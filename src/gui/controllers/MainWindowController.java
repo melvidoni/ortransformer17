@@ -5,10 +5,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import logic.TreeBrowser;
+import gui.components.TreeBrowser;
 
 
+/**
+ * Controller class of the main interface, with all the logic for
+ * the menu options and the toolbar options.
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
 public class MainWindowController {
     @FXML private MenuItem menuSave;
     @FXML private MenuItem menuTransform;
@@ -16,7 +20,14 @@ public class MainWindowController {
     @FXML private ToolBar toolBar;
     @FXML private SplitPane splitPane;
 
-    @FXML private TreeView treePane;
+    @FXML private TreeBrowser treePane;
+
+
+    // TODO ADD ELEMENTS OF THE DIAGRAM
+
+
+
+
 
 
     /**
@@ -69,6 +80,9 @@ public class MainWindowController {
         // Show the hidden elements
         toolBar.setManaged(true);
         splitPane.setManaged(true);
+
+        // Create a new model
+        treePane.newModel();
     }
 
 }
