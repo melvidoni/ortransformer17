@@ -2,14 +2,22 @@ package gui.components;
 
 
 
-import javafx.scene.canvas.Canvas;
+import app.Main;
+import gui.controllers.NewClassController;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import umldiagram.graphical.DrawingDiagram;
 
+import java.io.IOException;
 
 
-public class DrawingCanvas extends Canvas {
+public class DrawingCanvas extends Pane {
     private DrawingDiagram drawingDiagram;
 
     private boolean newClassFlag;
@@ -20,8 +28,26 @@ public class DrawingCanvas extends Canvas {
     private boolean newAssocClassFlag;
 
 
-
+    /**
+     * Default constructor of the class, that initializes
+     * the diagram with the corresponding values and listeners.
+     */
     public DrawingCanvas() {
+        super();
+
+        // Create a new model
+        newModel();
+
+        // Add the listeners
+        this.setOnMouseClicked(me -> {this.clickAction(me);});
+    }
+
+
+    /**
+     * Method that creates a new model, and cleans
+     * the current drawing pane.
+     */
+    public void newModel() {
         // Start the diagram
         drawingDiagram = new DrawingDiagram();
 
@@ -33,11 +59,8 @@ public class DrawingCanvas extends Canvas {
         newGenRelFlag = false;
         newAssocClassFlag = false;
 
-        // Add the listeners
-        setOnMouseClicked( me -> {
-            System.out.println("ADDING LISTENER");
-            clickAction(me);
-        } );
+        // Clean the pane
+        getChildren().clear();
     }
 
 
@@ -65,19 +88,50 @@ public class DrawingCanvas extends Canvas {
 
 
 
-
-
-
     private void clickAction(MouseEvent me) {
-        if(me.getButton() == MouseButton.PRIMARY) {
-            System.out.println("LEFT");
+        System.out.println("CLICK ACTION");
+
+        try {
+            /*
+            LEFT MOUSE BUTTON
+            */
+            if(me.getButton() == MouseButton.PRIMARY) {
+                System.out.println("PRIMARY BUTTON -> " + newClassFlag);
+
+
+                // If this is to draw a new class
+                if(newClassFlag) {
+                    System.out.println("NEW CLASS");
+
+                    FXMLLoader dloader = FXMLLoader.load(Main.class.getResource("/gui/views/NewClassDialog.fxml"));
+
+                    Stage dialogStage = new Stage();
+                    dialogStage.setTitle("Create New Class");
+                    dialogStage.initModality(Modality.WINDOW_MODAL);
+                    dialogStage.initOwner( getScene().getWindow() );
+
+                    Scene scene = new Scene(dloader.load());
+                    dialogStage.setScene(scene);
+
+                    // Show the dialog and wait until the user closes it
+                    dialogStage.showAndWait();
+                }
+            }
+            else if(me.getButton() == MouseButton.SECONDARY) {
+                System.out.println("RIGHT");
+            }
+
         }
-        else if(me.getButton() == MouseButton.SECONDARY) {
-            System.out.println("RIGHT");
+        catch (IOException e) {
+            // Exception gets thrown if the fxml file could not be loaded
+            e.printStackTrace();
         }
+
 
 
 
 
     }
+
+
 }

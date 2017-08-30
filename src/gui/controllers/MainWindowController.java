@@ -20,9 +20,13 @@ public class MainWindowController {
 
     @FXML private ToolBar toolBar;
     @FXML private SplitPane splitPane;
+    @FXML private ScrollPane scrollPane;
 
     @FXML private TreeBrowser treePane;
     @FXML private DrawingCanvas drawingCanvas;
+
+
+
 
 
 
@@ -40,7 +44,7 @@ public class MainWindowController {
         toolBar.setManaged(false);
         splitPane.setManaged(false);
 
-        // Start the elements
+        // Create a new drawing
         drawingCanvas = new DrawingCanvas();
     }
 
@@ -87,7 +91,7 @@ public class MainWindowController {
 
         // Create a new model
         treePane.newModel();
-        drawingCanvas = new DrawingCanvas();
+        drawingCanvas.newModel();
     }
 
 

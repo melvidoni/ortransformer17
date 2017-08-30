@@ -5,9 +5,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import gui.components.TreeBrowser?>
+
 <?import gui.components.DrawingCanvas?>
-
-
 <AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.MainWindowController">
    <children>
       <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
@@ -140,10 +139,10 @@
                     <TreeBrowser fx:id="treePane" />
                 </content>
             </ScrollPane>
-            <ScrollPane fitToHeight="true" fitToWidth="true" minWidth="400.0" minHeight="Infinity">
-               <content>
-                  <DrawingCanvas fx:id="drawingCanvas" />
-               </content>
+            <ScrollPane fitToHeight="true" fitToWidth="true"  fx:id="scrollPane" >
+                <content>
+                    <DrawingCanvas style="-fx-background-color: #666666;" fx:id="drawingCanvas"/>
+                </content>
             </ScrollPane>
          </items></SplitPane>
    </children>
