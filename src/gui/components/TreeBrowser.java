@@ -8,6 +8,12 @@ import javafx.scene.image.ImageView;
 import umldiagram.logical.*;
 
 
+/**
+ * This class shows a tree view of the elements of the
+ * UML diagram, and also contains a reference to the
+ * logical diagram object representation,
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
 public class TreeBrowser extends TreeView {
     private UMLDiagram umlDiagram;
     private TreeItem<String> root;

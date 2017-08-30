@@ -8,13 +8,13 @@
 <?import gui.components.DrawingCanvas?>
 
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.MainWindowController">
+<AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.MainWindowController">
    <children>
       <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <menus>
             <Menu mnemonicParsing="false" text="File">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#newModel" text="New">
+                  <MenuItem mnemonicParsing="false" onAction="#newModelMenu" text="New">
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -84,7 +84,7 @@
       </MenuBar>
       <ToolBar fx:id="toolBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0">
          <items>
-            <Button mnemonicParsing="false">
+            <Button mnemonicParsing="false" onAction="#newClassTool">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -133,14 +133,14 @@
                </graphic>
             </Button>
          </items></ToolBar>
-      <SplitPane fx:id="splitPane" dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="56.0">
+      <SplitPane fx:id="splitPane" dividerPositions="0.5" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="56.0">
          <items>
-            <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="400.0" minWidth="200.0">
+            <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="Infinity" maxWidth="400.0" minWidth="200.0">
                 <content>
                     <TreeBrowser fx:id="treePane" />
                 </content>
             </ScrollPane>
-            <ScrollPane fitToHeight="true" fitToWidth="true" minWidth="400.0">
+            <ScrollPane fitToHeight="true" fitToWidth="true" minWidth="400.0" minHeight="Infinity">
                <content>
                   <DrawingCanvas fx:id="drawingCanvas" />
                </content>
