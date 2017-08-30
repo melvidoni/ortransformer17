@@ -1,4 +1,4 @@
-package umldiagram;
+package umldiagram.logical;
 
 
 /**
@@ -22,7 +22,7 @@ public class AssociationClass {
 
 
     /**
-     * Getter to obtain the logical class of the association.
+     * Getter to obtain the umldiagram.logical class of the association.
      * @return the class in object format.
      */
 	public UmlClass getUmlClass() {
@@ -31,9 +31,9 @@ public class AssociationClass {
 
 
     /**
-     * Setter to change the existing association class (logical),
+     * Setter to change the existing association class (umldiagram.logical),
      * for the one received as a parameter.
-     * @param c The new logical class.
+     * @param c The new umldiagram.logical class.
      */
 	public void setClass(UmlClass c) {
 		logicalClass = c;
@@ -41,7 +41,7 @@ public class AssociationClass {
 
 
     /**
-     * Getter to obtain the logical relationship.
+     * Getter to obtain the umldiagram.logical relationship.
      * @return The relationship in object format.
      */
 	public Relationship getRelationship() {
@@ -79,7 +79,7 @@ public class AssociationClass {
 
     /**
      * Method that returns the class converted into a string.
-     * @return Converts the logical class to string, and returns it.
+     * @return Converts the umldiagram.logical class to string, and returns it.
      */
 	public String toString(){
 		return logicalClass.toString();

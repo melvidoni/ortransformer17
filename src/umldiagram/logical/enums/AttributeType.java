@@ -1,4 +1,4 @@
-package umldiagram.enums;
+package umldiagram.logical.enums;
 
 /**
  * Enum that controls the possible attribute types, and their nomenclature.

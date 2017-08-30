@@ -1,8 +1,8 @@
-package umldiagram;
+package umldiagram.logical;
 
 
-import umldiagram.enums.EndpointType;
-import umldiagram.enums.RelationshipType;
+import umldiagram.logical.enums.EndpointType;
+import umldiagram.logical.enums.RelationshipType;
 
 /**
  * Class that represents an UML relationship among classes.
@@ -151,7 +151,7 @@ public class Relationship {
 
 	/**
 	 * Methods that adds parameters to this relationship, according to the
-     * logical shape of a generalization.
+     * umldiagram.logical shape of a generalization.
 	 * @param oClass Child class of the relationship.
 	 * @param eClass Parent class of the relationship.
 	 */

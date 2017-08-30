@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.canvas.*?>
-<?import java.lang.*?>
+
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import gui.components.TreeBrowser?>
+<?import gui.components.DrawingCanvas?>
 
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.MainWindowController">
@@ -137,13 +136,13 @@
       <SplitPane fx:id="splitPane" dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="56.0">
          <items>
             <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="400.0" minWidth="200.0">
-               <content>
-                  <TreeBrowser fx:id="treePane" prefHeight="200.0" prefWidth="200.0" />
-               </content>
+                <content>
+                    <TreeBrowser fx:id="treePane" />
+                </content>
             </ScrollPane>
-            <ScrollPane fitToHeight="true" fitToWidth="true" minWidth="400.0" prefHeight="200.0" prefWidth="200.0">
+            <ScrollPane fitToHeight="true" fitToWidth="true" minWidth="400.0">
                <content>
-                  <Canvas />
+                  <DrawingCanvas fx:id="drawingCanvas" />
                </content>
             </ScrollPane>
          </items></SplitPane>

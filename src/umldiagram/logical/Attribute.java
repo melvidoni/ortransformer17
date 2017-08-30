@@ -1,7 +1,7 @@
-package umldiagram;
+package umldiagram.logical;
 
 
-import umldiagram.enums.AttributeType;
+import umldiagram.logical.enums.AttributeType;
 
 /**
  * Class that represents an attribute in the model's logic.

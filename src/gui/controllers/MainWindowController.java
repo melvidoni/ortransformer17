@@ -1,7 +1,9 @@
 package gui.controllers;
 
 
+import gui.components.DrawingCanvas;
 import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,12 +22,8 @@ public class MainWindowController {
     @FXML private ToolBar toolBar;
     @FXML private SplitPane splitPane;
 
-    @FXML private TreeBrowser treePane;
-
-
-    // TODO ADD ELEMENTS OF THE DIAGRAM
-
-
+    @FXML private TreeView treePane;
+    @FXML private DrawingCanvas drawingCanvas;
 
 
 
@@ -43,6 +41,8 @@ public class MainWindowController {
         toolBar.setManaged(false);
         splitPane.setManaged(false);
     }
+
+
 
 
     /**
@@ -68,6 +68,8 @@ public class MainWindowController {
     }
 
 
+
+
     /**
      * Action listener for the menu item of new model.
      */
@@ -82,7 +84,7 @@ public class MainWindowController {
         splitPane.setManaged(true);
 
         // Create a new model
-        treePane.newModel();
+        //treePane.newModel();
     }
 
 }

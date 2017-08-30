@@ -1,7 +1,7 @@
-package umldiagram;
+package umldiagram.logical;
 
 
-import umldiagram.enums.EndpointType;
+import umldiagram.logical.enums.EndpointType;
 
 /**
  * Class that represents and endpoint in a UML relationship
@@ -69,7 +69,7 @@ public class RelationshipEndpoint {
 
     /**
      * Getter to obtain the class this endpoint is linked to.
-     * @return The class in logical object format.
+     * @return The class in umldiagram.logical object format.
      */
 	public UmlClass getClassOf() {
 		return lclass;

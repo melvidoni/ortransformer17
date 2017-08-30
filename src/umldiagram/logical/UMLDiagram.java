@@ -1,6 +1,7 @@
-package umldiagram;
+package umldiagram.logical;
 
-import umldiagram.enums.RelationshipType;
+import umldiagram.logical.enums.RelationshipType;
+
 import java.util.IntSummaryStatistics;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -9,7 +10,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * Class that represents a UML diagram in the logical model.
+ * Class that represents a UML diagram in the umldiagram.logical model.
  * @author Melina Vidoni, INGAR CONICET-UTN.
  */
 public class UMLDiagram {
@@ -314,7 +315,7 @@ public class UMLDiagram {
 
 
 	/**
-	 * Method that searches all the relationships of the logical diagram,
+	 * Method that searches all the relationships of the umldiagram.logical diagram,
      * that link with the class which name matches with the ones received
      * as a parameter.
 	 * @param className Name of the class to be searched.
@@ -386,7 +387,7 @@ public class UMLDiagram {
 
 
 	/**
-	 * Method that returns the association class which logical class has
+	 * Method that returns the association class which umldiagram.logical class has
      * the same name as the one received as parameter.
 	 * @param cName Class name to be matched.
 	 * @return AssociationClass if found, the object of the association class.

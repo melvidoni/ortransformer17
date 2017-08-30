@@ -1,11 +1,11 @@
-package umldiagram;
+package umldiagram.logical;
 
 import java.util.LinkedList;
 import java.util.List;
 
 
 /**
- * Representation of an UML logical class, in the logical model of the system.
+ * Representation of an UML umldiagram.logical class, in the umldiagram.logical model of the system.
  * @author Melina Vidoni, INGAR CONICET-UTN.
  */
 public class UmlClass {
