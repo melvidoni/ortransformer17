@@ -2,16 +2,21 @@ package gui.controllers;
 
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import logic.TreeBrowser;
+
 
 public class MainWindowController {
     @FXML private MenuItem menuSave;
     @FXML private MenuItem menuTransform;
+
+    @FXML private ToolBar toolBar;
     @FXML private SplitPane splitPane;
+
+    @FXML private TreeView treePane;
 
 
     /**
@@ -19,8 +24,13 @@ public class MainWindowController {
      */
     @FXML
     private void initialize() {
+        // Block menus until activated
         menuSave.setDisable(true);
         menuTransform.setDisable(true);
+
+        // Hide elements
+        toolBar.setManaged(false);
+        splitPane.setManaged(false);
     }
 
 
@@ -44,6 +54,21 @@ public class MainWindowController {
 
         // Show the dialog
         alert.showAndWait();
+    }
+
+
+    /**
+     * Action listener for the menu item of new model.
+     */
+    @FXML
+    private void newModel() {
+        // Enable the menus
+        menuSave.setDisable(false);
+        menuTransform.setDisable(false);
+
+        // Show the hidden elements
+        toolBar.setManaged(true);
+        splitPane.setManaged(true);
     }
 
 }
