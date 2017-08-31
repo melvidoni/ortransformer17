@@ -2,12 +2,18 @@ package gui.controllers;
 
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+
+import java.io.IOException;
 
 
-public class NewClassController {
+public class NewClassController extends GridPane {
     @FXML private TextField className;
     @FXML private CheckBox isAbstract;
     @FXML private TableView attrTable;

@@ -19,9 +19,16 @@ public class MainWindowController {
     @FXML private MenuItem menuTransform;
 
     @FXML private ToolBar toolBar;
-    @FXML private SplitPane splitPane;
-    @FXML private ScrollPane scrollPane;
 
+    public ToggleButton getDrawClass() {
+        return drawClass;
+    }
+
+    @FXML private ToggleButton drawClass;
+
+
+
+    @FXML private SplitPane splitPane;
     @FXML private TreeBrowser treePane;
     @FXML private DrawingCanvas drawingCanvas;
 
@@ -101,13 +108,5 @@ public class MainWindowController {
 
 
 
-
-
-
-
-    @FXML
-    private void newClassTool() {
-        drawingCanvas.drawNewClass();
-    }
 
 }

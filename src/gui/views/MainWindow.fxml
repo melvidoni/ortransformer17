@@ -5,8 +5,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import gui.components.TreeBrowser?>
-
 <?import gui.components.DrawingCanvas?>
+
+
+
+
 <AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.MainWindowController">
    <children>
       <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
@@ -81,65 +84,71 @@
             </Menu>
          </menus>
       </MenuBar>
+
+
+       <fx:define>
+           <ToggleGroup fx:id="toggleButtonsGroup"/>
+       </fx:define>
+
       <ToolBar fx:id="toolBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0">
          <items>
-            <Button mnemonicParsing="false" onAction="#newClassTool">
+            <ToggleButton mnemonicParsing="false" fx:id="drawClass" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@img/tool_class.gif" />
                      </image></ImageView>
                </graphic>
-            </Button>
-            <Button mnemonicParsing="false">
+            </ToggleButton>
+            <ToggleButton mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
                <graphic>
-                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" >
                      <image>
                         <Image url="@img/tool_assocclass.gif" />
                      </image></ImageView>
                </graphic>
-            </Button>
-            <Button mnemonicParsing="false">
+            </ToggleButton>
+            <ToggleButton mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@img/tool_association.gif" />
                      </image></ImageView>
                </graphic>
-            </Button>
-            <Button mnemonicParsing="false">
+            </ToggleButton>
+            <ToggleButton mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@img/tool_generalization.gif" />
                      </image></ImageView>
                </graphic>
-            </Button>
-            <Button mnemonicParsing="false">
+            </ToggleButton>
+            <ToggleButton mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@img/tool_aggregation.gif" />
                      </image></ImageView>
                </graphic>
-            </Button>
-            <Button mnemonicParsing="false">
+            </ToggleButton>
+            <ToggleButton mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@img/tool_composition.gif" />
                      </image></ImageView>
                </graphic>
-            </Button>
+            </ToggleButton>
          </items></ToolBar>
       <SplitPane fx:id="splitPane" dividerPositions="0.5" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="56.0">
          <items>
-            <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="Infinity" maxWidth="400.0" minWidth="200.0">
+            <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="Infinity" maxWidth="300.0" minWidth="200.0">
                 <content>
                     <TreeBrowser fx:id="treePane" />
                 </content>
             </ScrollPane>
-            <ScrollPane fitToHeight="true" fitToWidth="true"  fx:id="scrollPane" >
+            <ScrollPane fitToHeight="true" fitToWidth="true" >
                 <content>
                     <DrawingCanvas style="-fx-background-color: #666666;" fx:id="drawingCanvas"/>
                 </content>

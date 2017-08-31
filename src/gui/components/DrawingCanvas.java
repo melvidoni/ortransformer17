@@ -3,9 +3,10 @@ package gui.components;
 
 
 import app.Main;
-import gui.controllers.NewClassController;
+import gui.controllers.MainWindowController;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -17,15 +18,14 @@ import umldiagram.graphical.DrawingDiagram;
 import java.io.IOException;
 
 
+
+
+
+
+
+
 public class DrawingCanvas extends Pane {
     private DrawingDiagram drawingDiagram;
-
-    private boolean newClassFlag;
-    private boolean newAssocRelFlag;
-    private boolean newAggregRelFlag;
-    private boolean newCompRelFlag;
-    private boolean newGenRelFlag;
-    private boolean newAssocClassFlag;
 
 
     /**
@@ -39,7 +39,7 @@ public class DrawingCanvas extends Pane {
         newModel();
 
         // Add the listeners
-        this.setOnMouseClicked(me -> {this.clickAction(me);});
+        this.setOnMouseClicked(this::clickAction);
     }
 
 
@@ -51,36 +51,9 @@ public class DrawingCanvas extends Pane {
         // Start the diagram
         drawingDiagram = new DrawingDiagram();
 
-        // Prepare the flags
-        newClassFlag = false;
-        newAssocRelFlag = false;
-        newAggregRelFlag = false;
-        newCompRelFlag = false;
-        newGenRelFlag = false;
-        newAssocClassFlag = false;
-
         // Clean the pane
         getChildren().clear();
     }
-
-
-
-    /**
-     * Sets all the flags for drawing a new class.
-     */
-    public void drawNewClass() {
-        // Set this one to be drawn
-        newClassFlag = true;
-
-        // Set the others as false
-        newAssocRelFlag = false;
-        newAggregRelFlag = false;
-        newCompRelFlag = false;
-        newGenRelFlag = false;
-        newAssocClassFlag = false;
-    }
-
-
 
 
 
@@ -91,34 +64,32 @@ public class DrawingCanvas extends Pane {
     private void clickAction(MouseEvent me) {
         System.out.println("CLICK ACTION");
 
+        System.out.println("BOUND? " );
+
         try {
             /*
             LEFT MOUSE BUTTON
             */
             if(me.getButton() == MouseButton.PRIMARY) {
-                System.out.println("PRIMARY BUTTON -> " + newClassFlag);
+                System.out.println("PRIMARY BUTTON -> ");
+
+                System.out.println("NEW CLASS");
 
 
-                // If this is to draw a new class
-                if(newClassFlag) {
-                    System.out.println("NEW CLASS");
+                FXMLLoader dloader = new FXMLLoader(Main.class.getResource("/gui/views/NewClassDialog.fxml"));
 
-                    FXMLLoader dloader = FXMLLoader.load(Main.class.getResource("/gui/views/NewClassDialog.fxml"));
+                Stage dialogStage = new Stage();
+                dialogStage.setResizable(false);
+                dialogStage.setTitle("Create New Class");
+                dialogStage.initModality(Modality.WINDOW_MODAL);
+                dialogStage.initOwner(getScene().getWindow());
 
-                    Stage dialogStage = new Stage();
-                    dialogStage.setTitle("Create New Class");
-                    dialogStage.initModality(Modality.WINDOW_MODAL);
-                    dialogStage.initOwner( getScene().getWindow() );
+                Scene scene = new Scene(dloader.load());
+                dialogStage.setScene(scene);
 
-                    Scene scene = new Scene(dloader.load());
-                    dialogStage.setScene(scene);
+                // Show the dialog and wait until the user closes it
+                dialogStage.showAndWait();
 
-                    // Show the dialog and wait until the user closes it
-                    dialogStage.showAndWait();
-                }
-            }
-            else if(me.getButton() == MouseButton.SECONDARY) {
-                System.out.println("RIGHT");
             }
 
         }
@@ -132,6 +103,5 @@ public class DrawingCanvas extends Pane {
 
 
     }
-
 
 }
