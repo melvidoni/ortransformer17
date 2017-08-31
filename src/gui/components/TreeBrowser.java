@@ -37,7 +37,7 @@ public class TreeBrowser extends TreeView {
      * the new information of the uml diagram.
      * @param umlDiagram Reference to the UML diagram.
      */
-    private void update(UMLDiagram umlDiagram) {
+    public void update(UMLDiagram umlDiagram) {
         // Clear the diagram
         setRoot(null);
 

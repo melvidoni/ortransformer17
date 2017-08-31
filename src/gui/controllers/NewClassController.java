@@ -177,7 +177,7 @@ public class NewClassController extends GridPane {
             // Add the attributes
             for(AttributeModel am: attrData) {
                 // Create attribute and add it
-                c.addAttribute(new Attribute(am.getName(), AttributeType.getAttribute(am.getType()),
+                c.addAttribute(new Attribute(am.getName(), AttributeType.getAttributeName(am.getType()),
                         UMLDiagram.getId(), am.isOrdered(), am.isUnique()));
             }
 

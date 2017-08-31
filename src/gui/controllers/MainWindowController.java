@@ -15,6 +15,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import umldiagram.graphical.DrawingDiagram;
+import umldiagram.logical.UMLDiagram;
+import umldiagram.logical.UmlClass;
 
 import java.io.IOException;
 
@@ -36,7 +38,6 @@ public class MainWindowController {
     @FXML private SplitPane splitPane;
     @FXML private TreeBrowser treePane;
     @FXML private DrawingDiagram drawingCanvas;
-
 
 
 
@@ -113,6 +114,8 @@ public class MainWindowController {
      */
     @FXML
     private void canvasClicked(MouseEvent me) {
+        UMLDiagram umlDiagram = UMLDiagram.getInstance(false);
+
         try {
             /*
             LEFT CLICK
@@ -130,12 +133,23 @@ public class MainWindowController {
                                 "Create New Class", drawingCanvas.getScene());
 
 
-                        // Then add a new node
-                        //drawingCanvas.addNewNode(me.getX(), me.getY());
+
+                        // If a class was created
+                        UmlClass c = umlDiagram.hasUndrawnClass();
+                        if(c != null) {
+                            // Update the tree
+                            treePane.update(umlDiagram);
+
+                            // Now draw the class
+                            drawingCanvas.addNewNode(me.getX(), me.getY(), c);
+                            umlDiagram.setUndrawnClass(false);
+                        }
+
+                        // Deselect after creating
+                        toggleNewClass.setSelected(false);
                     }
 
-                    // Deselect after creating
-                    toggleNewClass.setSelected(false);
+
                 }
 
             }

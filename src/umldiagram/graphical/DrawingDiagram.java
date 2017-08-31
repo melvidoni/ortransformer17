@@ -3,7 +3,10 @@ package umldiagram.graphical;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import umldiagram.logical.UmlClass;
+
 import java.util.LinkedList;
 
 
@@ -46,9 +49,6 @@ public class DrawingDiagram extends Pane {
     }
 
 
-
-
-
     /**
      * Method that checks if the point received belongs to another
      * node, or not. If it is contained in at least one, it returns.
@@ -68,16 +68,21 @@ public class DrawingDiagram extends Pane {
 
 
 
-    public void addNewNode(double x, double y) {
-        // Get coords of mouse
-        Node rectangle = new Node(x, y, 100, 100, Color.BLUEVIOLET);
-        rectangle.setOnMousePressed(this::pressedClass);
-        rectangle.setOnMouseDragged(this::draggedClass);
+    public void addNewNode(double x, double y, UmlClass c) {
+        // Draw the basic rectangle
+        Node node = new Node(x, y, c);
+
+        // Add the listeners for dragging
+        node.setOnMousePressed(this::pressedClass);
+        node.setOnMouseDragged(this::draggedClass);
 
         // Add the nodes
-        nodes.add(rectangle);
-        getChildren().add(rectangle);
+        nodes.add(node);
+        getChildren().add(node);
     }
+
+
+
 
 
 

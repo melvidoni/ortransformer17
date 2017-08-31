@@ -44,6 +44,37 @@ public class UmlClass {
 
 
     /**
+     * Method that checks for the longest attribute on the class.
+     * If there are none, it returns the class name.
+     * @return The longest attribute as a string, or the class name.
+     */
+    public String getLongestAttribute() {
+        // If there are no attributes return the name
+        if(attrList.isEmpty()) return name;
+
+        // Otherwise, check the attributes
+        else {
+            String longestAttr = "";
+            for(Attribute a : attrList) {
+                if(a.toString().length() >= longestAttr.length()) longestAttr = a.toString();
+            }
+
+            // Return a value
+            return longestAttr;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+    /**
      * Method to convert the class to string format.
      * @return The name of the class.
      */
@@ -137,7 +168,16 @@ public class UmlClass {
 		attrList = l;
 	}
 
-	
+
+
+
+
+
+
+
+
+
+
 	/**
 	 * Method that returns the attributes in a list of object arrays, to be
      * used on the tables in the modifying windows.

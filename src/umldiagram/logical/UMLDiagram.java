@@ -84,6 +84,13 @@ public class UMLDiagram {
     }
 
 
+    /**
+     * Changes the value of the undrawn class.
+     * @param u The new value for the flag.
+     */
+    public void setUndrawnClass(boolean u) {
+        undrawnClass = u;
+    }
 
 
 
@@ -492,5 +499,6 @@ public class UMLDiagram {
 		
 		return names;
 	}
+
 
 }
