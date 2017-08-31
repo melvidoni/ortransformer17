@@ -114,7 +114,7 @@
                      </image></ImageView>
                </graphic>
             </ToggleButton>
-            <ToggleButton mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
+            <ToggleButton mnemonicParsing="false" fx:id="toggleNewGen" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -149,7 +149,13 @@
             <ScrollPane fitToHeight="true" fitToWidth="true" >
                 <content>
                     <DrawingDiagram fx:id="drawingCanvas" style="-fx-background-color: #FFFFFF"
-                                    onMouseClicked="#canvasClicked" />
+                                    onMouseClicked="#canvasClicked"
+
+                                    onMousePressed="#canvasPressed"
+                                    onMouseDragged="#canvasDragged"
+                                    onMouseReleased="#canvasReleased"
+
+                                    onContextMenuRequested="#contextMenuRequested"/>
                 </content>
             </ScrollPane>
          </items></SplitPane>

@@ -207,6 +207,78 @@ public class UMLDiagram {
 	}
 
 
+
+
+	/**
+	 * Check if a generalization can be constructed between the
+	 * two classes received as parameters.
+	 * @param originClass The original class.
+	 * @param endClass The final class.
+	 * @return A string with the errors found. If everything is
+	 * okay and the generalization can be constructed, then the
+	 * returned string is empty.
+	 */
+	public String validGen(String originClass, String endClass) {
+		// Prepare the errors
+		String errors = "";
+
+		// Check if this is the same class
+		if(originClass.equals(endClass)) {
+			errors += "\n> The final endpoint must be different from the origin.";
+		}
+		// Check if the classes are already related
+		if(existsRelationshipBetween(originClass, endClass)) {
+			errors += "\n> Classes cannot be already related for a generalization.";
+		}
+		// If the origin already has a parent
+		if(isChildNode(originClass)) {
+			errors += "\n> Multiple hierarchy is not allowed on the origin class.";
+		}
+
+		return errors;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
 	/**
 	 * Method that deletes the class which name was received as a
@@ -233,6 +305,8 @@ public class UMLDiagram {
         classes.removeIf(c -> c.getName().equals(className));
 	}
 
+
+
 	
 	/**
 	 * Returns the class which names matches the one received
@@ -251,26 +325,8 @@ public class UMLDiagram {
 
 
 	
-	/**
-	 * Evaluates if there is a relationship, regardless of its type, between
-     * the two classes which names are received as parameters. It does not check
-     * if the classes exists, it believes they do.
-	 * @param oneClass Name of one of the classes.
-	 * @param anotherClass Name of the other class.
-	 * @return true if there is at least one relationship between these classes,
-     * false otherwise.
-	 */
-	public boolean existsRelationshipBetween(String oneClass, String anotherClass) {
-        for(Relationship r : relationships) {
-            String co = r.getOrigin().getClassOf().getName();
-            String cd = r.getEnd().getClassOf().getName();
-            if ((co.equals(oneClass) && cd.equals(anotherClass))
-                    || (co.equals(anotherClass) && cd.equals(oneClass))) {
-                return true;
-            }
-        }
-		return false;
-	}
+
+
 
 
 	
@@ -299,6 +355,7 @@ public class UMLDiagram {
 
 
 
+
 	/**
 	 * Returns the new id for the new relationship.
 	 * @return The new id is given by the amounf of relationships plus one.
@@ -312,21 +369,7 @@ public class UMLDiagram {
 
 
 
-	/**
-	 * Evaluates if the class which name is received as a parameter
-     * already belongs as a child node in a generalization.
-	 * @param className The class name to search for.
-	 * @return true if it already is a child node, false otherwise.
-	 */
-	public boolean isChildNode(String className) {
-        for(Relationship r : relationships) {
-            if (r.getType().equals(RelationshipType.GENERALIZATION)) {
-                if (r.getOrigin().getClassOf().getName().equals(className))
-                    return true;
-            }
-        }
-		return false;
-	}
+
 
 
 	
@@ -498,6 +541,57 @@ public class UMLDiagram {
         }
 		
 		return names;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+	/**
+	 * Evaluates if there is a relationship, regardless of its type, between
+	 * the two classes which names are received as parameters. It does not check
+	 * if the classes exists, it believes they do.
+	 * @param oneClass Name of one of the classes.
+	 * @param anotherClass Name of the other class.
+	 * @return true if there is at least one relationship between these classes,
+	 * false otherwise.
+	 */
+	private boolean existsRelationshipBetween(String oneClass, String anotherClass) {
+		for(Relationship r : relationships) {
+			String co = r.getOrigin().getClassOf().getName();
+			String cd = r.getEnd().getClassOf().getName();
+			if ((co.equals(oneClass) && cd.equals(anotherClass))
+					|| (co.equals(anotherClass) && cd.equals(oneClass))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+
+
+	/**
+	 * Evaluates if the class which name is received as a parameter
+	 * already belongs as a child node in a generalization.
+	 * @param className The class name to search for.
+	 * @return true if it already is a child node, false otherwise.
+	 */
+	private boolean isChildNode(String className) {
+		for(Relationship r : relationships) {
+			if (r.getType().equals(RelationshipType.GENERALIZATION)) {
+				if (r.getOrigin().getClassOf().getName().equals(className))
+					return true;
+			}
+		}
+		return false;
 	}
 
 

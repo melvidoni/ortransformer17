@@ -56,20 +56,24 @@ public class NewClassController extends GridPane {
         // Prepare the table columns
         attrNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         attrNameCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        attrNameCol.prefWidthProperty().bind(attrTable.widthProperty().divide(4));
         attrNameCol.setOnEditCommit(
                 t -> { t.getTableView().getItems().get(t.getTablePosition().getRow()).setName(t.getNewValue());
         });
 
         attrTypeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
         attrTypeCol.setCellFactory(ComboBoxTableCell.forTableColumn( AttributeType.getNamesValues() ));
+        attrTypeCol.prefWidthProperty().bind(attrTable.widthProperty().divide(4));
         attrTypeCol.setOnEditCommit(
                 t -> (t.getTableView().getItems().get(t.getTablePosition().getRow())).setType(t.getNewValue())
         );
 
         attrOrdCol.setCellValueFactory(new PropertyValueFactory<>("ordered"));
+        attrOrdCol.prefWidthProperty().bind(attrTable.widthProperty().divide(4));
         attrOrdCol.setCellFactory(p -> new CheckBoxTableCell<>());
 
         attrUnqCol.setCellValueFactory(new PropertyValueFactory<>("unique"));
+        attrUnqCol.prefWidthProperty().bind(attrTable.widthProperty().divide(4));
         attrUnqCol.setCellFactory(p -> new CheckBoxTableCell<>());
     }
 

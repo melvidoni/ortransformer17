@@ -22,7 +22,7 @@ public class Relationship {
      * of the relationship with the one received as parameter.
      * @param idR The new id of the class.
      */
-	Relationship(String idR){
+	public Relationship(String idR){
 		id = idR;
         isAssocClass = false;
 	}

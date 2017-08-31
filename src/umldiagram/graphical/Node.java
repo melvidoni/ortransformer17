@@ -64,4 +64,12 @@ class Node extends Label {
             && (getLayoutX() + getWidth())>=x && (getLayoutY()+getHeight())>=y;
     }
 
+
+    /**
+     * Returns the name of the node.
+     * @return the name of the node.
+     */
+    public String getName() {
+        return name;
+    }
 }
