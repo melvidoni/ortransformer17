@@ -5,7 +5,7 @@ import umldiagram.logical.enums.RelationshipType;
 import java.util.IntSummaryStatistics;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 
@@ -17,9 +17,11 @@ public class UMLDiagram {
 	private static UMLDiagram instance = new UMLDiagram("Diagram");
 
 	private String name;
-	private List<UmlClass> classes;
-	private List<Relationship> relationships;
-	private List<AssociationClass> associationClasses;
+	private LinkedList<UmlClass> classes;
+	private LinkedList<Relationship> relationships;
+	private LinkedList<AssociationClass> associationClasses;
+
+    private boolean undrawnClass;
 
 
     /**
@@ -28,10 +30,15 @@ public class UMLDiagram {
      * @param n The name of the diagram.
      */
 	private UMLDiagram(String n) {
-		classes = new LinkedList<>();
-		relationships = new LinkedList<>();
-		associationClasses = new LinkedList<>();
 		name = n;
+
+		// Lists
+        classes = new LinkedList<>();
+        relationships = new LinkedList<>();
+        associationClasses = new LinkedList<>();
+
+		// Flags
+        undrawnClass = false;
 	}
 
 
@@ -47,7 +54,13 @@ public class UMLDiagram {
     }
 
 
-
+    /**
+     * Method that returns a random integer to use as an id.
+     * @return The random number to be used as an id.
+     */
+    public static int getId() {
+        return ThreadLocalRandom.current().nextInt(1000000, 9999999 + 1);
+    }
 
 
     /**
@@ -56,8 +69,35 @@ public class UMLDiagram {
      * @param c The new class of the diagram.
      */
 	public void addClass(UmlClass c) {
-		classes.add(c);
+		classes.addFirst(c);
+		undrawnClass = true;
 	}
+
+
+    /**
+     * Method that checks if there are undrawn classes, and then
+     * returns the newest class.
+     * @return The UML class in object format, otherwise null.
+     */
+    public UmlClass hasUndrawnClass() {
+        return (undrawnClass) ? classes.getFirst() : null;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /**
@@ -98,7 +138,7 @@ public class UMLDiagram {
      * Getter to obtain the list of classes.
      * @return The list of classes in object format
      */
-	public List<UmlClass> getClasses() {
+	public LinkedList<UmlClass> getClasses() {
 		return classes;
 	}
 
@@ -106,7 +146,7 @@ public class UMLDiagram {
      * Getter to obtain the list of association classes.
      * @return The list of association classes in object format.
      */
-	public List<AssociationClass> getAssociationClasses() {
+	public LinkedList<AssociationClass> getAssociationClasses() {
 		return associationClasses;
 	}
 
@@ -115,7 +155,7 @@ public class UMLDiagram {
      * Getter to obtain the list of relationships in the diagram.
      * @return The list of relationships as objects.
      */
-	public List<Relationship> getRelationships(){
+	public LinkedList<Relationship> getRelationships(){
 		return relationships;
 	}
 
@@ -322,7 +362,7 @@ public class UMLDiagram {
      * Getter to obtain a list of names of the association classes.
      * @return A list of names as strings.
      */
-	public List<String> getAssocClassName() {
+	public LinkedList<String> getAssocClassName() {
 		LinkedList<String> names = new LinkedList<>();
         for(AssociationClass ca : associationClasses) {
             names.add(ca.getUmlClass().getName().toUpperCase());
@@ -338,8 +378,8 @@ public class UMLDiagram {
 	 * @param className Name of the class to be searched.
 	 * @return List of objects with the name and relationship.
 	 */
-	public List<Object[]> getRelationshipsOf(String className) {
-		List<Object[]> list = new LinkedList<>();
+	public LinkedList<Object[]> getRelationshipsOf(String className) {
+        LinkedList<Object[]> list = new LinkedList<>();
 		// Check the relationships
         for(Relationship r : relationships) {
             if (r.getOrigin().getClassOf().getName().equals(className)
@@ -441,7 +481,7 @@ public class UMLDiagram {
 	 * @return A list with the names of all the relationships, regardless
      * of the type, and including association classes.
 	 */
-	public List<String> getRelationshipsNames() {
+	public LinkedList<String> getRelationshipsNames() {
         LinkedList<String> names =
                 relationships.stream().map(r -> r.getName().toUpperCase())
                         .collect(Collectors.toCollection(LinkedList::new));
@@ -452,18 +492,5 @@ public class UMLDiagram {
 		
 		return names;
 	}
-
-
-    /**
-     * Evaluates if a received name for an association class is already used
-     * either as a regular class name, or as an association class name.
-     * @param className The class name to be compared.
-     * @return true if the name already exists, false if it does not.
-     */
-    public boolean existsAssociationClass(String className) {
-	    // If a normal class exists, or if an association class exists
-	    return getClassesNames().contains(className.toUpperCase());
-    }
-
 
 }

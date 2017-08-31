@@ -4,6 +4,9 @@ package gui.components;
 import app.Main;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -38,4 +41,34 @@ public class PopupHandlers {
         // Show the dialog and wait until the user closes it
         dialogStage.showAndWait();
     }
+
+
+    /**
+     * Method that shows a warning dialog, using the information received as parameters.
+     * @param title The title of the warning.
+     * @param subtitle The subtitle.
+     * @param message The main message content.
+     */
+    public static void showWarningDialog(String title, String subtitle, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        // Set text information
+        alert.setTitle(title);
+        alert.setHeaderText(subtitle);
+        alert.setContentText(message);
+
+        // Change the image
+        Image image = new Image("/gui/views/img/icon_warning.png");
+        ImageView imageView = new ImageView(image);
+        alert.setGraphic(imageView);
+
+        // Show the dialog
+        alert.showAndWait();
+    }
+
+
+
+
+
+
 }

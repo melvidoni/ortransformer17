@@ -1,7 +1,4 @@
-package umldiagram.logical.enums;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+package gui.components.enums;
 
 /**
  * Enum that controls the possible attribute types, and their nomenclature.
@@ -36,22 +33,6 @@ public enum AttributeType {
 
 
 	/**
-	 * Method that returns a list of names to be used in the combobox.
-	 * @return an observable list of names.
-	 */
-	public static ObservableList<String> getNamesValues() {
-		return FXCollections.observableArrayList(CHARACTER.getName(), INTEGER.getName(), DATE.getName());
-	}
-
-
-
-
-
-
-
-
-
-	/**
 	 * Getter to obtain the AttributeType that matches the
 	 * name that was received as a parameter.
 	 * @param n The name to check for a type.
@@ -66,11 +47,6 @@ public enum AttributeType {
 			return DATE;
 		return null;		
 	}
-
-
-
-
-
 
 
 	/**

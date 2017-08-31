@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane minHeight="400.0" minWidth="600.0" prefHeight="400.0"
-          prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.40"
-          fx:controller="gui.controllers.NewClassController">
+<GridPane minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.NewClassController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="60.0" prefWidth="80.0" />
@@ -33,14 +32,14 @@
             <Insets bottom="5.0" left="30.0" />
          </GridPane.margin>
       </CheckBox>
-      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
+      <ScrollPane fitToHeight="true" fitToWidth="true" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
          <content>
-            <TableView fx:id="attrTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity">
+            <TableView fx:id="attrTable" stylesheets="@style/TableStyle.css">
               <columns>
-                <TableColumn minWidth="100.0" prefWidth="200.0" text="Name" />
-                <TableColumn minWidth="100.0" prefWidth="75.0" text="Type" />
-                  <TableColumn maxWidth="-Infinity" minWidth="100.0" prefWidth="-1.0" text="Ordered" />
-                  <TableColumn maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Unique" />
+                <TableColumn fx:id="attrNameCol" text="Name" />
+                <TableColumn fx:id="attrTypeCol" text="Type" />
+                  <TableColumn fx:id="attrOrdCol" text="Ordered" />
+                  <TableColumn fx:id="attrUnqCol" text="Unique" />
               </columns>
             </TableView>
          </content>
