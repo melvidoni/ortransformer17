@@ -5,9 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import gui.components.TreeBrowser?>
-<?import gui.components.DrawingCanvas?>
-
-
+<?import umldiagram.graphical.DrawingDiagram?>
 
 
 <AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.MainWindowController">
@@ -92,7 +90,7 @@
 
       <ToolBar fx:id="toolBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0">
          <items>
-            <ToggleButton mnemonicParsing="false" fx:id="drawClass" toggleGroup="$toggleButtonsGroup">
+            <ToggleButton mnemonicParsing="false" fx:id="toggleNewClass" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -150,7 +148,8 @@
             </ScrollPane>
             <ScrollPane fitToHeight="true" fitToWidth="true" >
                 <content>
-                    <DrawingCanvas style="-fx-background-color: #666666;" fx:id="drawingCanvas"/>
+                    <DrawingDiagram fx:id="drawingCanvas" style="-fx-background-color: #FFFFFF"
+                                    onMouseClicked="#canvasClicked" />
                 </content>
             </ScrollPane>
          </items></SplitPane>

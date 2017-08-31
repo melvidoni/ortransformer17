@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
  * @author Melina Vidoni, INGAR CONICET-UTN.
  */
 public class UMLDiagram {
+	private static UMLDiagram instance = new UMLDiagram("Diagram");
+
 	private String name;
 	private List<UmlClass> classes;
 	private List<Relationship> relationships;
@@ -25,12 +27,27 @@ public class UMLDiagram {
      * name and the obtained browser panel.
      * @param n The name of the diagram.
      */
-	public UMLDiagram(String n) {
+	private UMLDiagram(String n) {
 		classes = new LinkedList<>();
 		relationships = new LinkedList<>();
 		associationClasses = new LinkedList<>();
 		name = n;
 	}
+
+
+    /**
+     * Method that returns an instance of the diagram.
+     * @param newInstance true if this requieres a clean slate,
+     *                    false to get the current instance.
+     * @return An UML diagram instance.
+     */
+    public static UMLDiagram getInstance(boolean newInstance) {
+        if(newInstance) instance = new UMLDiagram("Diagram");
+        return instance;
+    }
+
+
+
 
 
     /**

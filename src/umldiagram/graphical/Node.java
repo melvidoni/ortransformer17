@@ -1,21 +1,18 @@
 package umldiagram.graphical;
 
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
-import java.util.LinkedList;
 
-public class Node {
+
+public class Node extends Rectangle {
     private String name;
-    private LinkedList<String> attributes;
 
 
-    /**
-     * Default constructor of the class, that initializes
-     * the node with the values received.
-     * @param n Name of the corresponding class.
-     * @param attrs List of attributes as strings
-     */
-    public Node(String n, LinkedList<String> attrs) {
-        name = n;
-        attributes = attrs;
+    public Node(double x, double y, int w, int h, Color color) {
+        super(x, y, w, h);
+        setFill(color);
     }
+
+
 }

@@ -15,7 +15,6 @@ import umldiagram.logical.*;
  * @author Melina Vidoni, INGAR CONICET-UTN.
  */
 public class TreeBrowser extends TreeView {
-    private UMLDiagram umlDiagram;
     private TreeItem<String> root;
 
 
@@ -26,11 +25,8 @@ public class TreeBrowser extends TreeView {
      * Creates a new model on the browser.
      */
     public void newModel() {
-        // Create a new diagram
-        umlDiagram = new UMLDiagram("Diagram");
-
-        // Update with a new diagram
-        update();
+        // Create a new diagram and update
+        update(UMLDiagram.getInstance(true));
     }
 
 
@@ -39,8 +35,9 @@ public class TreeBrowser extends TreeView {
     /**
      * Method that updates the tree, in order to show
      * the new information of the uml diagram.
+     * @param umlDiagram Reference to the UML diagram.
      */
-    private void update() {
+    private void update(UMLDiagram umlDiagram) {
         // Clear the diagram
         setRoot(null);
 

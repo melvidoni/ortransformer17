@@ -1,12 +1,22 @@
 package gui.controllers;
 
 
-import gui.components.DrawingCanvas;
+import app.Main;
+import gui.components.PopupHandlers;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import gui.components.TreeBrowser;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import umldiagram.graphical.DrawingDiagram;
+
+import java.io.IOException;
 
 
 /**
@@ -19,18 +29,13 @@ public class MainWindowController {
     @FXML private MenuItem menuTransform;
 
     @FXML private ToolBar toolBar;
-
-    public ToggleButton getDrawClass() {
-        return drawClass;
-    }
-
-    @FXML private ToggleButton drawClass;
+    @FXML private ToggleButton toggleNewClass;
 
 
 
     @FXML private SplitPane splitPane;
     @FXML private TreeBrowser treePane;
-    @FXML private DrawingCanvas drawingCanvas;
+    @FXML private DrawingDiagram drawingCanvas;
 
 
 
@@ -50,9 +55,6 @@ public class MainWindowController {
         // Hide elements
         toolBar.setManaged(false);
         splitPane.setManaged(false);
-
-        // Create a new drawing
-        drawingCanvas = new DrawingCanvas();
     }
 
 
@@ -99,6 +101,49 @@ public class MainWindowController {
         // Create a new model
         treePane.newModel();
         drawingCanvas.newModel();
+    }
+
+
+
+
+    /**
+     * Action listener for the button regular clicks on the
+     * drawing canvas side of the system.
+     * @param me The mouse even that triggered the listener.
+     */
+    @FXML
+    private void canvasClicked(MouseEvent me) {
+        try {
+            /*
+            LEFT CLICK
+            */
+            if(me.getButton() == MouseButton.PRIMARY) {
+
+
+                // If the class is activated
+                if(toggleNewClass.isSelected()) {
+
+                    // If the point is not occupied
+                    if(!drawingCanvas.pointOccupied(me.getX(), me.getY())) {
+                        // Show the window
+                        PopupHandlers.showPopup("/gui/views/NewClassDialog.fxml",
+                                "Create New Class", drawingCanvas.getScene());
+
+
+                        // Then add a new node
+                        //drawingCanvas.addNewNode(me.getX(), me.getY());
+                    }
+
+                    // Deselect after creating
+                    toggleNewClass.setSelected(false);
+                }
+
+            }
+        }
+        catch(IOException ioe) {
+            // TODO REMOVE STACK TRACE
+            ioe.printStackTrace();
+        }
     }
 
 

@@ -7,8 +7,10 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import java.rmi.server.ExportException;
 
+/**
+ * Main class that launches the application.
+ */
 public class Main extends Application {
 
 
