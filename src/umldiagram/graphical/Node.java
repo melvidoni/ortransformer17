@@ -93,7 +93,7 @@ class Node extends Label {
      * @param targetNode The node to be compared with.
      * @return Two points tuple (origin, ending).
      */
-    public Point2D[] fromTo(Node targetNode) {
+    Point2D[] fromTo(Node targetNode) {
         // Create the array
         Point2D[] vector = new Point2D[2];
 
@@ -126,6 +126,29 @@ class Node extends Label {
     }
 
 
+
+
+
+    /**
+     * Given a point, this method returns the side of the rectangle in which
+     * it is contained, in order to estimate the cardinalities locations.
+     * @param p The point to be evaluated
+     * @return The return follows a character code. It is L (left), R (right),
+     *         T (up) and B (down).
+     */
+    char getSide(Point2D p) {
+        if(getLayoutX() == p.getX()){
+            return 'L';
+        }
+        else if((getLayoutX() + getWidth()) == p.getX() ){
+            return 'R';
+        }
+        else if(getLayoutY() == p.getY()){
+            return 'T';
+        }
+        else
+            return 'B';
+    }
 
 
 

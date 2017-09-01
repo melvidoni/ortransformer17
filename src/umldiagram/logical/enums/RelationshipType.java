@@ -8,11 +8,10 @@ package umldiagram.logical.enums;
  *
  */
 public enum RelationshipType {
-	// TODO CHANGE THESE NAMES
-	ASSOCIATION("Asociacion", EndpointType.ASSOCIATION),
-	AGGREGATION("Agregacion", EndpointType.AGGREGATION),
-	COMPOSITION("Composicion", EndpointType.COMPOSITION),
-	GENERALIZATION("Generalizacion", EndpointType.GENERALIZACION);
+	ASSOCIATION("Association", EndpointType.ASSOCIATION),
+	AGGREGATION("Aggregation", EndpointType.AGGREGATION),
+	COMPOSITION("Composition", EndpointType.COMPOSITION),
+	GENERALIZATION("Generalization", EndpointType.GENERALIZACION);
 
 	private String name;
 	private EndpointType enpointType;

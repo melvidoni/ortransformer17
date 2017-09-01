@@ -16,7 +16,6 @@ import umldiagram.graphical.DrawingStatus;
 import umldiagram.logical.Relationship;
 import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.UmlClass;
-import umldiagram.logical.enums.RelationshipType;
 
 import java.io.IOException;
 
@@ -268,14 +267,14 @@ public class MainWindowController {
                     // If there are no errors
                     else {
                         // Create logical gen
-                        Relationship newGen = new Relationship( String.valueOf(UMLDiagram.getId()) );
+                        Relationship newGen = new Relationship( String.valueOf(umlDiagram.newRelId()) );
                         newGen.newGeneralization(umlDiagram.getClasses(originClass),
                                 umlDiagram.getClasses(endClass));
                         umlDiagram.addRelationship(newGen);
                         treePane.update(umlDiagram);
 
                         // Draw the line
-                        drawingCanvas.addNewGen(originClass, endClass);
+                        drawingCanvas.addNewRel(newGen);
                     }
 
                     // Clean the status
@@ -308,9 +307,17 @@ public class MainWindowController {
                                     drawingCanvas.getScene());
 
 
-                        // TODO If there is a new association
-                        // Update tree
-                        // Draw relationship
+                        // If there is a new association
+                        Relationship relationship = umlDiagram.hasUndrawnRelationship();
+                        if(relationship != null) {
+                            // Update tree
+                            treePane.update(umlDiagram);
+
+                            // Draw relationship
+                            drawingCanvas.addNewRel(relationship);
+                            umlDiagram.setUndrawnRelationship(false);
+                        }
+
 
                         // Change the status
                         drawingStatus.setClasses("", "");
@@ -331,6 +338,7 @@ public class MainWindowController {
             e.printStackTrace();
         }
     }
+
 
 
 

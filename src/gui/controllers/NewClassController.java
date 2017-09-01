@@ -175,14 +175,14 @@ public class NewClassController extends GridPane {
         }
         else if(classOk) {
             // Create the base class
-            UmlClass c = new UmlClass(String.valueOf(UMLDiagram.getId()),
+            UmlClass c = new UmlClass(String.valueOf(UMLDiagram.getInstance(false).newClassId()),
                     className.getText(), isAbstract.isSelected());
 
             // Add the attributes
             for(AttributeModel am: attrData) {
                 // Create attribute and add it
                 c.addAttribute(new Attribute(am.getName(), AttributeType.getAttributeName(am.getType()),
-                        UMLDiagram.getId(), am.isOrdered(), am.isUnique()));
+                        UMLDiagram.getInstance(false).newClassId(), am.isOrdered(), am.isUnique()));
             }
 
             // Add the class to the diagram

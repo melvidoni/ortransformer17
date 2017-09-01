@@ -2,6 +2,7 @@ package umldiagram.logical;
 
 
 import umldiagram.logical.enums.EndpointType;
+import umldiagram.logical.enums.RelationshipType;
 
 /**
  * Class that represents and endpoint in a UML relationship
@@ -17,6 +18,53 @@ public class RelationshipEndpoint {
 	private String cardinality;
 	private EndpointType type;
 	private UmlClass lclass;
+
+
+
+    /**
+     * Default constructor to create a new relationship endpoint using the
+     * information received as parameters.
+     * @param n The role name.
+     * @param b If it is browsable.
+     * @param u If it is unique.
+     * @param o If it is ordered.
+     * @param c The endpoint cardinality.
+     * @param lc The related class.
+     * @param rType The type of relationship endpoint.
+     */
+	public RelationshipEndpoint(String n, boolean b, boolean u, boolean o, String c, UmlClass lc,
+							RelationshipType rType) {
+		// Set the direct values
+		name = n;
+		browsable = b;
+		unique = u;
+		ordered = o;
+		cardinality = c;
+		lclass = lc;
+
+		// Now the type
+		switch(rType) {
+			case GENERALIZATION: type = EndpointType.GENERALIZACION;
+								 break;
+
+			case ASSOCIATION: type = EndpointType.ASSOCIATION;
+							  break;
+
+			case AGGREGATION: type = EndpointType.AGGREGATION;
+							  break;
+
+			case COMPOSITION: type = EndpointType.COMPOSITION;
+							  break;
+		}
+	}
+
+
+
+
+
+
+
+
 
 
     /**

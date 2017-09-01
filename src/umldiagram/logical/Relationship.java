@@ -28,13 +28,26 @@ public class Relationship {
 	}
 
 
+
     /**
-     * Default constructor of the class, that creates an
-     * empty basic instance of relationship.
+     * Constructor of the class that creates a relationship with all the obtained information.
+     * @param id Numeric id of the relationship.
+     * @param n Name of the relationship.
+     * @param o Originating endpoint.
+     * @param e Destination endpoint.
+     * @param t Type of the relationship.
      */
-	public Relationship() {
-		isAssocClass = false;
-	}
+    public Relationship(int id, String n, RelationshipEndpoint o, RelationshipEndpoint e, RelationshipType t) {
+	    this(String.valueOf(id));
+	    name = n;
+	    origin = o;
+	    end = e;
+	    type = t;
+    }
+
+
+
+
 
 
     /**
@@ -50,6 +63,7 @@ public class Relationship {
 		else
 			return ("(" + name + ") " + type.getName() + " with:" + end.getClassOf().getName());
 	}
+
 
 
     /**
@@ -161,24 +175,13 @@ public class Relationship {
 		type = RelationshipType.GENERALIZATION;
 		
 		// Set the origin class
-		origin = new RelationshipEndpoint();
-		origin.setName( oClass.getName() + "Hijo" );
-		origin.setBrowsable(true);
-		origin.setUnique(false);
-		origin.setOrdered(false);
-		origin.setCardinality("0..*");
-		origin.setType(EndpointType.ASSOCIATION);
-		origin.setClass(oClass);
-		
+		origin = new RelationshipEndpoint( (oClass.getName() + "Hijo" ), true, false,
+                false, "0..*", oClass, RelationshipType.ASSOCIATION );
+
 		// Set the ending class
-		end = new RelationshipEndpoint();
-		end.setName( eClass.getName() + "Padre" );
-		end.setBrowsable(false);
-		end.setOrdered(false);
-		end.setUnique(false);
-		end.setCardinality("0..1");
-		end.setType(EndpointType.GENERALIZACION);
-		end.setClass(eClass);
+        end = new RelationshipEndpoint( (eClass.getName() + "Padre"), false, false,
+                false, "0..1", eClass, RelationshipType.GENERALIZATION
+        );
 	}
 
 

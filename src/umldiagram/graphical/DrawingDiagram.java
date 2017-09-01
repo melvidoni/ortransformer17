@@ -5,6 +5,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import umldiagram.logical.Relationship;
 import umldiagram.logical.UmlClass;
 import umldiagram.logical.enums.RelationshipType;
 
@@ -93,43 +94,42 @@ public class DrawingDiagram extends Pane {
 
 
 
-
-
-    public void addNewGen(String originClass, String endClass) {
+    /**
+     * Method to create a new generalization relationship,
+     * with the information received as a parameter.
+     * @param rel The new relationship to create.
+     */
+    public void addNewRel(Relationship rel) {
         // Prepare the nodes
         Node origin = null;
         Node ending = null;
 
-        // Get the nodes
+        // Get the onodes
         for(Node n: nodes) {
-            if(n.getName().equals(originClass)) origin = n;
-            else if(n.getName().equals(endClass)) ending = n;
+            if(n.getName().equals(rel.getOrigin().getClassOf().getName())) origin = n;
+            else if(n.getName().equals(rel.getEnd().getClassOf().getName())) ending = n;
 
             if(origin!=null && ending!=null) break;
         }
 
-        // Get the corresponding ending points
+        // Get the ending points
         Point2D[] points = origin.fromTo(ending);
-
+        char fromSide = origin.getSide(points[0]);
+        char toSide = ending.getSide(points[1]);
 
         // Now we will create a line
-        Arrow line = new Arrow(originClass + "_specs_" + endClass,points[0], points[1],
-                RelationshipType.GENERALIZATION);
+        Arrow line = new Arrow(rel.getName(), points[0], points[1], rel.getType(),
+                rel.getOrigin().getName() + "\n" + rel.getOrigin().getCardinality(),
+                rel.getEnd().getName() + "\n" + rel.getEnd().getCardinality(),
+                fromSide, toSide
+                );
 
 
         // Add it
         arrows.add(line);
         getChildren().add(line);
 
-
-
-
-
-
     }
-
-
-
 
 
 

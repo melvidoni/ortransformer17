@@ -22,6 +22,7 @@ public class UMLDiagram {
 	private LinkedList<AssociationClass> associationClasses;
 
     private boolean undrawnClass;
+    private boolean undrawnRelationship;
 
 
     /**
@@ -39,6 +40,7 @@ public class UMLDiagram {
 
 		// Flags
         undrawnClass = false;
+        undrawnRelationship = false;
 	}
 
 
@@ -54,12 +56,20 @@ public class UMLDiagram {
     }
 
 
+
+
+
+
+
     /**
      * Method that returns a random integer to use as an id.
      * @return The random number to be used as an id.
      */
-    public static int getId() {
-        return ThreadLocalRandom.current().nextInt(1000000, 9999999 + 1);
+    public int newClassId() {
+        IntSummaryStatistics summaryStatistics =
+                classes.stream().map(UmlClass::getId).mapToInt(Integer::parseInt).summaryStatistics();
+
+        return summaryStatistics.getMax()+1;
     }
 
 
@@ -110,14 +120,215 @@ public class UMLDiagram {
 
 
 
+
+
+
+
+
+
+
+    /**
+     * Check if a generalization can be constructed between the
+     * two classes received as parameters.
+     * @param originClass The original class.
+     * @param endClass The final class.
+     * @return A string with the errors found. If everything is
+     * okay and the generalization can be constructed, then the
+     * returned string is empty.
+     */
+    public String validGen(String originClass, String endClass) {
+        // Prepare the errors
+        String errors = "";
+
+        // Check if this is the same class
+        if(originClass.equals(endClass)) {
+            errors += "\n> The final endpoint must be different from the origin.";
+        }
+        // Check if the classes are already related
+        if(existsRelationshipBetween(originClass, endClass)) {
+            errors += "\n> Classes cannot be already related for a generalization.";
+        }
+        // If the origin already has a parent
+        if(isChildNode(originClass)) {
+            errors += "\n> Multiple hierarchy is not allowed on the origin class.";
+        }
+
+        return errors;
+    }
+
+
+
+
+
+    /**
+     * Check if a normal relationship (association, aggregation or composition)
+     * can be constructed between the two classes received as parameters.
+     * @param originClass The original class.
+     * @param endClass The final class.
+     * @return A string with the errors found. If everything is
+     * okay and the relationship can be constructed, then the
+     * returned string is empty.
+     */
+    public String validRelationship(String originClass, String endClass) {
+        // Check if there is a generalization between classes
+        return (existsGeneralizationBetween(originClass, endClass))
+                ? "> Relationships among members of the same generalization are not allowed"
+                : "";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * Method that adds a new relationship to the list in
      * the diagram, preserving the existing ones.
      * @param r The new relationship to be added.
      */
 	public void addRelationship(Relationship r) {
-		relationships.add(r);
+		relationships.addFirst(r);
+        undrawnRelationship = true;
 	}
+
+
+    /**
+     * Returns the new id for the new relationship.
+     * @return The new id is given by the amounf of relationships plus one.
+     */
+    public int newRelId() {
+        IntSummaryStatistics summaryStatistics =
+                relationships.stream().map(Relationship::getId).mapToInt(Integer::parseInt).summaryStatistics();
+
+        return summaryStatistics.getMax()+1;
+    }
+
+
+    /**
+     * Evaluates if a relationship already exists with the name received
+     * as a parameter. Returns a boolean depending on the result.
+     * @param relName The name of the relationship.
+     * @return true if the name exists, false otherwise.
+     */
+    public boolean existsRelationship(String relName) {
+        // Check for association, aggregation or composition
+        for(Relationship r : relationships) {
+            if (r.getName().toUpperCase().equals(relName.toUpperCase()))
+                return true;
+        }
+        // Check for association classes
+        for(AssociationClass ca : associationClasses) {
+            Relationship r = ca.getRelationship();
+            if (r.getName().toUpperCase().equals(relName.toUpperCase()))
+                return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * Method that checks if there are undrawn relationshio, and then
+     * returns the newest class.
+     * @return The UML relationship in object format, otherwise null.
+     */
+    public Relationship hasUndrawnRelationship() {
+        return (undrawnRelationship) ? relationships.getFirst() : null;
+    }
+
+
+    /**
+     * Changes the value of the undrawn relationship.
+     * @param u The new value for the flag.
+     */
+    public void setUndrawnRelationship(boolean u) {
+        undrawnRelationship = u;
+    }
+
+
+    /**
+     * Evaluates if there is a generalization between the two classes
+     * which names are received as parameters. It dos not consider which
+     * class is parent and which one is child.
+     * @param oneClass Name of one of the classes.
+     * @param anotherClass Name of the other class.
+     * @return true if there is at least one relationship between these classes,
+     * false otherwise.
+     */
+    private boolean existsGeneralizationBetween(String oneClass, String anotherClass) {
+        for(Relationship r : relationships) {
+            if (r.getType().equals(RelationshipType.GENERALIZATION)) {
+                String co = r.getOrigin().getClassOf().getName();
+                String cd = r.getEnd().getClassOf().getName();
+                if ((co.equals(oneClass) && cd.equals(anotherClass))
+                        || (co.equals(anotherClass) && cd.equals(oneClass))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Evaluates if there is a relationship, regardless of its type, between
+     * the two classes which names are received as parameters. It does not check
+     * if the classes exists, it believes they do.
+     * @param oneClass Name of one of the classes.
+     * @param anotherClass Name of the other class.
+     * @return true if there is at least one relationship between these classes,
+     * false otherwise.
+     */
+    private boolean existsRelationshipBetween(String oneClass, String anotherClass) {
+        for(Relationship r : relationships) {
+            String co = r.getOrigin().getClassOf().getName();
+            String cd = r.getEnd().getClassOf().getName();
+            if ((co.equals(oneClass) && cd.equals(anotherClass))
+                    || (co.equals(anotherClass) && cd.equals(oneClass))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
+    /**
+     * Evaluates if the class which name is received as a parameter
+     * already belongs as a child node in a generalization.
+     * @param className The class name to search for.
+     * @return true if it already is a child node, false otherwise.
+     */
+    private boolean isChildNode(String className) {
+        for(Relationship r : relationships) {
+            if (r.getType().equals(RelationshipType.GENERALIZATION)) {
+                if (r.getOrigin().getClassOf().getName().equals(className))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -211,6 +422,19 @@ public class UMLDiagram {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * Getter to replace the name of the diagram for a new one.
      * @param n The new name of the diagram.
@@ -227,78 +451,6 @@ public class UMLDiagram {
 	public String getName() {
 		return name;
 	}
-
-
-
-
-
-
-
-	/**
-	 * Check if a generalization can be constructed between the
-	 * two classes received as parameters.
-	 * @param originClass The original class.
-	 * @param endClass The final class.
-	 * @return A string with the errors found. If everything is
-	 * okay and the generalization can be constructed, then the
-	 * returned string is empty.
-	 */
-	public String validGen(String originClass, String endClass) {
-		// Prepare the errors
-		String errors = "";
-
-		// Check if this is the same class
-		if(originClass.equals(endClass)) {
-			errors += "\n> The final endpoint must be different from the origin.";
-		}
-		// Check if the classes are already related
-		if(existsRelationshipBetween(originClass, endClass)) {
-			errors += "\n> Classes cannot be already related for a generalization.";
-		}
-		// If the origin already has a parent
-		if(isChildNode(originClass)) {
-			errors += "\n> Multiple hierarchy is not allowed on the origin class.";
-		}
-
-		return errors;
-	}
-
-
-
-
-
-    /**
-     * Check if a normal relationship (association, aggregation or composition)
-     * can be constructed between the two classes received as parameters.
-     * @param originClass The original class.
-     * @param endClass The final class.
-     * @return A string with the errors found. If everything is
-     * okay and the relationship can be constructed, then the
-     * returned string is empty.
-     */
-    public String validRelationship(String originClass, String endClass) {
-	    // Check if there is a generalization between classes
-        return (existsGeneralizationBetween(originClass, endClass))
-                ? "> Relationships among members of the same generalization are not allowed"
-                : "";
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -358,76 +510,20 @@ public class UMLDiagram {
 
 
 	
-	/**
-	 * Evaluates if there is a generalization between the two classes
-     * which names are received as parameters. It dos not consider which
-     * class is parent and which one is child.
-     * @param oneClass Name of one of the classes.
-     * @param anotherClass Name of the other class.
-     * @return true if there is at least one relationship between these classes,
-     * false otherwise.
-	 */
-	public boolean existsGeneralizationBetween(String oneClass, String anotherClass) {
-        for(Relationship r : relationships) {
-            if (r.getType().equals(RelationshipType.GENERALIZATION)) {
-                String co = r.getOrigin().getClassOf().getName();
-                String cd = r.getEnd().getClassOf().getName();
-                if ((co.equals(oneClass) && cd.equals(anotherClass))
-                        || (co.equals(anotherClass) && cd.equals(oneClass))) {
-                    return true;
-                }
-            }
-        }
-		return false;
-	}
-
-
-
-
-	/**
-	 * Returns the new id for the new relationship.
-	 * @return The new id is given by the amounf of relationships plus one.
-	 */
-	public String newRelId() {
-        IntSummaryStatistics summaryStatistics =
-                relationships.stream().map(Relationship::getId).mapToInt(Integer::parseInt).summaryStatistics();
-
-        return String.valueOf(summaryStatistics.getMax()+1);
-	}
 
 
 
 
 
 
-	
-	/**
-	 * Evaluates if a relationship already exists with the name received
-     * as a parameter. Returns a boolean depending on the result.
-	 * @param relName The name of the relationship.
-	 * @return true if the name exists, false otherwise.
-	 */
-	public boolean existsRelationship(String relName) {
-		// Check for association, aggregation or composition
-        for(Relationship r : relationships) {
-            if (r.getName().toUpperCase().equals(relName.toUpperCase()))
-                return true;
-        }
-		// Check for association classes
-        for(AssociationClass ca : associationClasses) {
-            Relationship r = ca.getRelationship();
-            if (r.getName().toUpperCase().equals(relName.toUpperCase()))
-                return true;
-        }
-		return false;
-	}
+
 
 
     /**
      * Getter to obtain the next id of an association class.
      * @return The next id of an association class.
      */
-	public String getAssocClassId() {
+	public String newAssocClassId() {
         IntSummaryStatistics summaryStatistics =
                 associationClasses.stream().map(AssociationClass::getId)
                         .mapToInt(Integer::parseInt).summaryStatistics();
@@ -582,45 +678,7 @@ public class UMLDiagram {
 
 
 
-	/**
-	 * Evaluates if there is a relationship, regardless of its type, between
-	 * the two classes which names are received as parameters. It does not check
-	 * if the classes exists, it believes they do.
-	 * @param oneClass Name of one of the classes.
-	 * @param anotherClass Name of the other class.
-	 * @return true if there is at least one relationship between these classes,
-	 * false otherwise.
-	 */
-	private boolean existsRelationshipBetween(String oneClass, String anotherClass) {
-		for(Relationship r : relationships) {
-			String co = r.getOrigin().getClassOf().getName();
-			String cd = r.getEnd().getClassOf().getName();
-			if ((co.equals(oneClass) && cd.equals(anotherClass))
-					|| (co.equals(anotherClass) && cd.equals(oneClass))) {
-				return true;
-			}
-		}
-		return false;
-	}
 
-
-
-
-	/**
-	 * Evaluates if the class which name is received as a parameter
-	 * already belongs as a child node in a generalization.
-	 * @param className The class name to search for.
-	 * @return true if it already is a child node, false otherwise.
-	 */
-	private boolean isChildNode(String className) {
-		for(Relationship r : relationships) {
-			if (r.getType().equals(RelationshipType.GENERALIZATION)) {
-				if (r.getOrigin().getClassOf().getName().equals(className))
-					return true;
-			}
-		}
-		return false;
-	}
 
 
 
