@@ -1,13 +1,20 @@
 package umldiagram.graphical;
 
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import umldiagram.logical.enums.RelationshipType;
 
 public class DrawingStatus {
     private static DrawingStatus instance = new DrawingStatus();
 
-    private boolean drawingClass;
-    private boolean drawingGen;
-    private boolean drawingAssoc;
+    private SimpleBooleanProperty drawingClass;
+    private SimpleBooleanProperty drawingGen;
+    private SimpleBooleanProperty drawingAssoc;
+
+    private String originClass;
+    private String endClass;
 
 
 
@@ -16,9 +23,12 @@ public class DrawingStatus {
      * Private constructor that initializes the instance.
      */
     private DrawingStatus() {
-        drawingClass = false;
-        drawingGen = false;
-        drawingAssoc = false;
+        drawingClass = new SimpleBooleanProperty(false);
+        drawingGen = new SimpleBooleanProperty(false);
+        drawingAssoc = new SimpleBooleanProperty(false);
+
+        originClass = "";
+        endClass = "";
     }
 
 
@@ -33,35 +43,21 @@ public class DrawingStatus {
     }
 
 
-    /**
-     * Setter to change if the status is drawing a class.
-     * @param d true if it is drawing, false otherwise.
-     */
-    public void setDrawingClass(boolean d) {
-        drawingClass = d;
-    }
 
 
     /**
-     * Setter to change if the status is drawing a generalization.
-     * @param d true if it is drawing, false otherwise.
+     * Method that binds the properties of the status with the
+     * ones received as parameters.
+     * @param dc Toggle of drawing class property.
+     * @param dg Toggle of drawing generalization property.
+     * @param da Toggle of drawing association property.
      */
-    public void setDrawingGen(boolean d) {
-        drawingGen = d;
+    public void bindProperties(BooleanProperty dc, BooleanProperty dg,
+                               BooleanProperty da) {
+        Bindings.bindBidirectional(drawingClass, dc);
+        Bindings.bindBidirectional(drawingGen, dg);
+        Bindings.bindBidirectional(drawingAssoc, da);
     }
-
-
-
-    /**
-     * Setter to change if the status is drawing an association.
-     * @param d true if it is drawing, false otherwise.
-     */
-    public void setDrawingAssoc(boolean d) {
-        drawingGen = d;
-    }
-
-
-
 
 
 
@@ -71,7 +67,7 @@ public class DrawingStatus {
      */
     public boolean isDrawing() {
         // TODO COMPLETE THIS PART
-        return drawingClass || drawingGen || drawingAssoc;
+        return drawingClass.get() || drawingGen.get() || drawingAssoc.get();
     }
 
 
@@ -81,7 +77,51 @@ public class DrawingStatus {
      */
     public boolean isDrawingLine() {
         // TODO ADD OTHER RELATIONSHIPS
-        return drawingAssoc || drawingGen;
+        return drawingAssoc.get() || drawingGen.get();
     }
 
+
+
+
+
+
+    public RelationshipType getRelType() {
+        // TODO FILL WITH OTHER RELATIONSHIP
+        if(drawingGen.get()) return RelationshipType.GENERALIZATION;
+        else if(drawingAssoc.get()) return RelationshipType.ASSOCIATION;
+
+
+        return null;
+    }
+
+
+
+    /**
+     * Setter to change the values of the classes being used
+     * to create a new relationship.
+     * @param oc Name of the origin class.
+     * @param ec Name of the destination class.
+     */
+    public void setClasses(String oc, String ec) {
+        originClass = oc;
+        endClass = ec;
+    }
+
+
+    /**
+     * Getter to obtain the value of the destination class.
+     * @return The class name.
+     */
+    public String getEndClass() {
+        return endClass;
+    }
+
+
+    /**
+     * Getter to obtain the value of the origin class.
+     * @return The class name.
+     */
+    public String getOriginClass() {
+        return originClass;
+    }
 }

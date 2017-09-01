@@ -66,6 +66,8 @@ public class MainWindowController {
         // Coordinates
         drawingLine = null;
         drawingStatus = DrawingStatus.getInstance(true);
+        drawingStatus.bindProperties(toggleNewClass.selectedProperty(),
+                toggleNewGen.selectedProperty(), toggleNewAssoc.selectedProperty());
 
 
         // Prepare the context menu
@@ -127,6 +129,8 @@ public class MainWindowController {
         // Clean coordinates
         drawingLine = null;
         drawingStatus = DrawingStatus.getInstance(true);
+        drawingStatus.bindProperties(toggleNewClass.selectedProperty(),
+                toggleNewGen.selectedProperty(), toggleNewAssoc.selectedProperty());
     }
 
 
@@ -146,15 +150,11 @@ public class MainWindowController {
             if(me.getButton() == MouseButton.PRIMARY) {
                 // If the class is activated
                 if(toggleNewClass.isSelected()) {
-                    // Change the status
-                    drawingStatus.setDrawingClass(true);
-
                     // If the point is not occupied
                     if(!drawingCanvas.pointOccupied(me.getX(), me.getY())) {
                         // Show the window
                         PopupHandlers.showPopup("/gui/views/NewClassDialog.fxml",
-                                "Create New Class", drawingCanvas.getScene(),
-                                false, null, "", "");
+                                "Create New Class", drawingCanvas.getScene());
 
                         // If a class was created
                         UmlClass c = umlDiagram.hasUndrawnClass();
@@ -169,7 +169,6 @@ public class MainWindowController {
 
                         // Deselect after creating
                         toggleNewClass.setSelected(false);
-                        drawingStatus.setDrawingClass(false);
                     }
                 }
             }
@@ -190,24 +189,14 @@ public class MainWindowController {
      */
     @FXML
     private void canvasPressed(MouseEvent me) {
-        System.out.println("pressed");
-
         // If this is a primary button
         if(me.isPrimaryButtonDown() && drawingLine==null
                 && drawingCanvas.pointOccupied(me.getX(), me.getY())
-                // TODO ADD TOGGLES
-                && (toggleNewGen.isSelected() || toggleNewAssoc.isSelected()) ) {
-            System.out.println("DRAWING LINE");
+                && drawingStatus.isDrawingLine() ) {
 
             // Create a new line
             drawingLine = new Line(me.getX(), me.getY(), me.getX(), me.getY());
             drawingCanvas.getChildren().add(drawingLine);
-
-
-            // TODO Set the statuses
-            drawingStatus.setDrawingGen(toggleNewGen.isSelected());
-            drawingStatus.setDrawingAssoc(toggleNewAssoc.isSelected());
-
         }
     }
 
@@ -233,7 +222,6 @@ public class MainWindowController {
             // Resize if it goes outside
             if (mx > drawingCanvas.getMinWidth())  drawingCanvas.setMinWidth(mx);
             if (my > drawingCanvas.getMinHeight()) drawingCanvas.setMinHeight(my);
-
         }
     }
 
@@ -292,7 +280,6 @@ public class MainWindowController {
 
                     // Clean the status
                     toggleNewGen.setSelected(false);
-                    drawingStatus.setDrawingGen(false);
                 }
 
             /*
@@ -311,22 +298,26 @@ public class MainWindowController {
                                 "The following errors have been found:" + errors);
                     }
                     else {
+                        // Set the classes on the status
+                        drawingStatus.setClasses(originClass, endClass);
+
                         // Call the new window, depending on the type
                         if(toggleNewAssoc.isSelected())
                             PopupHandlers.showPopup("/gui/views/NewRelationshipDialog.fxml",
                                     "New Association Relationship",
-                                    drawingCanvas.getScene(), true,
-                                    RelationshipType.ASSOCIATION, originClass, endClass);
+                                    drawingCanvas.getScene());
 
 
                         // TODO If there is a new association
                         // Update tree
                         // Draw relationship
+
+                        // Change the status
+                        drawingStatus.setClasses("", "");
                     }
 
                     // Clean the status
                     toggleNewAssoc.setSelected(false);
-                    drawingStatus.setDrawingAssoc(false);
                 }
             }
 

@@ -1,6 +1,7 @@
 package gui.controllers;
 
 
+import umldiagram.graphical.DrawingStatus;
 import umldiagram.logical.enums.RelationshipType;
 
 
@@ -14,17 +15,19 @@ public abstract class ARelationshipController {
     protected String endClass;
 
 
+
     /**
-     * Method that initializes the controller with the received
-     * information about the relationship.
-     * @param t Type of the relationship.
-     * @param origin Name of origin class.
-     * @param end Name of destination class.
+     * Method that initializes the controller with  the information about
+     * current relationships being drawn.
      */
-    public void initialize(RelationshipType t, String origin, String end) {
-        type = t;
-        originClass = origin;
-        endClass = end;
+    void setValues() {
+        // Get the drawing status
+        DrawingStatus status = DrawingStatus.getInstance(false);
+
+        // Set the values
+        type = status.getRelType();
+        originClass = status.getOriginClass();
+        endClass = status.getEndClass();
     }
 
 }

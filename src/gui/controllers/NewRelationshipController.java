@@ -32,6 +32,13 @@ public class NewRelationshipController extends ARelationshipController {
 
 
 
+    public void NewRelationshipController() {
+        initialize();
+    }
+
+
+
+
     /**
      * Method to initialize the interface by adding the
      * corresponding elements and controllers.
@@ -52,6 +59,9 @@ public class NewRelationshipController extends ARelationshipController {
         originMinCard.setTextFormatter(FieldFormatter.getNumberFormatter(2));
         endMaxCard.setTextFormatter(FieldFormatter.getStarFormatter(2));
         originMaxCard.setTextFormatter(FieldFormatter.getStarFormatter(2));
+
+        // Now set the values for the other elements
+        setValues();
     }
 
 
@@ -74,10 +84,14 @@ public class NewRelationshipController extends ARelationshipController {
 
 
 
+
     @FXML
     private void createRelationship() {
-
+        System.out.println("create a: " + type.getName());
     }
+
+
+
 
 }
 
