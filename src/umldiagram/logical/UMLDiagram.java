@@ -94,16 +94,19 @@ public class UMLDiagram {
 
 
 
-
-
-
-
-
-
-
-
-
-
+    /**
+     * Returns the class which names matches the one received
+     * as a parameter.
+     * @param className The class name as a string.
+     * @return The object of the class, if the name matches.
+     * If no class is found, then returns null.
+     */
+    public UmlClass getClasses(String className) {
+        for (UmlClass c : classes) {
+            if (c.getName().equals(className)) return c;
+        }
+        return null;
+    }
 
 
 
@@ -115,6 +118,13 @@ public class UMLDiagram {
 	public void addRelationship(Relationship r) {
 		relationships.add(r);
 	}
+
+
+
+
+
+
+
 
 
     /**
@@ -139,6 +149,14 @@ public class UMLDiagram {
         }
 		return false;
 	}
+
+
+
+
+
+
+
+
 
 
     /**
@@ -189,6 +207,10 @@ public class UMLDiagram {
 	}
 
 
+
+
+
+
     /**
      * Getter to replace the name of the diagram for a new one.
      * @param n The new name of the diagram.
@@ -205,6 +227,9 @@ public class UMLDiagram {
 	public String getName() {
 		return name;
 	}
+
+
+
 
 
 
@@ -308,19 +333,7 @@ public class UMLDiagram {
 
 
 	
-	/**
-	 * Returns the class which names matches the one received
-     * as a parameter.
-	 * @param className The class name as a string.
-	 * @return The object of the class, if the name matches.
-     * If no class is found, then returns null.
-	 */
-	public UmlClass getClasses(String className) {
-        for (UmlClass c : classes) {
-            if (c.getName().equals(className)) return c;
-        }
-		return null;
-	}
+
 
 
 
@@ -593,6 +606,8 @@ public class UMLDiagram {
 		}
 		return false;
 	}
+
+
 
 
 }

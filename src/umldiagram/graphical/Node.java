@@ -2,12 +2,18 @@ package umldiagram.graphical;
 
 
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import umldiagram.logical.Attribute;
 import umldiagram.logical.UmlClass;
 
 
 
+
+/**
+ * Class that graphically represents a node (regular class) in the UML diagram.
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
 class Node extends Label {
     private String name;
 
@@ -72,4 +78,57 @@ class Node extends Label {
     public String getName() {
         return name;
     }
+
+
+
+
+
+
+
+
+
+    /**
+     * Method that compares two nodes, and returns the mid point between
+     * the sides that are closer to eachother.
+     * @param targetNode The node to be compared with.
+     * @return Two points tuple (origin, ending).
+     */
+    public Point2D[] fromTo(Node targetNode) {
+        // Create the array
+        Point2D[] vector = new Point2D[2];
+
+        // If the origin is under
+        if(getLayoutY() >= (targetNode.getLayoutY() + targetNode.getHeight())){
+            vector[0] = new Point2D(getLayoutX() + getWidth() / 2, getLayoutY());
+            vector[1] = new Point2D(targetNode.getLayoutX() + targetNode.getWidth() / 2,
+                    targetNode.getLayoutY() + targetNode.getHeight() - 1);
+        }
+        // If not, it is up
+        else if( (getLayoutY() + getHeight()) <= targetNode.getLayoutY()){
+            vector[0] = new Point2D(getLayoutX() + getWidth() / 2,
+                    getLayoutY() + getHeight() - 1);
+            vector[1] = new Point2D(targetNode.getLayoutX() + targetNode.getWidth() / 2,
+                    targetNode.getLayoutY());
+        }
+        // If it is at the parent's left.
+        else if( (getLayoutX() + getWidth()) <= targetNode.getLayoutX()){
+            vector[0] = new Point2D(getScaleX() + getWidth(),
+                    getLayoutY() + getHeight() / 2);
+            vector[1] = new Point2D(getLayoutX(), getLayoutY() + targetNode.getHeight() / 2);
+        }
+        // If it is at the parent's right.
+        else if ( getLayoutX() >= (targetNode.getLayoutX() + targetNode.getWidth()) ){
+            vector[0] = new Point2D(getLayoutX(), getLayoutY() + getHeight() / 2);
+            vector[1] = new Point2D(targetNode.getLayoutX() + targetNode.getWidth(),
+                    targetNode.getLayoutY() + targetNode.getHeight() / 2);
+        }
+        return vector;
+    }
+
+
+
+
+
+
+
 }

@@ -252,10 +252,6 @@ public class MainWindowController {
                 }
                 // If there are no errors
                 else {
-                    // Get the points
-                    double startX = drawingLine.getStartX();
-                    double startY = drawingLine.getStartY();
-
                     // Create logical gen
                     Relationship newGen = new Relationship( String.valueOf(UMLDiagram.getId()) );
                     newGen.newGeneralization(umlDiagram.getClasses(originClass),
@@ -263,6 +259,8 @@ public class MainWindowController {
                     umlDiagram.addRelationship(newGen);
                     treePane.update(umlDiagram);
 
+                    // Draw the line
+                    drawingCanvas.addNewGen(originClass, endClass);
                 }
 
                 // Clean the status

@@ -1,12 +1,12 @@
 package umldiagram.graphical;
 
 
+import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import umldiagram.logical.UmlClass;
+import umldiagram.logical.enums.RelationshipType;
 
 import java.util.LinkedList;
 
@@ -14,6 +14,7 @@ import java.util.LinkedList;
 
 public class DrawingDiagram extends Pane {
     private LinkedList<Node> nodes;
+    private LinkedList<Arrow> arrows;
 
     double orgSceneX, orgSceneY;
     double orgTranslateX, orgTranslateY;
@@ -30,6 +31,7 @@ public class DrawingDiagram extends Pane {
 
         // Prepare the lists
         nodes = new LinkedList<>();
+        arrows = new LinkedList<>();
 
         // Clean the children
         getChildren().clear();
@@ -43,7 +45,8 @@ public class DrawingDiagram extends Pane {
      */
     public void newModel() {
         // Prepare the lists
-        nodes = new LinkedList<>();
+        nodes.clear();
+        arrows.clear();
 
         // Clean the children
         getChildren().clear();
@@ -78,14 +81,64 @@ public class DrawingDiagram extends Pane {
         Node node = new Node(x, y, c);
 
         // Add the listeners for dragging
-        node.setOnMousePressed(this::pressedClass);
-        node.setOnMouseDragged(this::draggedClass);
+        //node.setOnMousePressed(this::pressedClass);
+        //node.setOnMouseDragged(this::draggedClass);
         node.setCursor(Cursor.CROSSHAIR);
 
         // Add the nodes
         nodes.add(node);
         getChildren().add(node);
     }
+
+
+
+
+
+
+    public void addNewGen(String originClass, String endClass) {
+        // Prepare the nodes
+        Node origin = null;
+        Node ending = null;
+
+        // Get the nodes
+        for(Node n: nodes) {
+            if(n.getName().equals(originClass)) origin = n;
+            else if(n.getName().equals(endClass)) ending = n;
+
+            if(origin!=null && ending!=null) break;
+        }
+
+        // Get the corresponding ending points
+        Point2D[] points = origin.fromTo(ending);
+
+
+        // Now we will create a line
+        Arrow line = new Arrow(originClass + "_specs_" + endClass,points[0], points[1],
+                RelationshipType.GENERALIZATION);
+
+
+        // Add it
+        arrows.add(line);
+        getChildren().add(line);
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -105,6 +158,16 @@ public class DrawingDiagram extends Pane {
         }
         return "";
     }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -147,6 +210,10 @@ public class DrawingDiagram extends Pane {
             ((Node)(me.getSource())).setTranslateY(newTranslateY);
         }
     }
+
+
+
+
 
 
 }
