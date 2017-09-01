@@ -106,7 +106,7 @@
                      </image></ImageView>
                </graphic>
             </ToggleButton>
-            <ToggleButton mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
+            <ToggleButton mnemonicParsing="false" fx:id="toggleNewAssoc" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>

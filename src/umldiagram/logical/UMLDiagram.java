@@ -267,6 +267,21 @@ public class UMLDiagram {
 
 
 
+    /**
+     * Check if a normal relationship (association, aggregation or composition)
+     * can be constructed between the two classes received as parameters.
+     * @param originClass The original class.
+     * @param endClass The final class.
+     * @return A string with the errors found. If everything is
+     * okay and the relationship can be constructed, then the
+     * returned string is empty.
+     */
+    public String validRelationship(String originClass, String endClass) {
+	    // Check if there is a generalization between classes
+        return (existsGeneralizationBetween(originClass, endClass))
+                ? "> Relationships among members of the same generalization are not allowed"
+                : "";
+    }
 
 
 
@@ -606,7 +621,6 @@ public class UMLDiagram {
 		}
 		return false;
 	}
-
 
 
 

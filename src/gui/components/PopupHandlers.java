@@ -2,6 +2,7 @@ package gui.components;
 
 
 import app.Main;
+import gui.controllers.ARelationshipController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -9,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import umldiagram.logical.enums.RelationshipType;
 
 import java.io.IOException;
 
@@ -27,7 +29,10 @@ public class PopupHandlers {
      * @param scene The scene used as parent to link the popup.
      * @throws IOException For errors opening the FXML file.
      */
-    public static void showPopup(String resource, String title, Scene scene) throws IOException {
+    public static void showPopup(String resource, String title, Scene scene,
+                                 boolean setRelationship, RelationshipType type,
+                                 String originClass, String endClass) throws IOException {
+        // Load and configure the dialog
         FXMLLoader dloader = new FXMLLoader(Main.class.getResource(resource));
 
         Stage dialogStage = new Stage();
@@ -35,12 +40,23 @@ public class PopupHandlers {
         dialogStage.setTitle(title);
         dialogStage.initModality(Modality.WINDOW_MODAL);
         dialogStage.initOwner(scene.getWindow());
-
         dialogStage.setScene(new Scene(dloader.load()));
+
+
+        // If we need to set up a relationship
+        if(setRelationship) {
+            // Get the controller
+            ARelationshipController controller = dloader.getController();
+            controller.initialize(type, originClass, endClass);
+        }
 
         // Show the dialog and wait until the user closes it
         dialogStage.showAndWait();
     }
+
+
+
+
 
 
     /**

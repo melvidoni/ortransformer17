@@ -16,6 +16,8 @@ import umldiagram.graphical.DrawingStatus;
 import umldiagram.logical.Relationship;
 import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.UmlClass;
+import umldiagram.logical.enums.RelationshipType;
+
 import java.io.IOException;
 
 
@@ -31,6 +33,7 @@ public class MainWindowController {
     @FXML private ToolBar toolBar;
     @FXML private ToggleButton toggleNewClass;
     @FXML private ToggleButton toggleNewGen;
+    @FXML private ToggleButton toggleNewAssoc;
 
     @FXML private SplitPane splitPane;
     @FXML private TreeBrowser treePane;
@@ -150,7 +153,8 @@ public class MainWindowController {
                     if(!drawingCanvas.pointOccupied(me.getX(), me.getY())) {
                         // Show the window
                         PopupHandlers.showPopup("/gui/views/NewClassDialog.fxml",
-                                "Create New Class", drawingCanvas.getScene());
+                                "Create New Class", drawingCanvas.getScene(),
+                                false, null, "", "");
 
                         // If a class was created
                         UmlClass c = umlDiagram.hasUndrawnClass();
@@ -179,30 +183,44 @@ public class MainWindowController {
 
 
 
+    /**
+     * Method that starts drawing a line when the canvas is
+     * pressed and there is a relationshio tool toggled.
+     * @param me The mouse event that triggered the listener.
+     */
     @FXML
     private void canvasPressed(MouseEvent me) {
+        System.out.println("pressed");
+
         // If this is a primary button
         if(me.isPrimaryButtonDown() && drawingLine==null
                 && drawingCanvas.pointOccupied(me.getX(), me.getY())
-                // TODO ADD OTHER RELATIONSHIPS
-                && (toggleNewGen.isSelected())
-        ) {
+                // TODO ADD TOGGLES
+                && (toggleNewGen.isSelected() || toggleNewAssoc.isSelected()) ) {
+            System.out.println("DRAWING LINE");
+
             // Create a new line
             drawingLine = new Line(me.getX(), me.getY(), me.getX(), me.getY());
             drawingCanvas.getChildren().add(drawingLine);
 
-            drawingStatus.setDrawingGen(true);
+
+            // TODO Set the statuses
+            drawingStatus.setDrawingGen(toggleNewGen.isSelected());
+            drawingStatus.setDrawingAssoc(toggleNewAssoc.isSelected());
+
         }
     }
 
 
+    /**
+     * Method that draws the line while the user is dragging the
+     * mouse around, trying to find the endpoint.
+     * @param me The mouse event that triggered the listener.
+     */
     @FXML
     private void canvasDragged(MouseEvent me) {
         // If it is primary button and a line is being drawn
-        if(me.isPrimaryButtonDown() && drawingLine!=null
-                // TODO ADD OTHER RELATIONSHIPS
-                && (toggleNewGen.isSelected()) ) {
-
+        if(me.isPrimaryButtonDown() && drawingLine!=null && drawingStatus.isDrawingLine() ) {
             // Change the ending line
             drawingLine.setEndX(me.getX());
             drawingLine.setEndY(me.getY());
@@ -222,57 +240,110 @@ public class MainWindowController {
 
 
 
+    /**
+     * Method that evaluates whether to create a relationship or not,
+     * depending on where the mouse ended up its draggin. It calls the
+     * corresponding constructors and deletes the temporary line. If
+     * corresponds, draws the new line.
+     * @param me The mouse event that triggered the listener.
+     */
     @FXML
     private void canvasReleased(MouseEvent me) {
-        // Check all the variables
-        if(drawingLine!=null && drawingCanvas.pointOccupied(me.getX(), me.getY()) ){
+        try {
 
-            // Get the diagram
-            UMLDiagram umlDiagram = UMLDiagram.getInstance(false);
+            // Check all the variables
+            if(drawingLine!=null && drawingCanvas.pointOccupied(me.getX(), me.getY()) ){
 
-            // Get both classes
-            String originClass = drawingCanvas
-                    .getClassAt(drawingLine.getStartX(), drawingLine.getStartY());
-            String endClass = drawingCanvas.getClassAt(me.getX(), me.getY());
+                // Get the diagram
+                UMLDiagram umlDiagram = UMLDiagram.getInstance(false);
+
+                // Get both classes
+                String originClass = drawingCanvas
+                        .getClassAt(drawingLine.getStartX(), drawingLine.getStartY());
+                String endClass = drawingCanvas.getClassAt(me.getX(), me.getY());
 
             /*
                 GENERALIZATION
              */
-            // If this is a generalization
-            if(toggleNewGen.isSelected()) {
-                // Validate the generalization
-                String errors = umlDiagram.validGen(originClass, endClass);
+                // If this is a generalization
+                if(toggleNewGen.isSelected()) {
+                    // Validate the generalization
+                    String errors = umlDiagram.validGen(originClass, endClass);
 
-                // If there are errors
-                if(!errors.isEmpty()) {
-                    // Show a message
-                    PopupHandlers.showWarningDialog("Incorrect Relationship",
-                            "Incorrect endpoints for the generalization.",
-                            "The following errors have been found:" + errors);
+                    // If there are errors
+                    if(!errors.isEmpty()) {
+                        // Show a message
+                        PopupHandlers.showWarningDialog("Incorrect Relationship",
+                                "Incorrect endpoints for the generalization.",
+                                "The following errors have been found:" + errors);
+                    }
+                    // If there are no errors
+                    else {
+                        // Create logical gen
+                        Relationship newGen = new Relationship( String.valueOf(UMLDiagram.getId()) );
+                        newGen.newGeneralization(umlDiagram.getClasses(originClass),
+                                umlDiagram.getClasses(endClass));
+                        umlDiagram.addRelationship(newGen);
+                        treePane.update(umlDiagram);
+
+                        // Draw the line
+                        drawingCanvas.addNewGen(originClass, endClass);
+                    }
+
+                    // Clean the status
+                    toggleNewGen.setSelected(false);
+                    drawingStatus.setDrawingGen(false);
                 }
-                // If there are no errors
-                else {
-                    // Create logical gen
-                    Relationship newGen = new Relationship( String.valueOf(UMLDiagram.getId()) );
-                    newGen.newGeneralization(umlDiagram.getClasses(originClass),
-                            umlDiagram.getClasses(endClass));
-                    umlDiagram.addRelationship(newGen);
-                    treePane.update(umlDiagram);
 
-                    // Draw the line
-                    drawingCanvas.addNewGen(originClass, endClass);
+            /*
+                ASSOCIATION, AGGREGATION OR COMPOSITION
+             */
+                // TODO MAYBE ADD ALL THE OTHER RELATIONSHIPS HERE
+                if(toggleNewAssoc.isSelected()) {
+                    // Validate the association
+                    String errors = umlDiagram.validRelationship(originClass, endClass);
+
+                    // If there are errors
+                    if(!errors.isEmpty()) {
+                        // Show a message
+                        PopupHandlers.showWarningDialog("Incorrect Relationship",
+                                "Incorrect endpoints for the relationship.",
+                                "The following errors have been found:" + errors);
+                    }
+                    else {
+                        // Call the new window, depending on the type
+                        if(toggleNewAssoc.isSelected())
+                            PopupHandlers.showPopup("/gui/views/NewRelationshipDialog.fxml",
+                                    "New Association Relationship",
+                                    drawingCanvas.getScene(), true,
+                                    RelationshipType.ASSOCIATION, originClass, endClass);
+
+
+                        // TODO If there is a new association
+                        // Update tree
+                        // Draw relationship
+                    }
+
+                    // Clean the status
+                    toggleNewAssoc.setSelected(false);
+                    drawingStatus.setDrawingAssoc(false);
                 }
-
-                // Clean the status
-                toggleNewGen.setSelected(false);
-                drawingStatus.setDrawingGen(false);
             }
-        }
 
-        // Remove the line
-        drawingCanvas.getChildren().remove(drawingLine);
-        drawingLine = null;
+            // Remove the line
+            drawingCanvas.getChildren().remove(drawingLine);
+            drawingLine = null;
+
+        }
+        catch (IOException e) {
+            // TODO COMPLETE EXCEPTION
+            e.printStackTrace();
+        }
     }
+
+
+
+
 
 
 

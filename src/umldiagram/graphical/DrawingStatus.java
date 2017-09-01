@@ -7,6 +7,9 @@ public class DrawingStatus {
 
     private boolean drawingClass;
     private boolean drawingGen;
+    private boolean drawingAssoc;
+
+
 
 
     /**
@@ -15,6 +18,7 @@ public class DrawingStatus {
     private DrawingStatus() {
         drawingClass = false;
         drawingGen = false;
+        drawingAssoc = false;
     }
 
 
@@ -48,6 +52,15 @@ public class DrawingStatus {
 
 
 
+    /**
+     * Setter to change if the status is drawing an association.
+     * @param d true if it is drawing, false otherwise.
+     */
+    public void setDrawingAssoc(boolean d) {
+        drawingGen = d;
+    }
+
+
 
 
 
@@ -58,7 +71,17 @@ public class DrawingStatus {
      */
     public boolean isDrawing() {
         // TODO COMPLETE THIS PART
-        return drawingClass || drawingGen;
+        return drawingClass || drawingGen || drawingAssoc;
+    }
+
+
+    /**
+     * Method that returns if a line is being drawn.
+     * @return true if it is being drawn, false otherwise.
+     */
+    public boolean isDrawingLine() {
+        // TODO ADD OTHER RELATIONSHIPS
+        return drawingAssoc || drawingGen;
     }
 
 }
