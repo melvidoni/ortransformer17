@@ -87,7 +87,9 @@ public class TreeBrowser extends TreeView {
             }
 
             // Now the relationship
-            acNode.getChildren().add(new TreeItem<>(ac.getRelationship().getName(),
+            acNode.getChildren().add(new TreeItem<>(
+                    ac.getRelationship().getOrigin().getName() + " "
+                            + ac.getRelationship().getName() + " " + ac.getRelationship().getEnd().getName(),
                     new ImageView(new Image("/gui/views/img/tree_rel.png"))) );
 
             // Add to the root
