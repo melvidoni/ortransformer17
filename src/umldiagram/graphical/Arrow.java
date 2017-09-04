@@ -125,10 +125,13 @@ class Arrow extends Group {
         name = rel.getName();
         type = rel.getType();
 
+        // Get the random separation
+        int randomSeparation = (int) (10 + Math.random() * (40 - 10));
+
         // Prepare the stops
-        Point2D firstStop = new Point2D(fromPoint.getX() + 30, fromPoint.getY());
-        Point2D secondStop = new Point2D(fromPoint.getX() + 30, toPoint.getY() - 30);
-        Point2D thirdStop = new Point2D(toPoint.getX(), toPoint.getY() - 30);
+        Point2D firstStop = new Point2D(fromPoint.getX() + randomSeparation, fromPoint.getY());
+        Point2D secondStop = new Point2D(fromPoint.getX() + randomSeparation, toPoint.getY() - randomSeparation);
+        Point2D thirdStop = new Point2D(toPoint.getX(), toPoint.getY() - randomSeparation);
 
         // Create the loop line
         loopMainLine = new Polyline(

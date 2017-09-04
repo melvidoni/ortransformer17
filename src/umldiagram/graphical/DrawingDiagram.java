@@ -140,10 +140,12 @@ public class DrawingDiagram extends Pane {
             // Prepare the two points
             Point2D fromPoint = new Point2D(
                     origin.getLayoutX() + origin.getWidth(),
-                    (2 * origin.getLayoutY() + origin.getHeight()) / 2
+                    origin.getLayoutY() + Math.random() *
+                            ((origin.getLayoutY() + origin.getHeight()) - origin.getLayoutY())
             );
             Point2D toPoint = new Point2D(
-                    (2 * origin.getLayoutX() + origin.getWidth()) / 2,
+                    origin.getLayoutX() + Math.random() *
+                            ((origin.getLayoutX() + origin.getWidth()) - origin.getLayoutX()),
                     origin.getLayoutY()
             );
 
