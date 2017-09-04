@@ -98,7 +98,7 @@
                      </image></ImageView>
                </graphic>
             </ToggleButton>
-            <ToggleButton mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
+            <ToggleButton mnemonicParsing="false" fx:id="toggleNewAC" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" >
                      <image>
@@ -122,7 +122,7 @@
                      </image></ImageView>
                </graphic>
             </ToggleButton>
-            <ToggleButton mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
+            <ToggleButton mnemonicParsing="false" fx:id="toggleNewAgg" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -130,7 +130,7 @@
                      </image></ImageView>
                </graphic>
             </ToggleButton>
-            <ToggleButton mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
+            <ToggleButton mnemonicParsing="false" fx:id="toggleNewComp" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>

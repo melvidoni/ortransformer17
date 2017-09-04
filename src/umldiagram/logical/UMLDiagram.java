@@ -5,7 +5,6 @@ import umldiagram.logical.enums.RelationshipType;
 import java.util.IntSummaryStatistics;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 
@@ -23,6 +22,7 @@ public class UMLDiagram {
 
     private boolean undrawnClass;
     private boolean undrawnRelationship;
+    public boolean undrawnAssocClass;
 
 
     /**
@@ -41,6 +41,7 @@ public class UMLDiagram {
 		// Flags
         undrawnClass = false;
         undrawnRelationship = false;
+        undrawnAssocClass = false;
 	}
 
 
@@ -159,7 +160,6 @@ public class UMLDiagram {
 
 
 
-
     /**
      * Check if a normal relationship (association, aggregation or composition)
      * can be constructed between the two classes received as parameters.
@@ -172,7 +172,7 @@ public class UMLDiagram {
     public String validRelationship(String originClass, String endClass) {
         // Check if there is a generalization between classes
         return (existsGeneralizationBetween(originClass, endClass))
-                ? "> Relationships among members of the same generalization are not allowed"
+                ? "> Relationships among members of the same generalization are not allowed."
                 : "";
     }
 
@@ -180,8 +180,31 @@ public class UMLDiagram {
 
 
 
+    /**
+     * Validates the endpoints of a new association class.
+     * @param originClass The origin class.
+     * @param endClass The ending class.
+     * @return A string with the errors found. If everything is
+     * okay and the relationship can be constructed, then the
+     * returned string is empty.
+     */
+    public String validAC(String originClass, String endClass) {
+        // Prepare the list with errors
+        String errors = "";
 
+        // If origin and end are the same
+        if(originClass.equals(endClass)) {
+            errors += "\n> Origin and destination class cannot be the same.";
+        }
 
+        // If there is a generalization between
+        if(existsGeneralizationBetween(originClass, endClass)) {
+            errors += "\n> Cannot create an association class between members of the same generalization";
+        }
+
+        // Return the information
+        return errors;
+    }
 
 
 
@@ -325,6 +348,28 @@ public class UMLDiagram {
 
 
 
+
+
+
+
+
+    /**
+     * Method that checks if there are undrawn association classes,
+     * and then returns the newest class.
+     * @return The UML class in object format, otherwise null.
+     */
+    public AssociationClass hasUndrawnAssocClass() {
+        return (undrawnAssocClass) ? associationClasses.getFirst() : null;
+    }
+
+
+    /**
+     * Changes the value of the undrawn association classes.
+     * @param u The new value for the flag.
+     */
+    public void setUndrawnAssocClass(boolean u) {
+        undrawnAssocClass = u;
+    }
 
 
 
@@ -666,14 +711,6 @@ public class UMLDiagram {
 		
 		return names;
 	}
-
-
-
-
-
-
-
-
 
 
 

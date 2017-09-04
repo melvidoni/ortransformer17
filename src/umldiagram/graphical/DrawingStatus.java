@@ -12,6 +12,9 @@ public class DrawingStatus {
     private SimpleBooleanProperty drawingClass;
     private SimpleBooleanProperty drawingGen;
     private SimpleBooleanProperty drawingAssoc;
+    private SimpleBooleanProperty drawingAgg;
+    private SimpleBooleanProperty drawingComp;
+    private SimpleBooleanProperty drawingAC;
 
     private String originClass;
     private String endClass;
@@ -26,6 +29,9 @@ public class DrawingStatus {
         drawingClass = new SimpleBooleanProperty(false);
         drawingGen = new SimpleBooleanProperty(false);
         drawingAssoc = new SimpleBooleanProperty(false);
+        drawingAgg = new SimpleBooleanProperty(false);
+        drawingComp = new SimpleBooleanProperty(false);
+        drawingAC= new SimpleBooleanProperty(false);
 
         originClass = "";
         endClass = "";
@@ -51,12 +57,18 @@ public class DrawingStatus {
      * @param dc Toggle of drawing class property.
      * @param dg Toggle of drawing generalization property.
      * @param da Toggle of drawing association property.
+     * @param dag Toggle of drawing aggregation property.
+     * @param dcp Toggle of drawing composition property.
      */
     public void bindProperties(BooleanProperty dc, BooleanProperty dg,
-                               BooleanProperty da) {
+                               BooleanProperty da, BooleanProperty dag,
+                               BooleanProperty dcp, BooleanProperty dac) {
         Bindings.bindBidirectional(drawingClass, dc);
         Bindings.bindBidirectional(drawingGen, dg);
         Bindings.bindBidirectional(drawingAssoc, da);
+        Bindings.bindBidirectional(drawingAgg, dag);
+        Bindings.bindBidirectional(drawingComp, dcp);
+        Bindings.bindBidirectional(drawingAC, dac);
     }
 
 
@@ -66,8 +78,7 @@ public class DrawingStatus {
      * @return true if something is being drawn, false otherwise.
      */
     public boolean isDrawing() {
-        // TODO COMPLETE THIS PART
-        return drawingClass.get() || drawingGen.get() || drawingAssoc.get();
+        return drawingClass.get() || isDrawingLine();
     }
 
 
@@ -76,20 +87,23 @@ public class DrawingStatus {
      * @return true if it is being drawn, false otherwise.
      */
     public boolean isDrawingLine() {
-        // TODO ADD OTHER RELATIONSHIPS
-        return drawingAssoc.get() || drawingGen.get();
+        return drawingAssoc.get() || drawingGen.get() || drawingAgg.get()
+                || drawingComp.get() || drawingAC.get();
     }
 
 
 
 
-
-
+    /**
+     * Method that depending on the current relationship status,
+     * returns the type of the drawing relationship.
+     * @return The type of the relationship as a enum.
+     */
     public RelationshipType getRelType() {
-        // TODO FILL WITH OTHER RELATIONSHIP
         if(drawingGen.get()) return RelationshipType.GENERALIZATION;
         else if(drawingAssoc.get()) return RelationshipType.ASSOCIATION;
-
+        else if(drawingAgg.get()) return RelationshipType.AGGREGATION;
+        else if(drawingComp.get()) return RelationshipType.COMPOSITION;
 
         return null;
     }

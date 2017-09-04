@@ -187,7 +187,7 @@ public class NewRelationshipController extends ARelationshipController {
             // Create the ending endpoint
             RelationshipEndpoint epEnd = new RelationshipEndpoint(endRole.getText(),
                     endBrowsable.isSelected(), endUnique.isSelected(), endOrdered.isSelected(),
-                    endMinCard + ".." + endMaxCard.getText(),
+                    endMinCard.getText() + ".." + endMaxCard.getText(),
                     diagram.getClasses(endClass), type);
 
             // Now creat the main relationship

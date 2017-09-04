@@ -5,6 +5,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import umldiagram.logical.AssociationClass;
 import umldiagram.logical.Relationship;
 import umldiagram.logical.UmlClass;
 import umldiagram.logical.enums.RelationshipType;
@@ -16,6 +17,7 @@ import java.util.LinkedList;
 public class DrawingDiagram extends Pane {
     private LinkedList<Node> nodes;
     private LinkedList<Arrow> arrows;
+    private LinkedList<ComplexNode> complexNodes;
 
     double orgSceneX, orgSceneY;
     double orgTranslateX, orgTranslateY;
@@ -33,6 +35,7 @@ public class DrawingDiagram extends Pane {
         // Prepare the lists
         nodes = new LinkedList<>();
         arrows = new LinkedList<>();
+        complexNodes = new LinkedList<>();
 
         // Clean the children
         getChildren().clear();
@@ -48,6 +51,7 @@ public class DrawingDiagram extends Pane {
         // Prepare the lists
         nodes.clear();
         arrows.clear();
+        complexNodes.clear();
 
         // Clean the children
         getChildren().clear();
@@ -104,33 +108,91 @@ public class DrawingDiagram extends Pane {
         Node origin = null;
         Node ending = null;
 
-        // Get the onodes
+        // Get the nodes
         for(Node n: nodes) {
             if(n.getName().equals(rel.getOrigin().getClassOf().getName())) origin = n;
-            else if(n.getName().equals(rel.getEnd().getClassOf().getName())) ending = n;
+            if(n.getName().equals(rel.getEnd().getClassOf().getName())) ending = n;
 
             if(origin!=null && ending!=null) break;
         }
+
+
+        // If origin and end are different
+        if(!origin.equals(ending)) {
+            // Get the ending points
+            Point2D[] points = origin.fromTo(ending);
+            char fromSide = origin.getSide(points[0]);
+            char toSide = ending.getSide(points[1]);
+
+            // Now we will create a line
+            Arrow line = new Arrow(rel.getName(), points[0], points[1], rel.getType(),
+                    rel.getOrigin().getName() + "\n" + rel.getOrigin().getCardinality(),
+                    rel.getEnd().getName() + "\n" + rel.getEnd().getCardinality(),
+                    fromSide, toSide
+            );
+
+            // Add it
+            arrows.add(line);
+            getChildren().add(line);
+        }
+        // If they are the same
+        else {
+            // Prepare the two points
+            Point2D fromPoint = new Point2D(
+                    origin.getLayoutX() + origin.getWidth(),
+                    (2 * origin.getLayoutY() + origin.getHeight()) / 2
+            );
+            Point2D toPoint = new Point2D(
+                    (2 * origin.getLayoutX() + origin.getWidth()) / 2,
+                    origin.getLayoutY()
+            );
+
+            // Create the loop arrow
+            Arrow loopLine = new Arrow(fromPoint, toPoint, rel);
+
+            // Add the loop
+            arrows.add(loopLine);
+            getChildren().add(loopLine);
+        }
+
+
+
+
+    }
+
+
+
+
+
+
+    public void addNewAssociationClass(AssociationClass assocClass) {
+        // Prepare the nodes
+        Node origin = null;
+        Node ending = null;
+
+        // Get the nodes
+        for(Node n: nodes) {
+            if(n.getName().equals(assocClass.getRelationship().getOrigin().getClassOf().getName()))
+                origin = n;
+            else if(n.getName().equals(assocClass.getRelationship().getEnd().getClassOf().getName()))
+                ending = n;
+
+            if(origin!=null && ending!=null) break;
+        }
+
 
         // Get the ending points
         Point2D[] points = origin.fromTo(ending);
         char fromSide = origin.getSide(points[0]);
         char toSide = ending.getSide(points[1]);
 
-        // Now we will create a line
-        Arrow line = new Arrow(rel.getName(), points[0], points[1], rel.getType(),
-                rel.getOrigin().getName() + "\n" + rel.getOrigin().getCardinality(),
-                rel.getEnd().getName() + "\n" + rel.getEnd().getCardinality(),
-                fromSide, toSide
-                );
+
+        // TODO Create the complex node
 
 
-        // Add it
-        arrows.add(line);
-        getChildren().add(line);
+
 
     }
-
 
 
 

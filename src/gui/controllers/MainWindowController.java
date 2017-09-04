@@ -13,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
 import umldiagram.graphical.DrawingDiagram;
 import umldiagram.graphical.DrawingStatus;
+import umldiagram.logical.AssociationClass;
 import umldiagram.logical.Relationship;
 import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.UmlClass;
@@ -33,6 +34,9 @@ public class MainWindowController {
     @FXML private ToggleButton toggleNewClass;
     @FXML private ToggleButton toggleNewGen;
     @FXML private ToggleButton toggleNewAssoc;
+    @FXML private ToggleButton toggleNewAgg;
+    @FXML private ToggleButton toggleNewComp;
+    @FXML private ToggleButton toggleNewAC;
 
     @FXML private SplitPane splitPane;
     @FXML private TreeBrowser treePane;
@@ -66,7 +70,9 @@ public class MainWindowController {
         drawingLine = null;
         drawingStatus = DrawingStatus.getInstance(true);
         drawingStatus.bindProperties(toggleNewClass.selectedProperty(),
-                toggleNewGen.selectedProperty(), toggleNewAssoc.selectedProperty());
+                toggleNewGen.selectedProperty(), toggleNewAssoc.selectedProperty(),
+                toggleNewAgg.selectedProperty(), toggleNewComp.selectedProperty(),
+                toggleNewAC.selectedProperty());
 
 
         // Prepare the context menu
@@ -77,6 +83,7 @@ public class MainWindowController {
         MenuItem relMenu = new MenuItem("Relationship");
         relMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_rel.png")));
 
+        // Put the items on the context menu
         contextMenu.getItems().addAll(editMenu, delMenu, relMenu);
     }
 
@@ -129,7 +136,9 @@ public class MainWindowController {
         drawingLine = null;
         drawingStatus = DrawingStatus.getInstance(true);
         drawingStatus.bindProperties(toggleNewClass.selectedProperty(),
-                toggleNewGen.selectedProperty(), toggleNewAssoc.selectedProperty());
+                toggleNewGen.selectedProperty(), toggleNewAssoc.selectedProperty(),
+                toggleNewAgg.selectedProperty(), toggleNewComp.selectedProperty(),
+                toggleNewAC.selectedProperty());
     }
 
 
@@ -249,9 +258,9 @@ public class MainWindowController {
                         .getClassAt(drawingLine.getStartX(), drawingLine.getStartY());
                 String endClass = drawingCanvas.getClassAt(me.getX(), me.getY());
 
-            /*
-                GENERALIZATION
-             */
+                /*
+                 GENERALIZATION
+                 */
                 // If this is a generalization
                 if(toggleNewGen.isSelected()) {
                     // Validate the generalization
@@ -281,11 +290,11 @@ public class MainWindowController {
                     toggleNewGen.setSelected(false);
                 }
 
-            /*
+                /*
                 ASSOCIATION, AGGREGATION OR COMPOSITION
-             */
-                // TODO MAYBE ADD ALL THE OTHER RELATIONSHIPS HERE
-                if(toggleNewAssoc.isSelected()) {
+                */
+                if(toggleNewAssoc.isSelected() || toggleNewAgg.isSelected()
+                        || toggleNewComp.isSelected()) {
                     // Validate the association
                     String errors = umlDiagram.validRelationship(originClass, endClass);
 
@@ -301,11 +310,9 @@ public class MainWindowController {
                         drawingStatus.setClasses(originClass, endClass);
 
                         // Call the new window, depending on the type
-                        if(toggleNewAssoc.isSelected())
-                            PopupHandlers.showPopup("/gui/views/NewRelationshipDialog.fxml",
-                                    "New Association Relationship",
-                                    drawingCanvas.getScene());
-
+                        PopupHandlers.showPopup("/gui/views/NewRelationshipDialog.fxml",
+                                "New " + drawingStatus.getRelType().getName() + " Relationship",
+                                drawingCanvas.getScene());
 
                         // If there is a new association
                         Relationship relationship = umlDiagram.hasUndrawnRelationship();
@@ -325,6 +332,50 @@ public class MainWindowController {
 
                     // Clean the status
                     toggleNewAssoc.setSelected(false);
+                    toggleNewAgg.setSelected(false);
+                    toggleNewComp.setSelected(false);
+                }
+
+                /*
+                ASSOCIATION CLASS
+                 */
+                if(toggleNewAC.isSelected()) {
+                    // Validate the errors
+                    String errors = umlDiagram.validAC(originClass, endClass);
+
+                    // If there are errors
+                    if(!errors.isEmpty()) {
+                        // Show a message
+                        PopupHandlers.showWarningDialog("Incorrect Association Class",
+                                "Incorrect endpoints for the association class.",
+                                "The following errors have been found:" + errors);
+                    }
+                    else {
+                        // Set the classes on the status
+                        drawingStatus.setClasses(originClass, endClass);
+
+                        // Call the new window, depending on the type
+                        PopupHandlers.showPopup("",
+                                "New Association Class Relationship",
+                                drawingCanvas.getScene());
+
+                        // If there is a new association class
+                        AssociationClass assocClass = umlDiagram.hasUndrawnAssocClass();
+
+                        if(assocClass != null) {
+                            // Update tree
+                            treePane.update(umlDiagram);
+
+                            // Draw relationship
+                            drawingCanvas.addNewAssociationClass(assocClass);
+                            umlDiagram.setUndrawnAssocClass(false);
+                        }
+
+
+                        // Change the status
+                        drawingStatus.setClasses("", "");
+                        toggleNewAC.setSelected(false);
+                    }
                 }
             }
 

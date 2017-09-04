@@ -80,16 +80,9 @@ class Node extends Label {
     }
 
 
-
-
-
-
-
-
-
     /**
      * Method that compares two nodes, and returns the mid point between
-     * the sides that are closer to eachother.
+     * the sides that are closer to each other.
      * @param targetNode The node to be compared with.
      * @return Two points tuple (origin, ending).
      */
@@ -110,13 +103,14 @@ class Node extends Label {
             vector[1] = new Point2D(targetNode.getLayoutX() + targetNode.getWidth() / 2,
                     targetNode.getLayoutY());
         }
-        // If it is at the parent's left.
+        // If it is at the the origin's right.
         else if( (getLayoutX() + getWidth()) <= targetNode.getLayoutX()){
-            vector[0] = new Point2D(getScaleX() + getWidth(),
+            vector[0] = new Point2D(getLayoutX() + getWidth(),
                     getLayoutY() + getHeight() / 2);
-            vector[1] = new Point2D(getLayoutX(), getLayoutY() + targetNode.getHeight() / 2);
+            vector[1] = new Point2D(targetNode.getLayoutX(),
+                    targetNode.getLayoutY() + targetNode.getHeight() / 2);
         }
-        // If it is at the parent's right.
+        // If it is at the origin's left.
         else if ( getLayoutX() >= (targetNode.getLayoutX() + targetNode.getWidth()) ){
             vector[0] = new Point2D(getLayoutX(), getLayoutY() + getHeight() / 2);
             vector[1] = new Point2D(targetNode.getLayoutX() + targetNode.getWidth(),
@@ -124,8 +118,6 @@ class Node extends Label {
         }
         return vector;
     }
-
-
 
 
 
