@@ -3,6 +3,7 @@ package gui.controllers;
 
 import gui.components.FieldFormatter;
 import gui.components.PopupHandlers;
+import gui.controllers.validation.UmlValidation;
 import gui.models.AttributeModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -118,24 +119,11 @@ public class NewClassController extends GridPane {
         className.setStyle("-fx-border-color: transparent;");
 
         // Temporal flags
-        boolean classOk = false;
+        boolean classOk = UmlValidation.validateNewClass(className);
         boolean attrNameOk = true;
         boolean attrTypeOk = true;
         String errors = "";
 
-        // If the class name is empty
-        if(className.getText().isEmpty()) {
-            // Add a border and tooltip
-            className.setStyle("-fx-border-color: #f4416b ; -fx-border-width: 2px ;");
-            className.setTooltip(new Tooltip("The class name cannot be empty"));
-        }
-        // If the class name is repeated
-        else if(UMLDiagram.getInstance(false).getClassesNames().contains(className.getText().toUpperCase())) {
-            // Add a border and tooltip
-            className.setStyle("-fx-border-color: #f4416b ; -fx-border-width: 2px ;");
-            className.setTooltip(new Tooltip("The class name is already in use."));
-        }
-        else classOk = true;
 
         // If there are duplicate attributes
         if(attrData.stream().collect(Collectors.groupingBy(AttributeModel::getName, Collectors.counting()))

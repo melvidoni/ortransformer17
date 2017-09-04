@@ -389,8 +389,11 @@ public class UMLDiagram {
      * @param ac The new association class to be added.
      */
 	public void addAssociationClass(AssociationClass ac) {
-		associationClasses.add(ac);
+		associationClasses.addFirst(ac);
+		undrawnAssocClass = true;
 	}
+
+
 
 	
 	/**

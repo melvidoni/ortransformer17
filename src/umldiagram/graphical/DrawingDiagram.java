@@ -8,9 +8,9 @@ import javafx.scene.layout.Pane;
 import umldiagram.logical.AssociationClass;
 import umldiagram.logical.Relationship;
 import umldiagram.logical.UmlClass;
-import umldiagram.logical.enums.RelationshipType;
-
 import java.util.LinkedList;
+
+
 
 
 
@@ -83,7 +83,7 @@ public class DrawingDiagram extends Pane {
      */
     public void addNewNode(double x, double y, UmlClass c) {
         // Draw the basic rectangle
-        Node node = new Node(x, y, c);
+        Node node = new Node(x, y, c, false);
 
         // Add the listeners for dragging
         //node.setOnMousePressed(this::pressedClass);
@@ -99,7 +99,7 @@ public class DrawingDiagram extends Pane {
 
 
     /**
-     * Method to create a new generalization relationship,
+     * Method to create a new relationship,
      * with the information received as a parameter.
      * @param rel The new relationship to create.
      */
@@ -166,7 +166,11 @@ public class DrawingDiagram extends Pane {
 
 
 
-
+    /**
+     * Method to create a new association class relationship,
+     * with the information received as a parameter.
+     * @param assocClass The new association class to create.
+     */
     public void addNewAssociationClass(AssociationClass assocClass) {
         // Prepare the nodes
         Node origin = null;
@@ -185,15 +189,14 @@ public class DrawingDiagram extends Pane {
 
         // Get the ending points
         Point2D[] points = origin.fromTo(ending);
-        char fromSide = origin.getSide(points[0]);
-        char toSide = ending.getSide(points[1]);
 
+        // Create the complex node
+        ComplexNode complexNode = new ComplexNode(assocClass, points[0],
+                points[1], origin.getSide(points[0]), ending.getSide(points[1]));
 
-        // TODO Create the complex node
-
-
-
-
+        // Add it to the diagram
+        complexNodes.addFirst(complexNode);
+        getChildren().add(complexNode);
     }
 
 

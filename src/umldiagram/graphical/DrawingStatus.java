@@ -101,7 +101,7 @@ public class DrawingStatus {
      */
     public RelationshipType getRelType() {
         if(drawingGen.get()) return RelationshipType.GENERALIZATION;
-        else if(drawingAssoc.get()) return RelationshipType.ASSOCIATION;
+        else if(drawingAssoc.get() || drawingAC.get()) return RelationshipType.ASSOCIATION;
         else if(drawingAgg.get()) return RelationshipType.AGGREGATION;
         else if(drawingComp.get()) return RelationshipType.COMPOSITION;
 

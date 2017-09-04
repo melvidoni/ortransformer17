@@ -21,7 +21,23 @@ public class AssociationClass {
 	}
 
 
+
     /**
+     * Constructor that initializes the isntance with the values
+     * received as parameters.
+     * @param lc The logical UML class.
+     * @param r The complete relationship.
+     */
+	public AssociationClass(UmlClass lc, Relationship r) {
+	    // Initialize the values
+        id = lc.getId();
+        logicalClass = lc;
+        relationship = r;
+	}
+
+
+
+	/**
      * Getter to obtain the umldiagram.logical class of the association.
      * @return the class in object format.
      */

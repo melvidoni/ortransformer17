@@ -74,7 +74,6 @@ public class MainWindowController {
                 toggleNewAgg.selectedProperty(), toggleNewComp.selectedProperty(),
                 toggleNewAC.selectedProperty());
 
-
         // Prepare the context menu
         MenuItem editMenu = new MenuItem("Edit");
         editMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_edit.png")));
@@ -355,7 +354,7 @@ public class MainWindowController {
                         drawingStatus.setClasses(originClass, endClass);
 
                         // Call the new window, depending on the type
-                        PopupHandlers.showPopup("",
+                        PopupHandlers.showPopup("/gui/views/NewAssocClassDialog.fxml",
                                 "New Association Class Relationship",
                                 drawingCanvas.getScene());
 

@@ -78,7 +78,7 @@ public class TreeBrowser extends TreeView {
         for(AssociationClass ac: umlDiagram.getAssociationClasses()) {
             // Create the node
             TreeItem<String> acNode = new TreeItem<>(ac.getUmlClass().getName(),
-                    new ImageView(new Image("/gui/view/img/tree_assocclass.png")));
+                    new ImageView(new Image("/gui/views/img/tree_assocclass.png")));
 
             // Add the attributes
             for(Attribute a: ac.getUmlClass().getAttributes()) {
@@ -87,7 +87,9 @@ public class TreeBrowser extends TreeView {
             }
 
             // Now the relationship
-            acNode.getChildren().add(new TreeItem<>(ac.getRelationship().getName(),
+            acNode.getChildren().add(new TreeItem<>(
+                    ac.getRelationship().getOrigin().getName() + " "
+                            + ac.getRelationship().getName() + " " + ac.getRelationship().getEnd().getName(),
                     new ImageView(new Image("/gui/views/img/tree_rel.png"))) );
 
             // Add to the root

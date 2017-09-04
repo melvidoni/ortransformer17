@@ -141,9 +141,11 @@
          </items></ToolBar>
       <SplitPane fx:id="splitPane" dividerPositions="0.5" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="56.0">
          <items>
-            <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="Infinity" maxWidth="300.0" minWidth="200.0">
+            <ScrollPane fitToHeight="true" fitToWidth="true" prefWidth="200.0"
+                        maxHeight="Infinity" maxWidth="400.0" minWidth="200.0"
+                        hbarPolicy="AS_NEEDED">
                 <content>
-                    <TreeBrowser fx:id="treePane" />
+                    <TreeBrowser fx:id="treePane"/>
                 </content>
             </ScrollPane>
             <ScrollPane fitToHeight="true" fitToWidth="true" >

@@ -1,10 +1,157 @@
 package umldiagram.graphical;
 
 
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
+import umldiagram.logical.AssociationClass;
+import umldiagram.logical.Attribute;
+import umldiagram.logical.UmlClass;
+
+import java.util.LinkedList;
+
+
+/**
+ * Class that graphically represents and association class.
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
+class ComplexNode extends Group {
+    private String className;
+    private String relName;
+
+
+    private Arrow arrow;
+    private Node node;
+    private Line line;
+    private char side;
 
 
 
 
-public class ComplexNode extends Group {
+    /**
+     * Constructor to create a new complex node with the information received.
+     * @param ac The association class in object format.
+     * @param startPoint The starting point of the relationship.
+     * @param endPoint The ending point of the relationship.
+     * @param fromSide Side where the relationship starts.
+     * @param toSide Side where the relationship ends.
+     */
+    ComplexNode(AssociationClass ac, Point2D startPoint, Point2D endPoint, char fromSide, char toSide) {
+        // Initialize the basic values
+        super();
+        className = ac.getUmlClass().getName();
+        relName = ac.getRelationship().getName();
+
+        // Create the basic arrow
+        arrow = new Arrow(relName, startPoint, endPoint, ac.getRelationship().getType(),
+                ac.getRelationship().getOrigin().getName() + "\n"
+                        + ac.getRelationship().getOrigin().getCardinality(),
+                ac.getRelationship().getEnd().getName() + "\n"
+                        + ac.getRelationship().getEnd().getCardinality(),
+                fromSide, toSide
+        );
+
+        // Add it to the group
+        getChildren().add(arrow);
+
+        // For the midline, get the points
+        Point2D startingMidPoint = new Point2D(
+                (startPoint.getX() + endPoint.getX()) / 2,
+                (endPoint.getY() + startPoint.getY()) / 2
+        );
+        Point2D finalMidPoint = getEndingPoint(startingMidPoint, startPoint, endPoint);
+
+        // Draw the line
+        line = new Line(startingMidPoint.getX(), startingMidPoint.getY(),
+                finalMidPoint.getX(), finalMidPoint.getY());
+        line.setStyle("-fx-stroke: #565656;");
+        getChildren().add(line);
+
+
+        // Get the poinst for the association class
+        Point2D classStartPoint = getNodeStartPoint(finalMidPoint, ac.getUmlClass());
+
+        // Draw the node
+        node = new Node(classStartPoint.getX(), classStartPoint.getY(), ac.getUmlClass(), true);
+
+        // Add it
+        getChildren().add(node);
+    }
+
+
+
+
+
+
+
+
+    /**
+     * Method to obtain the starting drawing point for a complex node,
+     * based on the received parameters.
+     * @param endPoint The point where the line ends.
+     * @param uClass The UML class in object format.
+     * @return the point where the class should be drawn.
+     */
+    private Point2D getNodeStartPoint(Point2D endPoint, UmlClass uClass) {
+        // Prepare the string for the faux label
+        HBox root = new HBox();
+        Node fauxNode = new Node(0,0, uClass, false);
+        root.getChildren().add(fauxNode);
+        new Scene(root);
+        root.applyCss();
+        root.layout();
+
+        // Depending on the side
+        switch(side) {
+            case 'V': // Vertical line
+                      return new Point2D(endPoint.getX(),
+                              endPoint.getY() - fauxNode.getHeight() / 2);
+
+            case 'H': // Horizontal line
+                      return new Point2D(endPoint.getX() - fauxNode.getWidth() / 2,
+                                 endPoint.getY());
+        }
+
+        return null;
+    }
+
+
+
+
+
+
+
+    /**
+     * Method that returns the ending point for the line towards the
+     * association class in a ComplexLine.
+     * @param midPoint Mid point of the line.
+     * @param originPoint Origin point of the line.
+     * @param endPoint Ending point of the line.
+     * @return the point where the line ends in object format.
+     */
+    private Point2D getEndingPoint(Point2D midPoint, Point2D originPoint, Point2D endPoint) {
+        // Obtain the slope of the line
+        double slope = (originPoint.getY() - endPoint.getY())  /
+                (endPoint.getX() - originPoint.getX());
+
+        // If it is an horizontal line
+        if(endPoint.getX() == originPoint.getX() || (slope <= 1 && slope >= -1)){
+            side = 'H';
+            return new Point2D(midPoint.getX(), midPoint.getY() + 50);
+
+        }
+        // If this is a vertical line
+        else {
+            side = 'V';
+            return new Point2D(midPoint.getX() + 50, midPoint.getY());
+
+        }
+    }
+
+
+
 }
