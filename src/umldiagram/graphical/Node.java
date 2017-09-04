@@ -25,7 +25,7 @@ class Node extends Label {
      * @param y The coordinate y.
      * @param umlClass The UML class in object format.
      */
-    Node(double x, double y, UmlClass umlClass) {
+    Node(double x, double y, UmlClass umlClass, boolean isAC) {
         super();
         name = umlClass.getName();
 
@@ -43,10 +43,14 @@ class Node extends Label {
         // Get a label for the text
         setText(text);
         setWrapText(true);
-        setStyle("-fx-background-color: #bbe1ff; " +
-                "-fx-border-color: #76B6FF; " +
-                "-fx-text-fill: #20283d");
-
+        if(!isAC) {
+            setStyle("-fx-background-color: #bbe1ff; " +
+                    "-fx-border-color: #76B6FF; -fx-text-fill: #20283d");
+        }
+        else {
+            setStyle("-fx-background-color: #bfde9c; " +
+                    "-fx-border-color: #5e991d; -fx-text-fill: #1a3d0a");
+        }
 
         setPadding(new Insets(10,10,10,10));
 

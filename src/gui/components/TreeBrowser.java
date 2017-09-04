@@ -78,7 +78,7 @@ public class TreeBrowser extends TreeView {
         for(AssociationClass ac: umlDiagram.getAssociationClasses()) {
             // Create the node
             TreeItem<String> acNode = new TreeItem<>(ac.getUmlClass().getName(),
-                    new ImageView(new Image("/gui/view/img/tree_assocclass.png")));
+                    new ImageView(new Image("/gui/views/img/tree_assocclass.png")));
 
             // Add the attributes
             for(Attribute a: ac.getUmlClass().getAttributes()) {

@@ -43,7 +43,8 @@ public class MainWindowController {
     @FXML private DrawingDiagram drawingCanvas;
 
 
-    private ContextMenu contextMenu = new ContextMenu();
+    private ContextMenu classContextMenu = new ContextMenu();
+    private ContextMenu acContextMenu = new ContextMenu();
 
 
     private DrawingStatus drawingStatus;
@@ -75,6 +76,7 @@ public class MainWindowController {
                 toggleNewAC.selectedProperty());
 
 
+
         // Prepare the context menu
         MenuItem editMenu = new MenuItem("Edit");
         editMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_edit.png")));
@@ -83,8 +85,14 @@ public class MainWindowController {
         MenuItem relMenu = new MenuItem("Relationship");
         relMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_rel.png")));
 
+        MenuItem editACMenu = new MenuItem("Edit");
+        editACMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_edit.png")));
+
+
+
         // Put the items on the context menu
-        contextMenu.getItems().addAll(editMenu, delMenu, relMenu);
+        classContextMenu.getItems().addAll(editMenu, delMenu, relMenu);
+        acContextMenu.getItems().add(editACMenu);
     }
 
 
@@ -152,14 +160,14 @@ public class MainWindowController {
     @FXML
     private void canvasClicked(MouseEvent me) {
         UMLDiagram umlDiagram = UMLDiagram.getInstance(false);
-        contextMenu.hide();
+        classContextMenu.hide();
 
         try {
             if(me.getButton() == MouseButton.PRIMARY) {
                 // If the class is activated
                 if(toggleNewClass.isSelected()) {
                     // If the point is not occupied
-                    if(!drawingCanvas.pointOccupied(me.getX(), me.getY())) {
+                    if(!drawingCanvas.pointOccupiedByClass(me.getX(), me.getY())) {
                         // Show the window
                         PopupHandlers.showPopup("/gui/views/NewClassDialog.fxml",
                                 "Create New Class", drawingCanvas.getScene());
@@ -199,7 +207,7 @@ public class MainWindowController {
     private void canvasPressed(MouseEvent me) {
         // If this is a primary button
         if(me.isPrimaryButtonDown() && drawingLine==null
-                && drawingCanvas.pointOccupied(me.getX(), me.getY())
+                && drawingCanvas.pointOccupiedByClass(me.getX(), me.getY())
                 && drawingStatus.isDrawingLine() ) {
 
             // Create a new line
@@ -248,7 +256,7 @@ public class MainWindowController {
         try {
 
             // Check all the variables
-            if(drawingLine!=null && drawingCanvas.pointOccupied(me.getX(), me.getY()) ){
+            if(drawingLine!=null && drawingCanvas.pointOccupiedByClass(me.getX(), me.getY()) ){
 
                 // Get the diagram
                 UMLDiagram umlDiagram = UMLDiagram.getInstance(false);
@@ -355,7 +363,7 @@ public class MainWindowController {
                         drawingStatus.setClasses(originClass, endClass);
 
                         // Call the new window, depending on the type
-                        PopupHandlers.showPopup("",
+                        PopupHandlers.showPopup("/gui/views/NewAssocClassDialog.fxml",
                                 "New Association Class Relationship",
                                 drawingCanvas.getScene());
 
@@ -400,14 +408,32 @@ public class MainWindowController {
 
 
 
+
+
     @FXML
     private void contextMenuRequested(ContextMenuEvent e) {
-        // If the point is occupied
-        if(drawingCanvas.pointOccupied(e.getX(), e.getY()) && !drawingStatus.isDrawing()) {
-            // Hide
-            contextMenu.hide();
-            contextMenu.show(drawingCanvas, e.getScreenX(), e.getScreenY());
+        // If we are not drawing
+        if(!drawingStatus.isDrawing()) {
+            // Hide the menus
+            classContextMenu.hide();
+            acContextMenu.hide();
+
+            // If the point is occupied by a regular class
+            if(drawingCanvas.pointOccupiedByClass(e.getX(), e.getY())) {
+                // Show the regular class menu
+                classContextMenu.show(drawingCanvas, e.getScreenX(), e.getScreenY());
+            }
+            // If the point is occupied by an association class
+            else if(drawingCanvas.pointOccupiedByAssocClass(e.getX(), e.getY())) {
+                // Show the association class menu
+                acContextMenu.show(drawingCanvas, e.getScreenX(), e.getScreenY());
+            }
         }
+
+
+
+
+
     }
 
 
