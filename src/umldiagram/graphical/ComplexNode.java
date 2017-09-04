@@ -166,4 +166,22 @@ class ComplexNode extends Group {
     public boolean contains(double x, double y) {
         return node.contains(x, y);
     }
+
+
+    /**
+     * Method to obtain the class name of this complex node.
+     * @return The class name of the complex node;
+     */
+    String getClassName() {
+        return className;
+    }
+
+
+    /**
+     * Method to obtain the relationship name of this complex node.
+     * @return The class name of the complex node;
+     */
+    String getRelName() {
+        return relName;
+    }
 }

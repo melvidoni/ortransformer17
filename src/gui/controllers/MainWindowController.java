@@ -2,6 +2,8 @@ package gui.controllers;
 
 
 import gui.components.PopupHandlers;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -19,6 +21,7 @@ import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.UmlClass;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 
 /**
@@ -48,6 +51,7 @@ public class MainWindowController {
 
 
     private DrawingStatus drawingStatus;
+    private String contextClassName;
     private Line drawingLine;
 
 
@@ -75,13 +79,18 @@ public class MainWindowController {
                 toggleNewAgg.selectedProperty(), toggleNewComp.selectedProperty(),
                 toggleNewAC.selectedProperty());
 
+        // Class name for menu
+        contextClassName = "";
 
 
         // Prepare the context menu
         MenuItem editMenu = new MenuItem("Edit");
         editMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_edit.png")));
+
         MenuItem delMenu = new MenuItem("Delete");
         delMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_delete.png")));
+        delMenu.setOnAction((ActionEvent e) -> {deleteClass(e);});
+
         MenuItem relMenu = new MenuItem("Relationship");
         relMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_rel.png")));
 
@@ -94,6 +103,7 @@ public class MainWindowController {
         classContextMenu.getItems().addAll(editMenu, delMenu, relMenu);
         acContextMenu.getItems().add(editACMenu);
     }
+
 
 
 
@@ -148,6 +158,8 @@ public class MainWindowController {
                 toggleNewAgg.selectedProperty(), toggleNewComp.selectedProperty(),
                 toggleNewAC.selectedProperty());
     }
+
+
 
 
 
@@ -215,6 +227,8 @@ public class MainWindowController {
             drawingCanvas.getChildren().add(drawingLine);
         }
     }
+
+
 
 
     /**
@@ -401,15 +415,11 @@ public class MainWindowController {
 
 
 
-
-
-
-
-
-
-
-
-
+    /**
+     * Method to show the corresponding context menu, when requested by
+     * the user, if it corresponds.
+     * @param e The listened context menu event .
+     */
     @FXML
     private void contextMenuRequested(ContextMenuEvent e) {
         // If we are not drawing
@@ -417,6 +427,9 @@ public class MainWindowController {
             // Hide the menus
             classContextMenu.hide();
             acContextMenu.hide();
+
+            // Store the class name
+            contextClassName = drawingCanvas.getClassAt(e.getX(), e.getY());
 
             // If the point is occupied by a regular class
             if(drawingCanvas.pointOccupiedByClass(e.getX(), e.getY())) {
@@ -437,10 +450,37 @@ public class MainWindowController {
     }
 
 
+    /**
+     *
+     */
+    private void deleteClass(ActionEvent ae) {
+        // Show a confirmation message
+        boolean delete = PopupHandlers.showConfirmation(
+                "Delete Class " + contextClassName,
+                "Please confirm you want to delete the selected class.",
+                "Be aware that besides the class, all relationships and " +
+                        "association classes ending or originating on this class" +
+                        " will also be deleted."
+        );
 
+        // If they requested delete
+        if(delete) {
+            // Get the diagram
+            UMLDiagram diagram = UMLDiagram.getInstance(false);
 
+            // Get the relationships
+            LinkedList<String[]> relationshipsOf = diagram.getRelationshipsOf(contextClassName);
 
+            // Now, delete the class
+            diagram.deleteClass(contextClassName);
+            treePane.update(diagram);
 
+            // Now delete the visuals
+            drawingCanvas.deleteClass(contextClassName, relationshipsOf);
+        }
+        // In any case, clean the name
+        contextClassName = "";
+    }
 
 
 }

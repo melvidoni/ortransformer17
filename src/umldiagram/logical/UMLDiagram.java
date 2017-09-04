@@ -600,13 +600,13 @@ public class UMLDiagram {
 	 * @param className Name of the class to be searched.
 	 * @return List of objects with the name and relationship.
 	 */
-	public LinkedList<Object[]> getRelationshipsOf(String className) {
-        LinkedList<Object[]> list = new LinkedList<>();
+	public LinkedList<String[]> getRelationshipsOf(String className) {
+        LinkedList<String[]> list = new LinkedList<>();
 		// Check the relationships
         for(Relationship r : relationships) {
             if (r.getOrigin().getClassOf().getName().equals(className)
                     || r.getEnd().getClassOf().getName().equals(className)) {
-                Object[] row = new Object[2];
+                String[] row = new String[2];
                 row[0] = r.getName();
                 row[1] = r.getType().getName();
                 list.add(row);
@@ -617,7 +617,7 @@ public class UMLDiagram {
             Relationship r = ca.getRelationship();
             if (r.getOrigin().getClassOf().getName().equals(className)
                     || r.getEnd().getClassOf().getName().equals(className)) {
-                Object[] row = new Object[2];
+                String[] row = new String[2];
                 row[0] = r.getName();
                 row[1] = "Association Class";
                 list.add(row);

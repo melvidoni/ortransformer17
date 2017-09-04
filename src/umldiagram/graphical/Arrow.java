@@ -325,4 +325,12 @@ class Arrow extends Group {
     }
 
 
+
+    /**
+     * Method to obtain the relationship name of this complex node.
+     * @return The class name of the complex node;
+     */
+    String getName() {
+        return name;
+    }
 }

@@ -8,6 +8,8 @@ import javafx.scene.layout.Pane;
 import umldiagram.logical.AssociationClass;
 import umldiagram.logical.Relationship;
 import umldiagram.logical.UmlClass;
+
+import java.util.Iterator;
 import java.util.LinkedList;
 
 
@@ -58,6 +60,9 @@ public class DrawingDiagram extends Pane {
     }
 
 
+
+
+
     /**
      * Method that checks if the point received belongs to another
      * node, or not. If it is contained in at least one, it returns.
@@ -72,8 +77,6 @@ public class DrawingDiagram extends Pane {
         }
         return false;
     }
-
-
 
 
 
@@ -183,10 +186,6 @@ public class DrawingDiagram extends Pane {
             arrows.add(loopLine);
             getChildren().add(loopLine);
         }
-
-
-
-
     }
 
 
@@ -229,15 +228,6 @@ public class DrawingDiagram extends Pane {
 
 
 
-
-
-
-
-
-
-
-
-
     /**
      * Given a point, it evaluates all the classes in order to return
      * the name of the class that contains that point.
@@ -250,6 +240,9 @@ public class DrawingDiagram extends Pane {
         for(Node n: nodes) {
             if(n.contains(x, y)) return n.getName();
         }
+        for(ComplexNode cn : complexNodes) {
+            if(cn.contains(x, y)) return cn.getClassName();
+        }
         return "";
     }
 
@@ -259,12 +252,50 @@ public class DrawingDiagram extends Pane {
 
 
 
+    /**
+     * Method that removes the class node associated to the one which name
+     * was received as a parameter, as well as all the related relationships.
+     * @param className The class node to delete.
+     * @param relationshipsOf The relationships to be removed.
+     */
+    public void deleteClass(String className, LinkedList<String[]> relationshipsOf) {
+        // Look for the node and delete it
+        for (Node n : nodes) {
+            if (n.getName().equals(className)) {
+                getChildren().remove(n);
+                nodes.remove(n);
+                break;
+            }
+        }
 
-
-
-
-
-
+        // Separate the association classes and relationships
+        for(String[] rof : relationshipsOf) {
+            if(rof[1].equals("Association Class")) {
+                // Go through the complex nodes
+                for(ComplexNode cn: complexNodes) {
+                    // If the name is the same
+                    if(cn.getRelName().equals(rof[0])) {
+                        // Then delete it
+                        getChildren().remove(cn);
+                        complexNodes.remove(cn);
+                        break;
+                    }
+                }
+            }
+            else {
+                // Go through the regular nodes
+                for(Arrow a: arrows) {
+                    // If the name is the same
+                    if(a.getName().equals(rof[0])) {
+                        // Remove it
+                        getChildren().remove(a);
+                        arrows.remove(a);
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
 
 
@@ -304,7 +335,6 @@ public class DrawingDiagram extends Pane {
             ((Node)(me.getSource())).setTranslateY(newTranslateY);
         }
     }
-
 
 
 
