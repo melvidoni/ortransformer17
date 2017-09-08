@@ -3,7 +3,6 @@ package gui.controllers;
 
 import gui.components.PopupHandlers;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -14,7 +13,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
 import umldiagram.graphical.DrawingDiagram;
-import umldiagram.graphical.DrawingStatus;
+import umldiagram.graphical.status.DrawingStatus;
+import umldiagram.graphical.status.EditingStatus;
 import umldiagram.logical.AssociationClass;
 import umldiagram.logical.Relationship;
 import umldiagram.logical.UMLDiagram;
@@ -49,10 +49,11 @@ public class MainWindowController {
     private ContextMenu classContextMenu = new ContextMenu();
     private ContextMenu acContextMenu = new ContextMenu();
 
-
     private DrawingStatus drawingStatus;
-    private String contextClassName;
+    private EditingStatus editingStatus;
     private Line drawingLine;
+
+
 
 
 
@@ -80,16 +81,17 @@ public class MainWindowController {
                 toggleNewAC.selectedProperty());
 
         // Class name for menu
-        contextClassName = "";
+        editingStatus = EditingStatus.getInstance(true);
 
 
         // Prepare the context menu
         MenuItem editMenu = new MenuItem("Edit");
         editMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_edit.png")));
+        editMenu.setOnAction((ActionEvent e) -> {editClass();});
 
         MenuItem delMenu = new MenuItem("Delete");
         delMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_delete.png")));
-        delMenu.setOnAction((ActionEvent e) -> {deleteClass(e);});
+        delMenu.setOnAction((ActionEvent e) -> {deleteClass();});
 
         MenuItem relMenu = new MenuItem("Relationship");
         relMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_rel.png")));
@@ -103,7 +105,6 @@ public class MainWindowController {
         classContextMenu.getItems().addAll(editMenu, delMenu, relMenu);
         acContextMenu.getItems().add(editACMenu);
     }
-
 
 
 
@@ -157,6 +158,9 @@ public class MainWindowController {
                 toggleNewGen.selectedProperty(), toggleNewAssoc.selectedProperty(),
                 toggleNewAgg.selectedProperty(), toggleNewComp.selectedProperty(),
                 toggleNewAC.selectedProperty());
+
+        // Clean the edition
+        editingStatus = EditingStatus.getInstance(true);
     }
 
 
@@ -429,7 +433,7 @@ public class MainWindowController {
             acContextMenu.hide();
 
             // Store the class name
-            contextClassName = drawingCanvas.getClassAt(e.getX(), e.getY());
+            editingStatus.setClassName(drawingCanvas.getClassAt(e.getX(), e.getY()));
 
             // If the point is occupied by a regular class
             if(drawingCanvas.pointOccupiedByClass(e.getX(), e.getY())) {
@@ -440,6 +444,7 @@ public class MainWindowController {
             else if(drawingCanvas.pointOccupiedByAssocClass(e.getX(), e.getY())) {
                 // Show the association class menu
                 acContextMenu.show(drawingCanvas, e.getScreenX(), e.getScreenY());
+                editingStatus.setAssociationClass(true);
             }
         }
 
@@ -450,13 +455,19 @@ public class MainWindowController {
     }
 
 
+
+
+
+
+
     /**
-     *
+     * Method that deletes the class upon which the context menu
+     * was called. It also deletes the related relationships.
      */
-    private void deleteClass(ActionEvent ae) {
+    private void deleteClass() {
         // Show a confirmation message
         boolean delete = PopupHandlers.showConfirmation(
-                "Delete Class " + contextClassName,
+                "Delete Class " + editingStatus.getClassName(),
                 "Please confirm you want to delete the selected class.",
                 "Be aware that besides the class, all relationships and " +
                         "association classes ending or originating on this class" +
@@ -469,18 +480,54 @@ public class MainWindowController {
             UMLDiagram diagram = UMLDiagram.getInstance(false);
 
             // Get the relationships
-            LinkedList<String[]> relationshipsOf = diagram.getRelationshipsOf(contextClassName);
+            LinkedList<String[]> relationshipsOf = diagram.getRelationshipsOf(editingStatus.getClassName());
 
             // Now, delete the class
-            diagram.deleteClass(contextClassName);
+            diagram.deleteClass(editingStatus.getClassName());
             treePane.update(diagram);
 
             // Now delete the visuals
-            drawingCanvas.deleteClass(contextClassName, relationshipsOf);
+            drawingCanvas.deleteClass(editingStatus.getClassName(), relationshipsOf);
         }
         // In any case, clean the name
-        contextClassName = "";
+        editingStatus.setClassName("");
+        editingStatus.setAssociationClass(false);
     }
 
+
+
+
+
+
+
+
+    private void editClass() {
+        try {
+            // First, lets call the interface
+            PopupHandlers.showPopup("/gui/views/EditClassDialog.fxml",
+                    "Edit " + ( editingStatus.isAssociationClass() ? "Association " : "" ) + "Class",
+                    drawingCanvas.getScene());
+
+            // Now if there is something to edit
+            if(editingStatus.isEdited()) {
+                // Get the diagram
+                UMLDiagram umlDiagram = UMLDiagram.getInstance(false);
+
+                // Update the information
+                treePane.update(umlDiagram);
+                drawingCanvas.editClass();
+
+
+
+                // Clean the data
+                editingStatus = EditingStatus.getInstance(true);
+            }
+        }
+        catch(IOException ioe) {
+            // TODO COMPLETE EXCEPTION
+            ioe.printStackTrace();
+        }
+
+    }
 
 }

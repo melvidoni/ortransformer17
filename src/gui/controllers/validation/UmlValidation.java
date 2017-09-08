@@ -1,11 +1,14 @@
 package gui.controllers.validation;
 
 
+import gui.models.AttributeModel;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import umldiagram.logical.UMLDiagram;
 
-
+import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 
 /**
@@ -13,6 +16,62 @@ import umldiagram.logical.UMLDiagram;
  * @author Melina Vidoni, INGAR CONICET-UTN.
  */
 public class UmlValidation {
+
+
+
+
+    /**
+     * Method that validates a list of attributes, and returns a String with
+     * the errors found on the attributes.
+     * @param attrData The list of attributes to be valdiated.
+     * @return En empty string if no errors were found, and a string with the
+     * list of errors if any was found.
+     */
+    public static String validateAttributes(ObservableList<AttributeModel> attrData) {
+        // Prepare the list of errors
+        String errors = "";
+
+        // Prepare flags
+        boolean attrNameOk = true;
+        boolean attrTypeOk = true;
+
+
+        // Check for empty or type errors
+        for(AttributeModel am: attrData) {
+            // Check for empty attribute names
+            if(am.getName().isEmpty() && attrNameOk ) {
+                // Add an error message
+                if(!errors.isEmpty()) errors += "\n";
+                errors += "> Attribute names cannot be empty.";
+
+                // Change the flag
+                attrNameOk = false;
+            }
+
+            // Check for empty attribute types
+            if(am.getType().isEmpty() && attrTypeOk) {
+                // Add an error message
+                if(!errors.isEmpty()) errors += "\n";
+                errors += "> Attribute types cannot be empty.";
+
+                // Change the flag
+                attrTypeOk = false;
+            }
+        }
+        // If there are duplicate attributes
+        if(attrData.stream().collect(Collectors.groupingBy(AttributeModel::getName, Collectors.counting()))
+                .entrySet().stream().anyMatch(e -> e.getValue() > 1) && attrNameOk) {
+            // Add an error message
+            if(!errors.isEmpty()) errors += "\n";
+            errors += "> Attribute names must be unique.";
+        }
+
+        // Return the errors
+        return errors;
+    }
+
+
+
 
 
 
@@ -86,6 +145,39 @@ public class UmlValidation {
 
         // Return the value
         return classOk;
+    }
+
+
+
+
+    /**
+     * Method that valida aan edited class name, to decide if the values are correct.
+     * @param className The textfield with the edited class name.
+     * @param originalName The original name of the class
+     * @return True if it is correct, false otherwise.
+     */
+    public static boolean validateEditedClass(TextField className, String originalName) {
+        // If the class name is empty
+        if(className.getText().isEmpty()) {
+            // Add a border and tooltip
+            className.setStyle("-fx-border-color: #f4416b ; -fx-border-width: 2px ;");
+            className.setTooltip(new Tooltip("The class name cannot be empty"));
+        }
+        // If the class name is repeated
+        // Check if the edited name is different than the original name
+        else if(!originalName.toUpperCase().equals(className.getText().toUpperCase()) &&
+                    // And the edited name is not contained on the list of classes
+                    UMLDiagram.getInstance(false).getClassesNames().contains(className.getText().toUpperCase())) {
+
+                // Add a border and tooltip
+                className.setStyle("-fx-border-color: #f4416b ; -fx-border-width: 2px ;");
+                className.setTooltip(new Tooltip("The class name is already in use."));
+        }
+        // If everything was correct, return true
+        else return true;
+
+        // If not, return the error
+        return false;
     }
 
 
@@ -183,6 +275,8 @@ public class UmlValidation {
 
 
 
+
+
     /**
      * Checks if two values of a cardinality are correct.
      * @param min Min value of the cardinality.
@@ -195,11 +289,6 @@ public class UmlValidation {
         // If not, the minimum must be less than the maximum
         return max.contains("*") || (Integer.valueOf(min) <= Integer.valueOf(max));
     }
-
-
-
-
-
 
 
 

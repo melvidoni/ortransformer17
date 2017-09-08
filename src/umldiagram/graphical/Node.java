@@ -7,6 +7,8 @@ import javafx.scene.control.Label;
 import umldiagram.logical.Attribute;
 import umldiagram.logical.UmlClass;
 
+import java.util.List;
+
 
 
 
@@ -84,6 +86,7 @@ class Node extends Label {
     }
 
 
+
     /**
      * Method that compares two nodes, and returns the mid point between
      * the sides that are closer to each other.
@@ -147,7 +150,24 @@ class Node extends Label {
     }
 
 
+    /**
+     * Update the values of the node, with the information received
+     * as a parameters.
+     * @param n The new name of the node.
+     * @param attributes The list of attributes.
+     */
+    void updateValues(String n, List<Attribute> attributes) {
+        // Prepare the text
+        String text = n.toUpperCase();
+        for(Attribute a: attributes) {
+            text += "\n" + a.toString();
+        }
 
+        // Change the name
+        name = n;
 
-
+        // Chane the text
+        setText(text);
+        applyCss();
+    }
 }

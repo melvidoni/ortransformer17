@@ -15,20 +15,23 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import umldiagram.graphical.status.EditingStatus;
 import umldiagram.logical.Attribute;
 import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.UmlClass;
 import umldiagram.logical.enums.AttributeType;
+
+import java.util.LinkedList;
 import java.util.stream.Collectors;
-
-
 
 
 /**
  * Controller class for the new class dialog.
  * @author Melina Vidoni, INGAR CONICET-UTN.
  */
-public class NewClassController extends GridPane {
+public class EditClassController extends GridPane {
+    private UmlClass umlClass;
+
     @FXML private TextField className;
     @FXML private CheckBox isAbstract;
 
@@ -41,17 +44,42 @@ public class NewClassController extends GridPane {
     private final ObservableList<AttributeModel> attrData  = FXCollections.observableArrayList();;
 
 
+
+
+
     /**
      * Method that initializes the frame with all the required information.
      */
     @FXML
     private void initialize() {
+        // Get the instances
+        UMLDiagram umlDiagram = UMLDiagram.getInstance(false);
+        EditingStatus editStatus = EditingStatus.getInstance(false);
+
+        // Get the class object
+        umlClass = (!editStatus.isAssociationClass())
+                ? umlDiagram.getClasses(editStatus.getClassName())
+                : umlDiagram.getAssociationClasses(editStatus.getClassName()).getUmlClass();
+
+
         // Prepare the class field
         className.setTextFormatter(FieldFormatter.getMixedFormatter(30));
+        className.setText(umlClass.getName());
+
+        // Check if abstract
+        isAbstract.setSelected(umlClass.isAbstract());
+
 
         // Prepare the table
         attrTable.setEditable(true);
         attrTable.getSelectionModel().setSelectionMode( SelectionMode.MULTIPLE );
+
+        // Load the information
+        for(Attribute a: umlClass.getAttributes()) {
+            attrData.add(new AttributeModel(a.getName(), a.getType().getName(),
+                    a.isOrdered(), a.isUnique()
+            ));
+        }
         attrTable.setItems(attrData);
 
         // Prepare the table columns
@@ -77,6 +105,9 @@ public class NewClassController extends GridPane {
         attrUnqCol.prefWidthProperty().bind(attrTable.widthProperty().divide(4));
         attrUnqCol.setCellFactory(p -> new CheckBoxTableCell<>());
     }
+
+
+
 
 
     /**
@@ -109,19 +140,22 @@ public class NewClassController extends GridPane {
     }
 
 
+
+
     /**
      * Method that validates the input and if corresponds,
      * creates a new UML class.
      */
     @FXML
-    private void createNewClass() {
+    private void editClass() {
+
+
         // Clean information
         className.setStyle("-fx-border-color: transparent;");
 
         // Temporal flags
-        boolean classOk = UmlValidation.validateNewClass(className);
+        boolean classOk = UmlValidation.validateEditedClass(className, umlClass.getName());
         String errors = UmlValidation.validateAttributes(attrData);
-
 
         // If there are errors
         if(!errors.isEmpty()) {
@@ -129,21 +163,23 @@ public class NewClassController extends GridPane {
                     "Incorrect data found on attributes.",
                     "The following errors have been found on the attributes:\n" + errors);
         }
-        // If attributes are ok, and the class is ok as well
         else if(classOk) {
-            // Create the base class
-            UmlClass c = new UmlClass(String.valueOf(UMLDiagram.getInstance(false).newClassId()),
-                    className.getText(), isAbstract.isSelected());
+            // Prepare the editing status
+            EditingStatus eStatus = EditingStatus.getInstance(false);
+            eStatus.setEdited(true);
+            eStatus.setEditedClassName(className.getText());
 
-            // Add the attributes
+            // Now edit the class
+            umlClass.setAbstract(isAbstract.isSelected());
+            umlClass.setName(className.getText());
+
+            // Remove the attributes
+            umlClass.setList(new LinkedList<>());
             for(AttributeModel am: attrData) {
                 // Create attribute and add it
-                c.addAttribute(new Attribute(am.getName(), AttributeType.getAttributeName(am.getType()),
+                umlClass.addAttribute(new Attribute(am.getName(), AttributeType.getAttributeName(am.getType()),
                         UMLDiagram.getInstance(false).newClassId(), am.isOrdered(), am.isUnique()));
             }
-
-            // Add the class to the diagram
-            UMLDiagram.getInstance(false).addClass(c);
 
             // Close the window
             cancelCreation();

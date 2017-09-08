@@ -27,6 +27,22 @@ public class AttributeModel {
     }
 
 
+    /**
+     * Default constructor that initializes the model
+     * with the values received as parameters
+     * @param n Name of the attribute.
+     * @param t Type of the attribute.
+     * @param o If it is ordered or not.
+     * @param u If is is unique or not.
+     */
+    public AttributeModel(String n, String t, Boolean o, Boolean u) {
+        name = new SimpleStringProperty(n);
+        type = new SimpleStringProperty(t);
+        ordered = new SimpleBooleanProperty(o);
+        unique = new SimpleBooleanProperty(u);
+    }
+
+
     public String getName() {
         return name.get();
     }

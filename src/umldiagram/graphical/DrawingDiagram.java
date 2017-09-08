@@ -5,11 +5,13 @@ import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import umldiagram.graphical.status.DrawingStatus;
+import umldiagram.graphical.status.EditingStatus;
 import umldiagram.logical.AssociationClass;
 import umldiagram.logical.Relationship;
+import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.UmlClass;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 
@@ -58,6 +60,10 @@ public class DrawingDiagram extends Pane {
         // Clean the children
         getChildren().clear();
     }
+
+
+
+
 
 
 
@@ -270,29 +276,30 @@ public class DrawingDiagram extends Pane {
 
         // Separate the association classes and relationships
         for(String[] rof : relationshipsOf) {
-            if(rof[1].equals("Association Class")) {
-                // Go through the complex nodes
-                for(ComplexNode cn: complexNodes) {
-                    // If the name is the same
-                    if(cn.getRelName().equals(rof[0])) {
-                        // Then delete it
-                        getChildren().remove(cn);
-                        complexNodes.remove(cn);
-                        break;
-                    }
-                }
-            }
-            else {
-                // Go through the regular nodes
-                for(Arrow a: arrows) {
-                    // If the name is the same
-                    if(a.getName().equals(rof[0])) {
-                        // Remove it
-                        getChildren().remove(a);
-                        arrows.remove(a);
-                        break;
-                    }
-                }
+            // If it is association class, delete it
+            if(rof[1].equals("Association Class")) deleteAssociationClass(rof[0]);
+            // Else, it is a normal relationship
+            else  deleteRelationship(rof[0]);
+        }
+    }
+
+
+
+
+
+    /**
+     * Method that deletes aan association class from the diagram.
+     * @param acName The assoc class name to be deleted.
+     */
+    public void deleteAssociationClass(String acName) {
+        // Go through the complex nodes
+        for(ComplexNode cn: complexNodes) {
+            // If the name is the same
+            if(cn.getRelName().equals(acName)) {
+                // Then delete it
+                getChildren().remove(cn);
+                complexNodes.remove(cn);
+                break;
             }
         }
     }
@@ -301,7 +308,97 @@ public class DrawingDiagram extends Pane {
 
 
 
+    /**
+     * Method that deletes a relationship from the diagram.
+     * @param relName The relationship to be deleted.
+     */
+    public void deleteRelationship(String relName) {
+        // Go through the regular arrows
+        for(Arrow a: arrows) {
+            // If the name is the same
+            if(a.getName().equals(relName)) {
+                // Remove it
+                getChildren().remove(a);
+                arrows.remove(a);
+                break;
+            }
+        }
+    }
 
+
+
+
+
+    public void editClass() {
+        // Get the information
+        EditingStatus editingStatus = EditingStatus.getInstance(false);
+        UMLDiagram umlDiagram = UMLDiagram.getInstance(false);
+
+
+        // If it is a regular class
+        if(!editingStatus.isAssociationClass()) {
+            // Get the class
+            UmlClass umlClass = umlDiagram.getClasses(editingStatus.getEditedClassName());
+
+            // Go through the nodes
+            for(Node n: nodes) {
+                // If this matches
+                if( n.getName().equals(editingStatus.getClassName()) ) {
+                    // Update the node
+                    n.updateValues(umlClass.getName(), umlClass.getAttributes());
+
+                    break;
+                }
+            }
+        }
+        // If it is an association class
+        else {
+            // TODO COMPLETE HERE
+        }
+
+
+
+
+
+
+
+
+
+        // Force the class to change
+        this.layoutChildren();
+
+
+        /*
+            EDIT THE RELATIONSHIPS
+         */
+        // Get the relationships
+        LinkedList<String[]> relationships = umlDiagram.getRelationshipsOf(editingStatus.getEditedClassName());
+
+        // Go through them
+        for(String[] rel: relationships) {
+            // If this is association class
+            if(rel[1].equals("Association Class")) {
+                // Remove the existing association class
+                deleteAssociationClass(rel[0]);
+
+                // Add a new one
+                addNewAssociationClass(umlDiagram.getAssociationClasses(rel[0]));
+
+            }
+            // If not, edit
+            else {
+                // Remove the arrow
+                deleteRelationship(rel[0]);
+
+                // Create a new relationship
+                addNewRel(umlDiagram.getRelationship(rel[0]));
+            }
+        }
+
+
+
+
+    }
 
 
 
@@ -335,8 +432,6 @@ public class DrawingDiagram extends Pane {
             ((Node)(me.getSource())).setTranslateY(newTranslateY);
         }
     }
-
-
 
 
 

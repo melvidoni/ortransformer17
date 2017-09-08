@@ -1,7 +1,7 @@
 package gui.controllers;
 
 
-import umldiagram.graphical.DrawingStatus;
+import umldiagram.graphical.status.DrawingStatus;
 import umldiagram.logical.enums.RelationshipType;
 
 

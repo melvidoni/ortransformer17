@@ -1,4 +1,4 @@
-package umldiagram.graphical;
+package umldiagram.graphical.status;
 
 
 import javafx.beans.binding.Bindings;
