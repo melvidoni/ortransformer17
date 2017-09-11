@@ -38,6 +38,7 @@ public class PopupHandlers {
         dialogStage.setTitle(title);
         dialogStage.initModality(Modality.WINDOW_MODAL);
         dialogStage.initOwner(scene.getWindow());
+        dialogStage.getIcons().add(new Image("/gui/views/img/logo.png"));
 
         // Show the dialog and wait until the user closes it
         dialogStage.setScene(new Scene(dloader.load()));

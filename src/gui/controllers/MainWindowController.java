@@ -2,6 +2,7 @@ package gui.controllers;
 
 
 import gui.components.PopupHandlers;
+import gui.models.RelationshipModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -95,9 +96,11 @@ public class MainWindowController {
 
         MenuItem relMenu = new MenuItem("Relationship");
         relMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_rel.png")));
+        relMenu.setOnAction((ActionEvent e) -> { listRelationships(); });
 
         MenuItem editACMenu = new MenuItem("Edit");
         editACMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_edit.png")));
+        editACMenu.setOnAction((ActionEvent e) -> {editClass();});
 
 
 
@@ -447,11 +450,6 @@ public class MainWindowController {
                 editingStatus.setAssociationClass(true);
             }
         }
-
-
-
-
-
     }
 
 
@@ -497,10 +495,10 @@ public class MainWindowController {
 
 
 
-
-
-
-
+    /**
+     * Method that edits a class or association class, in which the
+     * context menu was called. It also updates the tree and drawing.
+     */
     private void editClass() {
         try {
             // First, lets call the interface
@@ -509,15 +507,13 @@ public class MainWindowController {
                     drawingCanvas.getScene());
 
             // Now if there is something to edit
-            if(editingStatus.isEdited()) {
+            if(editingStatus.isEditedClass()) {
                 // Get the diagram
                 UMLDiagram umlDiagram = UMLDiagram.getInstance(false);
 
                 // Update the information
                 treePane.update(umlDiagram);
                 drawingCanvas.editClass();
-
-
 
                 // Clean the data
                 editingStatus = EditingStatus.getInstance(true);
@@ -529,5 +525,59 @@ public class MainWindowController {
         }
 
     }
+
+
+
+
+    private void listRelationships() {
+        try {
+            // First, lets call the interface
+            PopupHandlers.showPopup("/gui/views/ListRelationshipsDialog.fxml",
+                    "Relationships of Class " + editingStatus.getClassName(),
+                    drawingCanvas.getScene());
+
+            // Check if there are deleted relationships
+            if(editingStatus.hasDeletedRels()) {
+                // Get the diagram
+                UMLDiagram diagram = UMLDiagram.getInstance(false);
+
+                // Go through all the relationships
+                for(RelationshipModel rm : editingStatus.getDelRelationships()) {
+                    // If this is an association class, remove it
+                    if(rm.getType().equals("Association Class")) {
+                        // Update the diagram and canvas
+                        diagram.deleteAssociationClass(rm.getName());
+                        drawingCanvas.deleteAssociationClass(rm.getName());
+                    }
+                    // Otherwise, it is a normal relationship
+                    else {
+                        // Update the diagram and canvas
+                        diagram.deleteRelationship(rm.getName());
+                        drawingCanvas.deleteRelationship(rm.getName());
+                    }
+                }
+                // Update the pane
+                treePane.update(diagram);
+            }
+            // If it is for editing
+            else if(editingStatus.hasEditedRel()) {
+                // TODO COMPLETE EDIT
+
+            }
+
+
+
+
+            // Update the status
+            editingStatus = EditingStatus.getInstance(true);
+        }
+        catch(IOException ioe) {
+            // TODO COMPLETE EXCEPTION
+            ioe.printStackTrace();
+        }
+    }
+
+
+
 
 }

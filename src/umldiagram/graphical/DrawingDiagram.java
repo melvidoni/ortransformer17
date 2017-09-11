@@ -1,6 +1,8 @@
 package umldiagram.graphical;
 
 
+import gui.models.RelationshipModel;
+import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
@@ -326,9 +328,10 @@ public class DrawingDiagram extends Pane {
     }
 
 
-
-
-
+    /**
+     * Method that edits a class in the diagram. This can be either a
+     * regular class or an association class.
+     */
     public void editClass() {
         // Get the information
         EditingStatus editingStatus = EditingStatus.getInstance(false);
@@ -346,56 +349,59 @@ public class DrawingDiagram extends Pane {
                 if( n.getName().equals(editingStatus.getClassName()) ) {
                     // Update the node
                     n.updateValues(umlClass.getName(), umlClass.getAttributes());
-
                     break;
                 }
             }
+
+            // Force the class to change
+            this.layoutChildren();
+
+
+            /*
+                EDIT THE RELATIONSHIPS
+             */
+            // Get the relationships
+            LinkedList<String[]> relationships = umlDiagram.getRelationshipsOf(editingStatus.getEditedClassName());
+
+            // Go through them
+            for(String[] rel: relationships) {
+                // If this is association class
+                if(rel[1].equals("Association Class")) {
+                    // Remove the existing association class
+                    deleteAssociationClass(rel[0]);
+
+                    // Add a new one
+                    addNewAssociationClass(umlDiagram.getAssociationClasses(rel[0]));
+
+                }
+                // If not, edit
+                else {
+                    // Remove the arrow
+                    deleteRelationship(rel[0]);
+
+                    // Create a new relationship
+                    addNewRel(umlDiagram.getRelationship(rel[0]));
+                }
+            }
+
         }
         // If it is an association class
         else {
-            // TODO COMPLETE HERE
-        }
+            // Get the association class
+            AssociationClass assocClass = umlDiagram.getAssociationClasses(editingStatus.getEditedClassName());
 
-
-
-
-
-
-
-
-
-        // Force the class to change
-        this.layoutChildren();
-
-
-        /*
-            EDIT THE RELATIONSHIPS
-         */
-        // Get the relationships
-        LinkedList<String[]> relationships = umlDiagram.getRelationshipsOf(editingStatus.getEditedClassName());
-
-        // Go through them
-        for(String[] rel: relationships) {
-            // If this is association class
-            if(rel[1].equals("Association Class")) {
-                // Remove the existing association class
-                deleteAssociationClass(rel[0]);
-
-                // Add a new one
-                addNewAssociationClass(umlDiagram.getAssociationClasses(rel[0]));
-
+            // Go through the complex nodes
+            for(ComplexNode cn: complexNodes) {
+                // If this is it
+                if(cn.getClassName().equals(editingStatus.getClassName()) ) {
+                   // Update the complex node
+                   cn.updateValues(assocClass.getUmlClass());
+                   break;
+                }
             }
-            // If not, edit
-            else {
-                // Remove the arrow
-                deleteRelationship(rel[0]);
 
-                // Create a new relationship
-                addNewRel(umlDiagram.getRelationship(rel[0]));
-            }
+
         }
-
-
 
 
     }
@@ -432,6 +438,8 @@ public class DrawingDiagram extends Pane {
             ((Node)(me.getSource())).setTranslateY(newTranslateY);
         }
     }
+
+
 
 
 

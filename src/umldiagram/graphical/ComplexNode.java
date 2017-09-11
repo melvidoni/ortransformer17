@@ -13,6 +13,7 @@ import umldiagram.logical.Attribute;
 import umldiagram.logical.UmlClass;
 
 import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -72,7 +73,7 @@ class ComplexNode extends Group {
         getChildren().add(line);
 
 
-        // Get the poinst for the association class
+        // Get the point for the association class
         Point2D classStartPoint = getNodeStartPoint(finalMidPoint, ac.getUmlClass());
 
         // Draw the node
@@ -83,6 +84,25 @@ class ComplexNode extends Group {
     }
 
 
+
+
+    /**
+     * Method that updates the values of the association class, changing
+     * the names and attributes on the regular node.
+     * @param umlClass The information in object format to update the node.
+     */
+    void updateValues(UmlClass umlClass) {
+        // Lets update the node
+        node.updateValues(umlClass.getName(), umlClass.getAttributes());
+        layout();
+
+        // Relocate the class
+        Point2D newStartingPoint =  (side == 'V')
+                ? (new Point2D(line.getEndX(), line.getEndY() - node.getHeight() / 2))
+                : (new Point2D(line.getEndX() - node.getWidth() / 2, line.getEndY()));
+        node.relocate(newStartingPoint.getX(), newStartingPoint.getY());
+        layout();
+    }
 
 
 
@@ -184,4 +204,5 @@ class ComplexNode extends Group {
     String getRelName() {
         return relName;
     }
+
 }

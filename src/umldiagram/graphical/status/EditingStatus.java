@@ -1,25 +1,58 @@
 package umldiagram.graphical.status;
 
 
+import gui.models.RelationshipModel;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.util.LinkedList;
 
 
+
+
+/**
+ * Singleton class used to keep the editing status of relationships
+ * and classes, and obtain the values throughout the controllers.
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
 public class EditingStatus {
     private static EditingStatus instance = new EditingStatus();
 
     private String className;
     private String editedClassName;
     private boolean associationClass;
-    private boolean edited;
+    private boolean editedClass;
+
+
+    private boolean editedRel;
+    private String relName;
+    private String editedRelName;
+
+    private boolean deletedRels;
+    private ObservableList<RelationshipModel> delRelationships;
+
+
+
+
+
 
 
     /**
      * Private default constructor of the class.
      */
     private EditingStatus() {
+        // Class values
         className = "";
         editedClassName = "";
         associationClass = false;
-        edited = false;
+        editedClass = false;
+
+        // Relationship values
+        editedRel = false;
+        deletedRels = false;
+        relName = "";
+        editedRelName = "";
+        delRelationships = FXCollections.observableArrayList();
     }
 
 
@@ -54,12 +87,12 @@ public class EditingStatus {
         associationClass = ac;
     }
 
-    public boolean isEdited() {
-        return edited;
+    public boolean isEditedClass() {
+        return editedClass;
     }
 
-    public void setEdited(boolean e) {
-        edited = e;
+    public void setEditedClass(boolean e) {
+        editedClass = e;
     }
 
     public String getEditedClassName() {
@@ -68,5 +101,46 @@ public class EditingStatus {
 
     public void setEditedClassName(String e) {
         editedClassName = e;
+    }
+
+
+    public boolean hasEditedRel() {
+        return editedRel;
+    }
+
+    public void setEditedRel(boolean e) {
+        editedRel = e;
+    }
+
+    public String getRelName() {
+        return relName;
+    }
+
+    public void setRelName(String r) {
+        relName = r;
+    }
+
+    public String getEditedRelName() {
+        return editedRelName;
+    }
+
+    public void setEditedRelName(String e) {
+        editedRelName = e;
+    }
+
+    public boolean hasDeletedRels() {
+        return deletedRels;
+    }
+
+    public void setDeletedRels(boolean d) {
+        deletedRels = d;
+    }
+
+    public ObservableList<RelationshipModel> getDelRelationships() {
+        return delRelationships;
+    }
+
+    public void setDelRelationships(ObservableList d) {
+        delRelationships = d;
     }
 }

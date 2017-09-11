@@ -22,7 +22,6 @@ import umldiagram.logical.UmlClass;
 import umldiagram.logical.enums.AttributeType;
 
 import java.util.LinkedList;
-import java.util.stream.Collectors;
 
 
 /**
@@ -166,7 +165,7 @@ public class EditClassController extends GridPane {
         else if(classOk) {
             // Prepare the editing status
             EditingStatus eStatus = EditingStatus.getInstance(false);
-            eStatus.setEdited(true);
+            eStatus.setEditedClass(true);
             eStatus.setEditedClassName(className.getText());
 
             // Now edit the class

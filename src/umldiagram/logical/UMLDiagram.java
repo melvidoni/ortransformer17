@@ -1,5 +1,7 @@
 package umldiagram.logical;
 
+import gui.models.RelationshipModel;
+import javafx.collections.ObservableList;
 import umldiagram.logical.enums.RelationshipType;
 
 import java.util.IntSummaryStatistics;
@@ -547,17 +549,8 @@ public class UMLDiagram {
 
 
 
-	
 
 
-
-
-	
-
-
-
-
-	
 
 
 
@@ -633,7 +626,7 @@ public class UMLDiagram {
      * the same name as the one received as parameter.
 	 * @param relName Relationship name to be deleted.
 	 */
-	public void deleteAssociationClass(String relName) {
+    public void deleteAssociationClass(String relName) {
         associationClasses.removeIf(ca -> ca.getRelationship().getName()
                 .toUpperCase().equals(relName.toUpperCase()));
 	}
@@ -645,7 +638,7 @@ public class UMLDiagram {
      * or generaliztion), which names matches the parameter.
 	 * @param relName Relationship name to be deleted.
 	 */
-	public void deleteRelationship(String relName) {
+    public void deleteRelationship(String relName) {
         relationships.removeIf(r -> r.getName().toUpperCase().equals(relName.toUpperCase()));
 	}
 
@@ -714,12 +707,6 @@ public class UMLDiagram {
 		
 		return names;
 	}
-
-
-
-
-
-
 
 
 }

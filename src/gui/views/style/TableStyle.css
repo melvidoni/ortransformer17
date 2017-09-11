@@ -3,6 +3,6 @@
 }
 
 
-#attrTable .table-column {
+#attrTable .table-column, #relsTable .table-column {
     -fx-alignment: CENTER;
 }
