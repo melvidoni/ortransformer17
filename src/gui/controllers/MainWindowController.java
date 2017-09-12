@@ -3,17 +3,22 @@ package gui.controllers;
 
 import gui.components.PopupHandlers;
 import gui.models.RelationshipModel;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import gui.components.TreeBrowser;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
+import javafx.stage.FileChooser;
 import org.apache.commons.lang3.StringUtils;
+import transformations.save.SaveDiagram;
 import umldiagram.graphical.DrawingDiagram;
 import umldiagram.graphical.status.DrawingStatus;
 import umldiagram.graphical.status.EditingStatus;
@@ -22,8 +27,12 @@ import umldiagram.logical.Relationship;
 import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.UmlClass;
 
+import javax.imageio.ImageIO;
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
+
+
 
 
 /**
@@ -34,6 +43,7 @@ import java.util.LinkedList;
 public class MainWindowController {
     @FXML private MenuItem menuSave;
     @FXML private MenuItem menuTransform;
+    @FXML private MenuItem menuPng;
 
     @FXML private ToolBar toolBar;
     @FXML private ToggleButton toggleNewClass;
@@ -69,6 +79,7 @@ public class MainWindowController {
         // Block menus until activated
         menuSave.setDisable(true);
         menuTransform.setDisable(true);
+        menuPng.setDisable(true);
 
         // Hide elements
         toolBar.setManaged(false);
@@ -89,19 +100,19 @@ public class MainWindowController {
         // Prepare the context menu
         MenuItem editMenu = new MenuItem("Edit");
         editMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_edit.png")));
-        editMenu.setOnAction((ActionEvent e) -> {editClass();});
+        editMenu.setOnAction((ActionEvent e) -> editClass());
 
         MenuItem delMenu = new MenuItem("Delete");
         delMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_delete.png")));
-        delMenu.setOnAction((ActionEvent e) -> {deleteClass();});
+        delMenu.setOnAction((ActionEvent e) -> deleteClass());
 
         MenuItem relMenu = new MenuItem("Relationship");
         relMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_rel.png")));
-        relMenu.setOnAction((ActionEvent e) -> { listRelationships(); });
+        relMenu.setOnAction((ActionEvent e) -> listRelationships() );
 
         MenuItem editACMenu = new MenuItem("Edit");
         editACMenu.setGraphic(new ImageView(new Image("/gui/views/img/context_edit.png")));
-        editACMenu.setOnAction((ActionEvent e) -> {editClass();});
+        editACMenu.setOnAction((ActionEvent e) -> editClass());
 
 
 
@@ -146,6 +157,7 @@ public class MainWindowController {
         // Enable the menus
         menuSave.setDisable(false);
         menuTransform.setDisable(false);
+        menuPng.setDisable(false);
 
         // Show the hidden elements
         toolBar.setManaged(true);
@@ -457,8 +469,6 @@ public class MainWindowController {
 
 
 
-
-
     /**
      * Method that deletes the class upon which the context menu
      * was called. It also deletes the related relationships.
@@ -530,8 +540,10 @@ public class MainWindowController {
 
 
 
-
-
+    /**
+     * Action listener to handle the action on listing the relationships
+     * associated to a particular class.
+     */
     private void listRelationships() {
         try {
             // First, lets call the interface
@@ -587,6 +599,76 @@ public class MainWindowController {
         catch(IOException ioe) {
             // TODO COMPLETE EXCEPTION
             ioe.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+    /**
+     * Method to export the generated diagram as a PNG image,
+     * on a location slected by the user.
+     */
+    @FXML
+    private void exportToPNG() {
+        // Prepare the File Chooser
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export Diagram as Image");
+
+        // Limit the extension
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("PNG Files", "*.png")
+        );
+
+        // Get the selected file
+        File file = fileChooser.showSaveDialog(null);
+
+        // If a file was selected
+        if (file != null) {
+            try {
+                // Get the snapshot
+                WritableImage image = drawingCanvas.snapshot(new SnapshotParameters(), null);
+
+                // And write the image
+                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+            }
+            catch (IOException ex) {
+                // TODO COMPLETE THIS MESSAGE
+                ex.printStackTrace();
+            }
+        }
+        // Finish exporting
+    }
+
+
+
+
+
+    @FXML
+    private void saveDiagram() {
+        try {
+            // Prepare the File Chooser
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Diagram");
+
+            // Limit the extension
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("ORT Files", "*.ort")
+            );
+
+            // Get the selected file
+            File file = fileChooser.showSaveDialog(null);
+
+            // If a file was selected
+            if(file != null) {
+                SaveDiagram.export(file, drawingCanvas.getNodes());
+            }
+        }
+        catch (IOException ex) {
+            // TODO COMPLETE THIS MESSAGE
+            ex.printStackTrace();
         }
     }
 

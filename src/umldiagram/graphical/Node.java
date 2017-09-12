@@ -16,7 +16,7 @@ import java.util.List;
  * Class that graphically represents a node (regular class) in the UML diagram.
  * @author Melina Vidoni, INGAR CONICET-UTN.
  */
-class Node extends Label {
+public class Node extends Label {
     private String name;
 
 

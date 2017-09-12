@@ -471,6 +471,25 @@ public class DrawingDiagram extends Pane {
 
 
 
+    /**
+     * Method that returns the list of nodes of the drawing.
+     * @return The list of nodes in object format.
+     */
+    public LinkedList<Node> getNodes() {
+        return nodes;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     private void pressedClass(MouseEvent me) {
@@ -498,6 +517,8 @@ public class DrawingDiagram extends Pane {
             ((Node)(me.getSource())).setTranslateY(newTranslateY);
         }
     }
+
+
 
 
 
