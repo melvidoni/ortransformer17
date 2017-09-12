@@ -94,13 +94,14 @@ public class NewRelationshipController extends ARelationshipController {
         cleanFields();
 
         // Validate the relationship
-        boolean ok = UmlValidation.validateNewRelationship(nameField, endRole, originRole,
+        boolean relationshipOK = UmlValidation.validateNewRelationship(nameField);
+        boolean endpointsOK = UmlValidation.validateEndpoints(endRole, originRole,
                 endMinCard, endMaxCard, originMinCard, originMaxCard);
 
         /*
             IF THERE ARE NO ERRORS
          */
-        if(ok) {
+        if(relationshipOK && endpointsOK) {
             // Create the origin endpoint
             RelationshipEndpoint epOrigin = new RelationshipEndpoint(originRole.getText(),
                     originBrowsable.isSelected(), originUnique.isSelected(), originOrdered.isSelected(),
@@ -128,21 +129,6 @@ public class NewRelationshipController extends ARelationshipController {
     }
 
 
-
-
-
-    /**
-     * Checks if two values of a cardinality are correct.
-     * @param min Min value of the cardinality.
-     * @param max Max value of the cardinality.
-     * @return true if the max is a star, or if the max is greater than or
-     * equal to the min. False in the other case.
-     */
-    private boolean cardinalityAccepted(String min, String max) {
-        // If the max is a star, then it is ok
-        // If not, the minimum must be less than the maximum
-        return max.contains("*") || (Integer.valueOf(min) <= Integer.valueOf(max));
-    }
 
 
 

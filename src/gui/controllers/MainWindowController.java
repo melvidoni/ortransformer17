@@ -13,6 +13,7 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
+import org.apache.commons.lang3.StringUtils;
 import umldiagram.graphical.DrawingDiagram;
 import umldiagram.graphical.status.DrawingStatus;
 import umldiagram.graphical.status.EditingStatus;
@@ -529,18 +530,20 @@ public class MainWindowController {
 
 
 
+
+
     private void listRelationships() {
         try {
             // First, lets call the interface
             PopupHandlers.showPopup("/gui/views/ListRelationshipsDialog.fxml",
-                    "Relationships of Class " + editingStatus.getClassName(),
+                    "Relationships of Class " + StringUtils.capitalize(editingStatus.getClassName()),
                     drawingCanvas.getScene());
+
+            // Get the diagram
+            UMLDiagram diagram = UMLDiagram.getInstance(false);
 
             // Check if there are deleted relationships
             if(editingStatus.hasDeletedRels()) {
-                // Get the diagram
-                UMLDiagram diagram = UMLDiagram.getInstance(false);
-
                 // Go through all the relationships
                 for(RelationshipModel rm : editingStatus.getDelRelationships()) {
                     // If this is an association class, remove it
@@ -559,16 +562,26 @@ public class MainWindowController {
                 // Update the pane
                 treePane.update(diagram);
             }
-            // If it is for editing
-            else if(editingStatus.hasEditedRel()) {
-                // TODO COMPLETE EDIT
 
+            // If we need to open the editing
+            else if(editingStatus.needsOpenEditing()) {
+                // Open the new dialog
+                PopupHandlers.showPopup("/gui/views/EditRelationshipDialog.fxml",
+                        "Editing Relationship " + StringUtils.capitalize(editingStatus.getRelName()),
+                        drawingCanvas.getScene());
+
+                // If something was edited
+                if(editingStatus.hasEditedRel()) {
+                    // Update logical part
+                    treePane.update(diagram);
+
+                    // Update the diagram
+                    drawingCanvas.editRelationship();
+                }
             }
 
 
-
-
-            // Update the status
+            // Clean the status
             editingStatus = EditingStatus.getInstance(true);
         }
         catch(IOException ioe) {

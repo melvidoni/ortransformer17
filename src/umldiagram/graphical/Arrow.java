@@ -5,7 +5,6 @@ package umldiagram.graphical;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.shape.CubicCurve;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Polyline;
@@ -297,6 +296,39 @@ class Arrow extends Group {
 
 
 
+    /**
+     * Method to update the values of the relationship, using the information
+     * received as a parameter.
+     * @param relationship Relationship with the updated information.
+     * @param startPoint The starting point.
+     * @param endPoint The ending point.
+     * @param fromSide Side where it starts.
+     * @param toSide Side where it ends.
+     */
+    void updateValues(Relationship relationship, Point2D startPoint, Point2D endPoint,
+                      char fromSide, char toSide) {
+        // Change name values
+        getChildren().remove(nameLabel);
+        name = relationship.getName();
+        drawName(startPoint, endPoint);
+
+        // Update cardinalities
+        getChildren().removeAll(originLabel, endLabel);
+        drawCards(startPoint, endPoint,
+                relationship.getOrigin().getName() + "\n" + relationship.getOrigin().getCardinality(),
+                relationship.getEnd().getName() + "\n" + relationship.getEnd().getCardinality(),
+                fromSide, toSide);
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     /**
@@ -333,4 +365,5 @@ class Arrow extends Group {
     String getName() {
         return name;
     }
+
 }

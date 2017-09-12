@@ -23,7 +23,7 @@ public class EditingStatus {
     private boolean associationClass;
     private boolean editedClass;
 
-
+    private boolean openEditing;
     private boolean editedRel;
     private String relName;
     private String editedRelName;
@@ -48,6 +48,7 @@ public class EditingStatus {
         editedClass = false;
 
         // Relationship values
+        openEditing = false;
         editedRel = false;
         deletedRels = false;
         relName = "";
@@ -142,5 +143,13 @@ public class EditingStatus {
 
     public void setDelRelationships(ObservableList d) {
         delRelationships = d;
+    }
+
+    public void setOpenEditing(boolean o) {
+        openEditing = o;
+    }
+
+    public boolean needsOpenEditing() {
+        return openEditing;
     }
 }

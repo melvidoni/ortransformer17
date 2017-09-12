@@ -1,8 +1,6 @@
 package umldiagram.graphical;
 
 
-import gui.models.RelationshipModel;
-import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
@@ -287,8 +285,6 @@ public class DrawingDiagram extends Pane {
 
 
 
-
-
     /**
      * Method that deletes aan association class from the diagram.
      * @param acName The assoc class name to be deleted.
@@ -308,8 +304,6 @@ public class DrawingDiagram extends Pane {
 
 
 
-
-
     /**
      * Method that deletes a relationship from the diagram.
      * @param relName The relationship to be deleted.
@@ -326,6 +320,9 @@ public class DrawingDiagram extends Pane {
             }
         }
     }
+
+
+
 
 
     /**
@@ -410,6 +407,69 @@ public class DrawingDiagram extends Pane {
 
 
 
+    /**
+     * Method that edits a relationship in the diagram. It can be either
+     * a regular relationship or an association class.
+     */
+    public void editRelationship() {
+        // Get the instances
+        EditingStatus eStatus = EditingStatus.getInstance(false);
+        UMLDiagram diagram = UMLDiagram.getInstance(false);
+
+        // Get the relationship
+        Relationship relationship = (eStatus.isAssociationClass())
+                ? (diagram.getRelAssociationClass(eStatus.getEditedRelName()).getRelationship())
+                : (diagram.getRelationship(eStatus.getEditedRelName()));
+
+
+        // Prepare the nodes
+        Node origin = null;
+        Node ending = null;
+
+        // Get the nodes
+        for(Node n: nodes) {
+            if(n.getName().equals(relationship.getOrigin().getClassOf().getName())) origin = n;
+            if(n.getName().equals(relationship.getEnd().getClassOf().getName())) ending = n;
+
+            if(origin!=null && ending!=null) break;
+        }
+
+        // Get the ending points
+        Point2D[] points = origin.fromTo(ending);
+        char fromSide = origin.getSide(points[0]);
+        char toSide = ending.getSide(points[1]);
+
+
+
+        // If it is an association class
+        if(eStatus.isAssociationClass()) {
+            // Go through the nodes
+            for(ComplexNode cn: complexNodes) {
+                // If this is it
+                if(cn.getRelName().equals(eStatus.getRelName())) {
+                    // Call the editing method
+                    cn.updateArrow(relationship, points[0], points[1], fromSide, toSide);
+                    break;
+                }
+            }
+        }
+        // If not, it is a regular relationship
+        else {
+            // Find the relationship
+            for(Arrow a: arrows) {
+                // If this is it
+                if(a.getName().equals(eStatus.getRelName())) {
+                    // Call the editing method
+                    a.updateValues(relationship, points[0], points[1], fromSide, toSide);
+                    break;
+                }
+            }
+        }
+        // Finish the editing
+    }
+
+
+
 
 
 
@@ -438,8 +498,6 @@ public class DrawingDiagram extends Pane {
             ((Node)(me.getSource())).setTranslateY(newTranslateY);
         }
     }
-
-
 
 
 

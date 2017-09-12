@@ -102,13 +102,14 @@ public class NewAssocClassController extends ARelationshipController {
 
         // Validate the data
         boolean classNameOk = UmlValidation.validateNewClass(classNameField);
-        boolean relationshipOk = UmlValidation.validateNewRelationship(relNameField,
-                endRole, originRole, endMinCard, endMaxCard, originMinCard, originMaxCard);
+        boolean relationshipOk = UmlValidation.validateNewRelationship(relNameField);
+        boolean endpointsOk = UmlValidation.validateEndpoints(endRole, originRole,
+                endMinCard, endMaxCard, originMinCard, originMaxCard);
 
         /*
             IF THERE ARE NO ERRORS
          */
-        if(classNameOk && relationshipOk) {
+        if(classNameOk && relationshipOk && endpointsOk) {
             // Create the origin endpoint
             RelationshipEndpoint epOrigin = new RelationshipEndpoint(originRole.getText(),
                     originBrowsable.isSelected(), originUnique.isSelected(), originOrdered.isSelected(),

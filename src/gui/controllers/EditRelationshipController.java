@@ -8,6 +8,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import umldiagram.graphical.status.EditingStatus;
 import umldiagram.logical.Relationship;
 import umldiagram.logical.RelationshipEndpoint;
 import umldiagram.logical.UMLDiagram;
@@ -15,6 +16,8 @@ import umldiagram.logical.enums.RelationshipType;
 
 
 public class EditRelationshipController extends ARelationshipController {
+    private Relationship relationship;
+
     @FXML private TextField nameField;
 
     @FXML private Label endClassName;
@@ -34,18 +37,24 @@ public class EditRelationshipController extends ARelationshipController {
     @FXML private CheckBox originOrdered;
 
 
+
+
     /**
      * Method to initialize the interface by adding the
      * corresponding elements and controllers.
      */
     @FXML
     private void initialize() {
-        // Now set the values for the other elements
-        setValues();
+        // Get the status and diagram
+        EditingStatus eStatus = EditingStatus.getInstance(false);
+        UMLDiagram diagram = UMLDiagram.getInstance(false);
 
-        // Set the class values
-        endClassName.setText(endClass);
-        originClassName.setText(originClass);
+        // Find the relationship
+        relationship = (!eStatus.isAssociationClass())
+                ? diagram.getRelationship(eStatus.getRelName())
+                : diagram.getRelAssociationClass(eStatus.getRelName()).getRelationship();
+
+
 
         // Put controllers on the name fields
         nameField.setTextFormatter(FieldFormatter.getMixedFormatter(20));
@@ -57,6 +66,35 @@ public class EditRelationshipController extends ARelationshipController {
         originMinCard.setTextFormatter(FieldFormatter.getNumberFormatter(2));
         endMaxCard.setTextFormatter(FieldFormatter.getStarFormatter(2));
         originMaxCard.setTextFormatter(FieldFormatter.getStarFormatter(2));
+
+
+
+        // Now set the default values
+        type = relationship.getType();
+        originClass = relationship.getOrigin().getClass().getName();
+        endClass = relationship.getEnd().getClass().getName();
+
+
+        // Set the values on the fields
+        nameField.setText(relationship.getName());
+
+        endClassName.setText(relationship.getEnd().getClassOf().getName());
+        endRole.setText(relationship.getEnd().getName());
+        String[] endCard = relationship.getEnd().getCardinality().split("\\.\\.");
+        endMinCard.setText(endCard[0]);
+        endMaxCard.setText(endCard[1]);
+        endBrowsable.setSelected(relationship.getEnd().isBrowsable());
+        endUnique.setSelected(relationship.getEnd().isUnique());
+        endOrdered.setSelected(relationship.getEnd().isOrdered());
+
+        originClassName.setText(relationship.getOrigin().getClassOf().getName());
+        originRole.setText(relationship.getOrigin().getName());
+        String[] originCard = relationship.getOrigin().getCardinality().split("\\.\\.");
+        originMinCard.setText(originCard[0]);
+        originMaxCard.setText(originCard[1]);
+        originBrowsable.setSelected(relationship.getOrigin().isBrowsable());
+        originUnique.setSelected(relationship.getOrigin().isUnique());
+        originOrdered.setSelected(relationship.getOrigin().isOrdered());
     }
 
 
@@ -73,56 +111,66 @@ public class EditRelationshipController extends ARelationshipController {
      * It is the action listener of the cancel button.
      */
     @FXML
-    private void cancelCreation() {
+    private void cancelEdit() {
         ((Stage) nameField.getScene().getWindow()).close();
     }
 
 
 
 
+
+
     /**
      * Validates if the input data for a relationship is correct and,
-     * in that case, creates the logical relationship. Otherwise, it shows
+     * in that case, edits the logical relationship. Otherwise, it shows
      * error messages.
      */
     @FXML
-    private void createRelationship() {
+    private void editRelationship() {
         // Get the diagram instance
         UMLDiagram diagram = UMLDiagram.getInstance(false);
+        EditingStatus eStatus = EditingStatus.getInstance(false);
 
         // Clean the information
         cleanFields();
 
+
+
         // Validate the relationship
-        boolean ok = UmlValidation.validateNewRelationship(nameField, endRole, originRole,
+        boolean relationshipOk = UmlValidation.validateEditedRelationship(nameField,
+                eStatus.getRelName());
+        boolean endpointsOk = UmlValidation.validateEndpoints(endRole, originRole,
                 endMinCard, endMaxCard, originMinCard, originMaxCard);
 
-        /*
-            IF THERE ARE NO ERRORS
-         */
-        if(ok) {
-            // Create the origin endpoint
-            RelationshipEndpoint epOrigin = new RelationshipEndpoint(originRole.getText(),
-                    originBrowsable.isSelected(), originUnique.isSelected(), originOrdered.isSelected(),
-                    originMinCard.getText() + ".." + originMaxCard.getText(),
-                    diagram.getClasses(originClass), RelationshipType.ASSOCIATION );
 
-            // Create the ending endpoint
-            RelationshipEndpoint epEnd = new RelationshipEndpoint(endRole.getText(),
-                    endBrowsable.isSelected(), endUnique.isSelected(), endOrdered.isSelected(),
-                    endMinCard.getText() + ".." + endMaxCard.getText(),
-                    diagram.getClasses(endClass), type);
+        if(relationshipOk && endpointsOk) {
+            // Edit the relationship
+            relationship.setName(nameField.getText());
 
-            // Now creat the main relationship
-            Relationship r = new Relationship( diagram.newRelId(), nameField.getText(),
-                    epOrigin, epEnd, type);
+            // Edit the origin
+            relationship.getOrigin().setName(originRole.getText());
+            relationship.getOrigin().setBrowsable(originBrowsable.isSelected());
+            relationship.getOrigin().setUnique(originUnique.isSelected());
+            relationship.getOrigin().setOrdered(originOrdered.isSelected());
+            relationship.getOrigin().setCardinality(
+                    originMinCard.getText() + ".." + originMaxCard.getText()
+            );
 
+            // Edit the end
+            relationship.getEnd().setName(endRole.getText());
+            relationship.getEnd().setBrowsable(endBrowsable.isSelected());
+            relationship.getEnd().setUnique(endUnique.isSelected());
+            relationship.getEnd().setOrdered(endOrdered.isSelected());
+            relationship.getEnd().setCardinality(
+                    endMinCard.getText() + ".." + endMaxCard.getText()
+            );
 
-            // Add the relationship
-            diagram.addRelationship(r);
+            // Update the information
+            eStatus.setEditedRelName(nameField.getText());
+            eStatus.setEditedRel(true);
 
             // And cancel
-            cancelCreation();
+            cancelEdit();
         }
 
     }
@@ -131,18 +179,13 @@ public class EditRelationshipController extends ARelationshipController {
 
 
 
-    /**
-     * Checks if two values of a cardinality are correct.
-     * @param min Min value of the cardinality.
-     * @param max Max value of the cardinality.
-     * @return true if the max is a star, or if the max is greater than or
-     * equal to the min. False in the other case.
-     */
-    private boolean cardinalityAccepted(String min, String max) {
-        // If the max is a star, then it is ok
-        // If not, the minimum must be less than the maximum
-        return max.contains("*") || (Integer.valueOf(min) <= Integer.valueOf(max));
-    }
+
+
+
+
+
+
+
 
 
 

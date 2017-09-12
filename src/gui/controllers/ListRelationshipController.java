@@ -11,6 +11,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
 import umldiagram.graphical.status.EditingStatus;
 import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.enums.RelationshipType;
@@ -89,13 +90,22 @@ public class ListRelationshipController {
                     "At least one relationship must be selected to be deleted.");
         }
         else {
-           // Update the status
-           EditingStatus eStatus = EditingStatus.getInstance(false);
-           eStatus.setDeletedRels(true);
-           eStatus.setDelRelationships(relsTable.getSelectionModel().getSelectedItems());
+            // Ask for confirmation
+            boolean delete = PopupHandlers.showConfirmation("Deleting Relationships",
+                    "The selected relationships will be deleted.",
+                    "Please confirm that you want to proceed. This action cannot be undone.");
 
-           // Close the window
-            cancelListing();
+            // If we need to delete
+            if(delete) {
+                // Update the status
+                EditingStatus eStatus = EditingStatus.getInstance(false);
+                eStatus.setDeletedRels(true);
+                eStatus.setDelRelationships(relsTable.getSelectionModel().getSelectedItems());
+
+                // Close the window
+                cancelListing();
+            }
+            // If not, do nothing
         }
     }
 
@@ -104,57 +114,48 @@ public class ListRelationshipController {
 
 
 
+    /**
+     * Method that validates the relationship selection, and opens the
+     * new frame with the information to edit a relationship.
+     */
     @FXML
     private void editRelationship() {
-        try {
-            // Get the selection count
-            int selectionCount = relsTable.getSelectionModel().getSelectedIndices().size();
+        // Get the selection count
+        int selectionCount = relsTable.getSelectionModel().getSelectedIndices().size();
 
-            // Check for selection errors
-            String errors = "";
-            // If there is no selection, put an error
-            if(selectionCount == 0)
-                errors = "One relationship must be selected to be edited.";
-                // If there is more than one selection, show another message
-            else if(selectionCount > 1)
-                errors = "Only one relationship can be edited at a time";
-                // And if there is a generalization, show another message
-            else if(((RelationshipModel) relsTable.getSelectionModel().getSelectedItem())
-                    .getType().equals(RelationshipType.GENERALIZATION.getName())) {
-                errors = "Generalization relationships cannot be edited";
-            }
-
-            // If everything is OK...
-            if(errors.isEmpty()) {
-                // Get the item
-                RelationshipModel rm = (RelationshipModel) relsTable.getSelectionModel().getSelectedItem();
-
-                // Get the status and save the info
-                EditingStatus eStatus = EditingStatus.getInstance(false);
-                eStatus.setEditedRel(true);
-                eStatus.setEditedRelName(rm.getName());
-                eStatus.setAssociationClass(rm.getType().equals("Association Class"));
-
-                // Close the frame
-                cancelListing();
-
-                // Open the new dialog
-                // TODO CHECK AND FIX THIS!
-                PopupHandlers.showPopup("",
-                        "Editing Relationship " + eStatus.getRelName(),
-                        relsTable.getScene()
-                );
-            }
-            // If there are errors...
-            else {
-                // Show a message
-                PopupHandlers.showWarningDialog("Incorrect Selection",
-                        "Incorrect selection to edit a relationship.", errors);
-            }
+        // Check for selection errors
+        String errors = "";
+        // If there is no selection, put an error
+        if(selectionCount == 0)
+            errors = "One relationship must be selected to be edited.";
+            // If there is more than one selection, show another message
+        else if(selectionCount > 1)
+            errors = "Only one relationship can be edited at a time";
+            // And if there is a generalization, show another message
+        else if(((RelationshipModel) relsTable.getSelectionModel().getSelectedItem())
+                .getType().equals(RelationshipType.GENERALIZATION.getName())) {
+            errors = "Generalization relationships cannot be edited";
         }
-        catch(IOException ioe) {
-            // TODO COMPLETE EXCEPTION
-            ioe.printStackTrace();
+
+        // If everything is OK...
+        if(errors.isEmpty()) {
+            // Get the item
+            RelationshipModel rm = (RelationshipModel) relsTable.getSelectionModel().getSelectedItem();
+
+            // Get the status and save the info
+            EditingStatus eStatus = EditingStatus.getInstance(false);
+            eStatus.setRelName(rm.getName());
+            eStatus.setAssociationClass(rm.getType().equals("Association Class"));
+            eStatus.setOpenEditing(true);
+
+            // Close the frame
+            cancelListing();
+        }
+        // If there are errors...
+        else {
+            // Show a message
+            PopupHandlers.showWarningDialog("Incorrect Selection",
+                    "Incorrect selection to edit a relationship.", errors);
         }
     }
 

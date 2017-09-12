@@ -4,16 +4,13 @@ package umldiagram.graphical;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Line;
-import javafx.scene.text.Text;
 import umldiagram.logical.AssociationClass;
-import umldiagram.logical.Attribute;
+import umldiagram.logical.Relationship;
 import umldiagram.logical.UmlClass;
 
-import java.util.LinkedList;
-import java.util.List;
+
 
 
 /**
@@ -101,6 +98,27 @@ class ComplexNode extends Group {
                 ? (new Point2D(line.getEndX(), line.getEndY() - node.getHeight() / 2))
                 : (new Point2D(line.getEndX() - node.getWidth() / 2, line.getEndY()));
         node.relocate(newStartingPoint.getX(), newStartingPoint.getY());
+        layout();
+    }
+
+
+
+
+
+
+    /**
+     * Method that updates the values of the relationship, changing the
+     * corresponding data, according to the one received as parameters.
+     * @param relationship The relationship with the information to be used.
+     * @param startPoint The starting point of the relationship.
+     * @param endPoint The ending point of the relationship.
+     * @param fromSide Side where the relationship starts.
+     * @param toSide Side where the relationship ends.
+     */
+    void updateArrow(Relationship relationship, Point2D startPoint, Point2D endPoint,
+                     char fromSide, char toSide) {
+        // Call the arrow to update it
+        arrow.updateValues(relationship, startPoint, endPoint, fromSide, toSide);
         layout();
     }
 

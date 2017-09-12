@@ -74,29 +74,45 @@ public class UmlValidation {
 
 
 
+    /**
+     * Method that validates an edited relationship name, to decide if the values are correct.
+     * @param newRelName The new name, possible edited.
+     * @param originalRelName The original name, with no edition.
+     * @return true if the name is ok, false if there are errors.
+     */
+    public static boolean validateEditedRelationship(TextField newRelName, String originalRelName) {
+        // Get the diagram instance
+        UMLDiagram diagram = UMLDiagram.getInstance(false);
+
+        // Check if the name is empty
+        if(newRelName.getText().isEmpty()) {
+            // Add errors to the relationship
+            newRelName.setStyle("-fx-border-color: #f4416b ; -fx-border-width: 2px ;");
+            newRelName.setTooltip(new Tooltip("The relationship name cannot be empty."));
+        }
+        else if(!originalRelName.toUpperCase().equals(newRelName.getText().toUpperCase())
+            && diagram.existsRelationship(newRelName.getText())) {
+            // Add errors to the relationship
+            newRelName.setStyle("-fx-border-color: #f4416b ; -fx-border-width: 2px ;");
+            newRelName.setTooltip(new Tooltip("The relationship name already exists."));
+        }
+        else return true;
+
+        // Now return
+        return false;
+    }
+
+
+
 
     /**
      * Method that evaluates a new relationship to decide if the values are correct.
      * @param relNameField Name of the relationship.
-     * @param endRole End role name.
-     * @param originRole Origin role name.
-     * @param endMinCard End min cardinality.
-     * @param endMaxCard End max cardinality.
-     * @param originMinCard Origin min cardinality.
-     * @param originMaxCard Origin max cardinality.
      * @return true if everything is okay, false otherwise.
      */
-    public static boolean validateNewRelationship(TextField relNameField,
-                                                  TextField endRole, TextField originRole,
-                                                  TextField endMinCard, TextField endMaxCard,
-                                                  TextField originMinCard, TextField originMaxCard) {
+    public static boolean validateNewRelationship(TextField relNameField) {
         // Get the diagram instance
         UMLDiagram diagram = UMLDiagram.getInstance(false);
-
-        // Temporal flags
-        boolean relNameOk = false;
-        boolean endpointsOk = validateEndpoints(endRole, originRole, endMinCard,
-                endMaxCard, originMinCard, originMaxCard);
 
         // Check if the name is empty
         if(relNameField.getText().isEmpty()) {
@@ -107,79 +123,12 @@ public class UmlValidation {
             relNameField.setStyle("-fx-border-color: #f4416b ; -fx-border-width: 2px ;");
             relNameField.setTooltip(new Tooltip("The relationship name already exists."));
         }
-        else relNameOk = true;
+        else return true;
 
 
         // Now return
-        return relNameOk && endpointsOk;
-    }
-
-
-
-
-
-
-
-    /**
-     * Method that valida a new class name, to decide if the values are correct.
-     * @param className The textfield with the class name.
-     * @return True if it is correct, false otherwise.
-     */
-    public static boolean validateNewClass(TextField className) {
-        // Temporal flags
-        boolean classOk = false;
-
-        // If the class name is empty
-        if(className.getText().isEmpty()) {
-            // Add a border and tooltip
-            className.setStyle("-fx-border-color: #f4416b ; -fx-border-width: 2px ;");
-            className.setTooltip(new Tooltip("The class name cannot be empty"));
-        }
-        // If the class name is repeated
-        else if(UMLDiagram.getInstance(false).getClassesNames().contains(className.getText().toUpperCase())) {
-            // Add a border and tooltip
-            className.setStyle("-fx-border-color: #f4416b ; -fx-border-width: 2px ;");
-            className.setTooltip(new Tooltip("The class name is already in use."));
-        }
-        else classOk = true;
-
-        // Return the value
-        return classOk;
-    }
-
-
-
-
-    /**
-     * Method that valida aan edited class name, to decide if the values are correct.
-     * @param className The textfield with the edited class name.
-     * @param originalName The original name of the class
-     * @return True if it is correct, false otherwise.
-     */
-    public static boolean validateEditedClass(TextField className, String originalName) {
-        // If the class name is empty
-        if(className.getText().isEmpty()) {
-            // Add a border and tooltip
-            className.setStyle("-fx-border-color: #f4416b ; -fx-border-width: 2px ;");
-            className.setTooltip(new Tooltip("The class name cannot be empty"));
-        }
-        // If the class name is repeated
-        // Check if the edited name is different than the original name
-        else if(!originalName.toUpperCase().equals(className.getText().toUpperCase()) &&
-                    // And the edited name is not contained on the list of classes
-                    UMLDiagram.getInstance(false).getClassesNames().contains(className.getText().toUpperCase())) {
-
-                // Add a border and tooltip
-                className.setStyle("-fx-border-color: #f4416b ; -fx-border-width: 2px ;");
-                className.setTooltip(new Tooltip("The class name is already in use."));
-        }
-        // If everything was correct, return true
-        else return true;
-
-        // If not, return the error
         return false;
     }
-
 
 
 
@@ -195,9 +144,9 @@ public class UmlValidation {
      * @param originMaxCard Origin max cardinality.
      * @return true if everything is ok, false if there is at least one error.
      */
-    private static boolean validateEndpoints(TextField endRole, TextField originRole,
-                                             TextField endMinCard, TextField endMaxCard,
-                                             TextField originMinCard, TextField originMaxCard) {
+    public static boolean validateEndpoints(TextField endRole, TextField originRole,
+                                            TextField endMinCard, TextField endMaxCard,
+                                            TextField originMinCard, TextField originMaxCard) {
         // Temporal flags
         boolean rolesOk = false;
         boolean oCardOk = false;
@@ -274,6 +223,66 @@ public class UmlValidation {
 
 
 
+    /**
+     * Method that valida a new class name, to decide if the values are correct.
+     * @param className The textfield with the class name.
+     * @return True if it is correct, false otherwise.
+     */
+    public static boolean validateNewClass(TextField className) {
+        // Temporal flags
+        boolean classOk = false;
+
+        // If the class name is empty
+        if(className.getText().isEmpty()) {
+            // Add a border and tooltip
+            className.setStyle("-fx-border-color: #f4416b ; -fx-border-width: 2px ;");
+            className.setTooltip(new Tooltip("The class name cannot be empty"));
+        }
+        // If the class name is repeated
+        else if(UMLDiagram.getInstance(false).getClassesNames().contains(className.getText().toUpperCase())) {
+            // Add a border and tooltip
+            className.setStyle("-fx-border-color: #f4416b ; -fx-border-width: 2px ;");
+            className.setTooltip(new Tooltip("The class name is already in use."));
+        }
+        else classOk = true;
+
+        // Return the value
+        return classOk;
+    }
+
+
+
+
+    /**
+     * Method that valida aan edited class name, to decide if the values are correct.
+     * @param className The textfield with the edited class name.
+     * @param originalName The original name of the class
+     * @return True if it is correct, false otherwise.
+     */
+    public static boolean validateEditedClass(TextField className, String originalName) {
+        // If the class name is empty
+        if(className.getText().isEmpty()) {
+            // Add a border and tooltip
+            className.setStyle("-fx-border-color: #f4416b ; -fx-border-width: 2px ;");
+            className.setTooltip(new Tooltip("The class name cannot be empty"));
+        }
+        // If the class name is repeated
+        // Check if the edited name is different than the original name
+        else if(!originalName.toUpperCase().equals(className.getText().toUpperCase()) &&
+                    // And the edited name is not contained on the list of classes
+                    UMLDiagram.getInstance(false).getClassesNames().contains(className.getText().toUpperCase())) {
+
+                // Add a border and tooltip
+                className.setStyle("-fx-border-color: #f4416b ; -fx-border-width: 2px ;");
+                className.setTooltip(new Tooltip("The class name is already in use."));
+        }
+        // If everything was correct, return true
+        else return true;
+
+        // If not, return the error
+        return false;
+    }
+
 
 
 
@@ -289,7 +298,6 @@ public class UmlValidation {
         // If not, the minimum must be less than the maximum
         return max.contains("*") || (Integer.valueOf(min) <= Integer.valueOf(max));
     }
-
 
 
 }
