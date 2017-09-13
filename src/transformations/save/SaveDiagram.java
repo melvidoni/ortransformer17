@@ -82,7 +82,8 @@ public class SaveDiagram {
             printWriter.println(SaveLabels.ASSOC_CLASS_CLOSURE.getName());
         }
 
-        if(null != writer) writer.close();
+        // Close the file
+        writer.close();
 		
 	}
 

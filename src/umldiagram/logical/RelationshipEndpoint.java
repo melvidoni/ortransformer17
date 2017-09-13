@@ -21,8 +21,27 @@ public class RelationshipEndpoint {
 
 
 
+
+
+	/**
+	 * Default empty constructor of the class.
+	 */
+	public RelationshipEndpoint() {
+		name = "";
+		browsable = false;
+		unique = false;
+		ordered = false;
+		cardinality = "";
+		type = EndpointType.ASSOCIATION;
+		lclass = null;
+	}
+
+
+
+
+
     /**
-     * Default constructor to create a new relationship endpoint using the
+     * Constructor to create a new relationship endpoint using the
      * information received as parameters.
      * @param n The role name.
      * @param b If it is browsable.

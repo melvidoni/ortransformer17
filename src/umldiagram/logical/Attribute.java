@@ -17,6 +17,18 @@ public class Attribute {
 
 
 
+	/**
+	 * Default constructor that initializes an empty attribute.
+	 */
+	public Attribute(){
+		name = "";
+		id = -1;
+		ordered = false;
+		unique = false;
+	}
+
+
+
     /**
      * Constructor that creates an attribute with the values received as
      * parameters, stored in the instance.

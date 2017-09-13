@@ -18,6 +18,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import org.apache.commons.lang3.StringUtils;
+import transformations.save.OpenDiagram;
 import transformations.save.SaveDiagram;
 import umldiagram.graphical.DrawingDiagram;
 import umldiagram.graphical.status.DrawingStatus;
@@ -612,58 +613,18 @@ public class MainWindowController {
      * on a location slected by the user.
      */
     @FXML
-    private void exportToPNG() {
-        // Prepare the File Chooser
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Export Diagram as Image");
-
-        // Limit the extension
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("PNG Files", "*.png")
-        );
-
-        // Get the selected file
-        File file = fileChooser.showSaveDialog(null);
-
-        // If a file was selected
-        if (file != null) {
-            try {
-                // Get the snapshot
-                WritableImage image = drawingCanvas.snapshot(new SnapshotParameters(), null);
-
-                // And write the image
-                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
-            }
-            catch (IOException ex) {
-                // TODO COMPLETE THIS MESSAGE
-                ex.printStackTrace();
-            }
-        }
-        // Finish exporting
-    }
-
-
-
-
-
-    @FXML
-    private void saveDiagram() {
+    private void exportToPNGMenu() {
         try {
-            // Prepare the File Chooser
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Save Diagram");
-
-            // Limit the extension
-            fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("ORT Files", "*.ort")
-            );
-
             // Get the selected file
-            File file = fileChooser.showSaveDialog(null);
+            File file = PopupHandlers.showSaveFileChooser("Export Diagram as Image",
+                    "PNG Files", "*.png");
 
             // If a file was selected
-            if(file != null) {
-                SaveDiagram.export(file, drawingCanvas.getNodes());
+            if (file != null) {
+                // Get the snapshop and write the image
+                ImageIO.write(SwingFXUtils.fromFXImage(
+                        drawingCanvas.snapshot(new SnapshotParameters(), null),
+                        null), "png", file);
             }
         }
         catch (IOException ex) {
@@ -674,5 +635,55 @@ public class MainWindowController {
 
 
 
+
+
+    /**
+     * Method that saves te current diagram on the file selected
+     * by the user. It shows a filechooser to pick the file up.
+     */
+    @FXML
+    private void saveDiagramMenu() {
+        try {
+            // Get the selected file
+            File file = PopupHandlers.showSaveFileChooser("Save Diagram",
+                    "ORT Files", "*.ort");
+
+            // If a file was selected, save the diagram
+            if(file != null)  SaveDiagram.export(file, drawingCanvas.getNodes());
+        }
+        catch (IOException ex) {
+            // TODO COMPLETE THIS MESSAGE
+            ex.printStackTrace();
+        }
+    }
+
+
+
+
+
+    @FXML
+    private void openDiagramMenu() {
+        try {
+            // Get the selected file
+            File file = PopupHandlers.showOpenFileChooser("Open Diagram",
+                    "ORT Files", "*.ort");
+
+            // If a file was selected, save the diagram
+            if(file != null) {
+                // Create a new model
+                newModelMenu();
+
+                // Now store get the information
+                OpenDiagram.open(file, drawingCanvas);
+
+                // Update the tree
+                treePane.update(UMLDiagram.getInstance(false));
+            }
+        }
+        catch (IOException ex) {
+            // TODO COMPLETE THIS MESSAGE
+            ex.printStackTrace();
+        }
+    }
 
 }

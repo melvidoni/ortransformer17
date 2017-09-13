@@ -19,7 +19,7 @@ public class UmlClass {
      * Default constructor that initializes the instance
      * with empty default values.
      */
-	UmlClass(){
+	public UmlClass(){
 		id = "";
 		name = "";
 		attrList = new LinkedList<>();

@@ -24,7 +24,7 @@
                      </graphic>
                   </MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Open">
+                  <MenuItem mnemonicParsing="false" text="Open" onAction="#openDiagramMenu">
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -33,7 +33,7 @@
                         </ImageView>
                      </graphic>
                   </MenuItem>
-                  <MenuItem fx:id="menuSave" mnemonicParsing="false" text="Save" onAction="#saveDiagram">
+                  <MenuItem fx:id="menuSave" mnemonicParsing="false" text="Save" onAction="#saveDiagramMenu">
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -66,7 +66,7 @@
                      </graphic>
                   </MenuItem>
 
-                  <MenuItem fx:id="menuPng" mnemonicParsing="false" text="Export PNG" onAction="#exportToPNG">
+                  <MenuItem fx:id="menuPng" mnemonicParsing="false" text="Export PNG" onAction="#exportToPNGMenu">
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>

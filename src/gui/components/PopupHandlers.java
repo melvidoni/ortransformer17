@@ -10,10 +10,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import umldiagram.logical.enums.RelationshipType;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -103,5 +105,56 @@ public class PopupHandlers {
     }
 
 
+
+
+
+
+    /**
+     * Method that shows a file chooser used to save a file, using the config
+     * received as parameters.
+     * @param title The title of the chooser.
+     * @param extTitle The extension title.
+     * @param ext The extension ending.
+     * @return The selected file, or null if the user pressed cancel.
+     */
+    public static File showSaveFileChooser(String title, String extTitle, String ext) {
+        // Prepare the File Chooser
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(title);
+
+        // Limit the extension
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter(extTitle, ext)
+        );
+
+        // Get the selected file
+        return fileChooser.showSaveDialog(null);
+    }
+
+
+
+
+
+    /**
+     * Method that shows a file chooser used to open a file, using the config
+     * received as parameters.
+     * @param title The title of the chooser.
+     * @param extTitle The extension title.
+     * @param ext The extension ending.
+     * @return The selected file, or null if the user pressed cancel.
+     */
+    public static File showOpenFileChooser(String title, String extTitle, String ext) {
+        // Prepare the File Chooser
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(title);
+
+        // Limit the extension
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter(extTitle, ext)
+        );
+
+        // Get the selected file
+        return fileChooser.showOpenDialog(null);
+    }
 
 }
