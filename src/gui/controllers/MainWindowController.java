@@ -651,7 +651,7 @@ public class MainWindowController {
             // If a file was selected, save the diagram
             if(file != null)  SaveDiagram.export(file, drawingCanvas.getNodes());
         }
-        catch (IOException ex) {
+        catch (Exception ex) {
             // TODO COMPLETE THIS MESSAGE
             ex.printStackTrace();
         }
@@ -663,7 +663,7 @@ public class MainWindowController {
 
     @FXML
     private void openDiagramMenu() {
-        try {
+       /* try {
             // Get the selected file
             File file = PopupHandlers.showOpenFileChooser("Open Diagram",
                     "ORT Files", "*.ort");
@@ -683,7 +683,7 @@ public class MainWindowController {
         catch (IOException ex) {
             // TODO COMPLETE THIS MESSAGE
             ex.printStackTrace();
-        }
+        }*/
     }
 
 }
