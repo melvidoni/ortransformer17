@@ -32,7 +32,7 @@ public enum RelationshipType {
     /**
      * Method that returns the enum for the relationship type
      * received as a parameter.
-     * @param t The type of relationship to compare.
+     * @param t The name of relationship to compare.
      * @return The corresponding enum (if found), false otherwise.
      */
 	public static RelationshipType getRelType(String t){
@@ -48,7 +48,29 @@ public enum RelationshipType {
 	}
 
 
-    /**
+
+
+	/**
+	 * Method that returns the enum for the relationship type
+	 * received as a parameter.
+	 * @param t The enpoint of relationship to compare.
+	 * @return The corresponding enum (if found), false otherwise.
+	 */
+	public static RelationshipType getRelEndpointType(EndpointType t){
+		if(ASSOCIATION.enpointType.equals(t))
+			return RelationshipType.ASSOCIATION;
+		else if(AGGREGATION.enpointType.equals(t))
+			return RelationshipType.AGGREGATION;
+		else if(COMPOSITION.enpointType.equals(t))
+			return RelationshipType.COMPOSITION;
+		else if(GENERALIZATION.enpointType.equals(t))
+			return RelationshipType.GENERALIZATION;
+		return null;
+	}
+
+
+
+	/**
      * Getter to obtain the name of the relationship type.
      * @return The name of the relationship type.
      */
@@ -56,12 +78,4 @@ public enum RelationshipType {
 		return name;
 	}
 
-
-    /**
-     * Getter to obtain the type of endpoint in the relationship.
-     * @return The type of endpoint in object format.
-     */
-	public EndpointType getEndpointType() {
-		return enpointType;
-	}
 }

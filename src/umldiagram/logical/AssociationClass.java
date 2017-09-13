@@ -11,16 +11,6 @@ public class AssociationClass {
 	private Relationship relationship;
 
 
-    /**
-     * Default constructor that initializes an empty instance.
-     */
-	public AssociationClass(){
-		id = "";
-		logicalClass = new UmlClass();
-		relationship = new Relationship("");
-	}
-
-
 
     /**
      * Constructor that initializes the isntance with the values

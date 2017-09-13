@@ -21,7 +21,7 @@ public enum SaveLabels {
 		CLASS_ABSTRACT("classAbstract"),
 		CLASS_ID("classId"),
 		NODE_POINT_X("nodePointX"),
-        NODE_POINT_Y("nodePointX"),
+        NODE_POINT_Y("nodePointY"),
 	ATTRIBUTE("attribute"),
 		ATTRIBUTE_NAME("attrName"),
 		ATTRIBUTE_TYPE("attrType"),

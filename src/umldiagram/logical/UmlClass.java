@@ -19,7 +19,7 @@ public class UmlClass {
      * Default constructor that initializes the instance
      * with empty default values.
      */
-	public UmlClass(){
+	UmlClass(){
 		id = "";
 		name = "";
 		attrList = new LinkedList<>();
@@ -169,36 +169,6 @@ public class UmlClass {
 	}
 
 
-
-
-
-
-
-
-
-
-
-	/**
-	 * Method that returns the attributes in a list of object arrays, to be
-     * used on the tables in the modifying windows.
-	 * @return Attributes list as a list of object arrays.
-	 */
-	public List<Object[]> tablefyAttributes(){
-		List<Object[]> rowsList = new LinkedList<>();
-
-        for(Attribute a : attrList) {
-            Object[] row = new Object[4];
-            // Add the data
-            row[0] = a.getName();
-            row[1] = a.getType();
-            row[2] = a.isOrdered();
-            row[3] = a.isUnique();
-            // Add the row to the list
-            rowsList.add(row);
-        }
-		
-		return rowsList;
-	}
 
 
 

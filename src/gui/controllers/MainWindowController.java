@@ -660,10 +660,13 @@ public class MainWindowController {
 
 
 
-
+    /**
+     * Method that opens a diagram from an *.ort file selected by
+     * the user, using a FileChooser to pick the file up.
+     */
     @FXML
     private void openDiagramMenu() {
-       /* try {
+       try {
             // Get the selected file
             File file = PopupHandlers.showOpenFileChooser("Open Diagram",
                     "ORT Files", "*.ort");
@@ -680,10 +683,10 @@ public class MainWindowController {
                 treePane.update(UMLDiagram.getInstance(false));
             }
         }
-        catch (IOException ex) {
+        catch (Exception ex) {
             // TODO COMPLETE THIS MESSAGE
             ex.printStackTrace();
-        }*/
+        }
     }
 
 }

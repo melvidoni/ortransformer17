@@ -27,7 +27,8 @@ import java.util.LinkedList;
 
 /**
  * Class that saves the UML diagram in a special format of the system,
- * with a *.ort file extension.
+ * with a *.ort file extension. Though the extension is custom, the
+ * file is an XML file, parsed with JavaX utilities.
  * @author Melina Vidoni, INGAR CONICET-UTN.
  */
 public class SaveDiagram {
@@ -156,7 +157,7 @@ public class SaveDiagram {
 
             // Add the values
             aElement.setAttribute(SaveLabels.ATTRIBUTE_NAME.getName(), a.getName());
-            aElement.setAttribute(SaveLabels.ATTRIBUTE_TYPE.getName(), a.getType().getName());
+            aElement.setAttribute(SaveLabels.ATTRIBUTE_TYPE.getName(), a.getType().getType());
             aElement.setAttribute(SaveLabels.ATTRIBUTE_ID.getName(), String.valueOf(a.getId()));
             aElement.setAttribute(SaveLabels.ATTRIBUTE_ORDERED.getName(), String.valueOf(a.isOrdered()));
             aElement.setAttribute(SaveLabels.ATTRIBUTE_UNIQUE.getName(), String.valueOf(a.isUnique()));

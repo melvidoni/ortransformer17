@@ -227,6 +227,8 @@ public class UMLDiagram {
 	}
 
 
+
+
     /**
      * Returns the new id for the new relationship.
      * @return The new id is given by the amounf of relationships plus one.
