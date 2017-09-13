@@ -43,7 +43,7 @@
                      </graphic>
                   </MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Exit">
+                  <MenuItem mnemonicParsing="false" text="Exit" onAction="#exitMenu">
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -56,7 +56,7 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Model">
                <items>
-                  <MenuItem fx:id="menuTransform" mnemonicParsing="false" text="Transform">
+                  <MenuItem fx:id="menuTransform" mnemonicParsing="false" text="Transform" onAction="#transformDiagram">
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>

@@ -3,6 +3,7 @@ package gui.controllers;
 
 import gui.components.PopupHandlers;
 import gui.models.RelationshipModel;
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,13 +12,13 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import gui.components.TreeBrowser;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
-import javafx.stage.FileChooser;
 import org.apache.commons.lang3.StringUtils;
+import transformations.ort.TransformationStatus;
+import transformations.ort.TranslationTask;
 import transformations.save.OpenDiagram;
 import transformations.save.SaveDiagram;
 import umldiagram.graphical.DrawingDiagram;
@@ -27,7 +28,6 @@ import umldiagram.logical.AssociationClass;
 import umldiagram.logical.Relationship;
 import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.UmlClass;
-
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
@@ -64,6 +64,8 @@ public class MainWindowController {
 
     private DrawingStatus drawingStatus;
     private EditingStatus editingStatus;
+    private TransformationStatus transfStatus;
+
     private Line drawingLine;
 
 
@@ -94,8 +96,9 @@ public class MainWindowController {
                 toggleNewAgg.selectedProperty(), toggleNewComp.selectedProperty(),
                 toggleNewAC.selectedProperty());
 
-        // Class name for menu
+        // Prepare other statuses
         editingStatus = EditingStatus.getInstance(true);
+        transfStatus = TransformationStatus.getInstance(true);
 
 
         // Prepare the context menu
@@ -176,8 +179,9 @@ public class MainWindowController {
                 toggleNewAgg.selectedProperty(), toggleNewComp.selectedProperty(),
                 toggleNewAC.selectedProperty());
 
-        // Clean the edition
+        // Clean the statuses
         editingStatus = EditingStatus.getInstance(true);
+        transfStatus = TransformationStatus.getInstance(true);
     }
 
 
@@ -689,4 +693,47 @@ public class MainWindowController {
         }
     }
 
+
+
+
+
+    /**
+     * Method that exits the application without asking for
+     * any type of input.
+     */
+    @FXML
+    private void exitMenu() {
+        // Show confirmation
+        Platform.exit();
+    }
+
+
+
+
+    @FXML
+    private void transformDiagram() {
+        try {
+            // Start showing the transformation information
+            PopupHandlers.showPopup(
+                    "/gui/views/TransformDialog.fxml",
+                    "Configure Transformation", drawingCanvas.getScene()
+            );
+
+            // If the transformation was configured
+            if(transfStatus.needsTransformation()) {
+                // Start the thread
+                Thread th = new Thread(new TranslationTask());
+                th.setDaemon(true);
+                th.start();
+
+                // Show the progress
+                PopupHandlers.showPopup("/gui/views/ProgressDialog.fxml",
+                        "Transformation in Progress", drawingCanvas.getScene());
+            }
+        }
+        catch (IOException e) {
+            // TODO CORRECT THIS CATCH
+            e.printStackTrace();
+        }
+    }
 }
