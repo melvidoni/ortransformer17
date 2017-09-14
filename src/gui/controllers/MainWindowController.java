@@ -19,8 +19,8 @@ import javafx.scene.shape.Line;
 import org.apache.commons.lang3.StringUtils;
 import transformations.ort.TransformationStatus;
 import transformations.ort.TranslationTask;
+import transformations.ort.UMLtoXML;
 import transformations.save.OpenDiagram;
-import transformations.save.SaveDiagram;
 import umldiagram.graphical.DrawingDiagram;
 import umldiagram.graphical.status.DrawingStatus;
 import umldiagram.graphical.status.EditingStatus;
@@ -653,7 +653,8 @@ public class MainWindowController {
                     "ORT Files", "*.ort");
 
             // If a file was selected, save the diagram
-            if(file != null)  SaveDiagram.export(file, drawingCanvas.getNodes());
+            if(file != null)
+                UMLtoXML.transformToXML(file, false, drawingCanvas.getNodes());
         }
         catch (Exception ex) {
             // TODO COMPLETE THIS MESSAGE
@@ -721,11 +722,6 @@ public class MainWindowController {
 
             // If the transformation was configured
             if(transfStatus.needsTransformation()) {
-                // Start the thread
-                Thread th = new Thread(new TranslationTask());
-                th.setDaemon(true);
-                th.start();
-
                 // Show the progress
                 PopupHandlers.showPopup("/gui/views/ProgressDialog.fxml",
                         "Transformation in Progress", drawingCanvas.getScene());

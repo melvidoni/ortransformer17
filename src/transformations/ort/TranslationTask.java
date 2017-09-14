@@ -3,8 +3,14 @@ package transformations.ort;
 
 import javafx.concurrent.Task;
 
+import javax.xml.transform.*;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.util.Random;
+
+
+
 
 
 /**
@@ -16,6 +22,15 @@ public class TranslationTask extends Task {
 
 
 
+    /**
+     * Empty constructor of the class.
+     */
+    public TranslationTask() {}
+
+
+
+
+
     @Override
     protected Boolean call() throws Exception {
         // Get the transformation status
@@ -24,25 +39,32 @@ public class TranslationTask extends Task {
 
         // STEP 1
         // Get the temporal directory according to the operative system
-        String tempPath = System.getProperty("java.io.tmpdir") + File.separator + "ORTransformer";
+        String tempPath = System.getProperty("java.io.tmpdir") + "ORTransformer";
         String tempName = fileName();
         File tempDir = new File(tempPath);
         tempDir.mkdirs();
-        tStatus.setProgressProperty(10);
+        updateProgress(10,100);
+        updateMessage("10% Completed. Temp files loaded successfully.");
 
 
         // STEP 2
         // Translate from UML to XML
+        File preFile = new File(tempPath + File.separator + tempName + ".xml.pre");
+        UMLtoXML.transformToXML(preFile,true, null);
+        updateProgress(25, 100);
+        updateMessage("25% Completed. XML translation compleated successfully.");
 
 
-
+        // STEP 3
+        // Transform towards the metamodel
+        File modFile = new File(tempPath + File.separator + tempName + ".xml.mod");
+        transform("files/UMLToModel.xslt", "UMLMetamodel","UMLMetamodel.xsd", preFile, modFile);
+        updateProgress(40, 100);
+        updateMessage("40% Completed. Metamodel transformation achieved.");
 
 
 /*
-        // Translate from UML to XML
-        UMLtoXML guiaXML = new UMLtoXML(path, number, uml);
-        guiaXML.transformToXML();
-        vp.setProgressValue(25);
+
 
         // Transform towards the metamodel
         MetamodelMapping guiaMetamodelo = new MetamodelMapping(path, number);
@@ -89,6 +111,32 @@ public class TranslationTask extends Task {
 
         return true;
     }
+
+
+
+
+
+
+
+    private void transform(String xslt, String param, String xsd, File preFile, File modFile)
+            throws TransformerException {
+
+        // Prepare the factory and source
+        TransformerFactory factory = TransformerFactory.newInstance();
+        Source xsltSource = new StreamSource(new File(xslt));
+
+        // Prepare the transformation
+        Transformer transformer = factory.newTransformer(xsltSource);
+        transformer.setParameter(param, xsd);
+
+        // Obtain the input file
+        Source text = new StreamSource(preFile);
+        transformer.transform(text, new StreamResult(modFile));
+    }
+
+
+
+
 
 
 

@@ -22,10 +22,6 @@ public class TransformationStatus {
     private ImplementationType implementation;
     private DatabaseType database;
 
-    private SimpleDoubleProperty progressProperty;
-    private SimpleStringProperty progressLabel;
-
-
 
 
 
@@ -34,9 +30,6 @@ public class TransformationStatus {
      * restarts the status of transformation.
      */
     private TransformationStatus() {
-        progressProperty = new SimpleDoubleProperty(0);
-        progressLabel = new SimpleStringProperty("Working...");
-
         transform = false;
         implementation = null;
         database = null;
@@ -80,24 +73,4 @@ public class TransformationStatus {
     public void setDatabase(DatabaseType d) {
         database = d;
     }
-
-
-    public double getProgress() {
-        return progressProperty.get();
-    }
-
-    public SimpleDoubleProperty getProgressProperty() {
-        return progressProperty;
-    }
-
-
-    void setProgressProperty(double pp) {
-        progressProperty.set(pp);
-        progressLabel.set(pp + "% Completed");
-    }
-
-    public SimpleStringProperty getLabelProperty() {
-        return progressLabel;
-    }
-
 }

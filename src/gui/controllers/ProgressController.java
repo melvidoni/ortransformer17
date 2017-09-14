@@ -5,9 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import transformations.ort.TransformationStatus;
-
-
-
+import transformations.ort.TranslationTask;
 
 
 public class ProgressController {
@@ -23,15 +21,21 @@ public class ProgressController {
      */
     @FXML
     private void initialize() {
-        // Get the status
-        TransformationStatus tStatus = TransformationStatus.getInstance(false);
+        // Prepare the simulation tread
+        TranslationTask tTask = new TranslationTask();
 
         // Bind the progress bar
-        progressBar.progressProperty().bindBidirectional( tStatus.getProgressProperty() );
+        progressBar.progressProperty().bind(tTask.progressProperty());
         progressBar.progressProperty().addListener( ce -> progressListener() );
 
         // Bind the label
-        progressLabel.textProperty().bindBidirectional( tStatus.getLabelProperty() );
+        progressLabel.textProperty().bind(tTask.messageProperty());
+
+
+        // Start the thread
+        Thread th = new Thread(tTask);
+        th.setDaemon(true);
+        th.start();
     }
 
 
