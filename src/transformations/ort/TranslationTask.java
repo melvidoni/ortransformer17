@@ -7,7 +7,6 @@ import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
-import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -76,10 +75,24 @@ public class TranslationTask extends Task {
         // STEP 4
         // First mapping, using types
         File tpoFile = new File(tempPath + File.separator + tempName + ".xml.tpo");
-        transform("files/FirstMapping.xslt", getParamsFirstStep(modFile.getAbsolutePath()), modFile, tpoFile);
+        transform("files/FirstMapping.xslt",
+                getParamsList(modFile.getAbsolutePath(), 8, "Param_",
+                        "SQL2003Metamodel_data_1",  "files/SQL2003Metamodel_data.xsd"),
+                modFile, tpoFile);
         updateProgress(55, 100);
         updateMessage("55% Completed. Types transformation achieved.");
 
+
+
+        // STEP 5
+        // Second mapping, using tables
+        File tblFile = new File(tempPath + File.separator + tempName + ".xml.tbl");
+        transform("files/SecondMapping.xslt." + tStatus.getImplementation().getExtension(),
+                getParamsList(tpoFile.getAbsolutePath(),2, "SQL2003Metamodel_data",
+                        "SQL2003Metamodel_schema_1", "files/SQL2003Metamodel_schema.xsd"),
+                tpoFile, tblFile);
+        updateProgress(70, 100);
+        updateMessage("70% Completed. Tables successfully mapped.");
 
 
 
@@ -124,6 +137,19 @@ public class TranslationTask extends Task {
 
 
 
+
+
+
+
+    /**
+     * Method that performs an XSL Transformation, using the information received
+     * as parameters when calling.
+     * @param xslt The XSLT file to lead the transformation.
+     * @param params Any possible parameters for the file.
+     * @param startFile The origin XML file.
+     * @param endFile The target XML file.
+     * @throws TransformerException An exception for transformation issues.
+     */
     private void transform(String xslt, LinkedList<String[]> params, File startFile, File endFile)
             throws TransformerException {
 
@@ -146,10 +172,17 @@ public class TranslationTask extends Task {
 
 
 
-
-
-
-    private LinkedList<String[]> getParamsFirstStep(String modName) {
+    /**
+     * Method that prepares the parameters for those requiring a list.
+     * @param modName The name of the file that is going to be used.
+     * @param max The maximum name of iterations.
+     * @param paramName The names of the params on the loop, without number.
+     * @param lastPName The name of the last param.
+     * @param lastPPath The path of the last param.
+     * @return The parameters as a linked list of arrays of string.
+     */
+    private LinkedList<String[]> getParamsList(String modName, int max, String paramName,
+                                               String lastPName, String lastPPath) {
         // Prepare the uri
         String uri = modName.replace(File.separator, "/");
 
@@ -157,24 +190,21 @@ public class TranslationTask extends Task {
         LinkedList<String[]> parameters = new LinkedList<>();
 
         // Add basic parameters
-        for(int i=1; i<=8; i++) {
+        for(int i=1; i<=max; i++) {
             // Create the element
-            String[] param = {"Param_" + i, "file:///" + uri};
+            String[] param = {paramName + i, "file:///" + uri};
             parameters.add(param);
         }
 
         // Create the last one
-        String[] lastParam = {"SQL2003Metamodel_data_1",
-                (new File("files/SQL2003Metamodel_data.xsd"))
-                        .getAbsolutePath().replace(File.separator, "/")
+        String[] lastParam = {lastPName,
+                (new File(lastPPath)).getAbsolutePath().replace(File.separator, "/")
         };
         parameters.addLast(lastParam);
 
         // Return the list
         return parameters;
     }
-
-
 
 
 
@@ -191,5 +221,6 @@ public class TranslationTask extends Task {
         Random r = new Random();
         return String.valueOf(r.nextInt(10000000) + 1000000);
     }
+
 
 }

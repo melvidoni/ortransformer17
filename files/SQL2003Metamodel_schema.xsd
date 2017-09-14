@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		edited with XMLSpy v2007 (http://www.altova.com) by Fernanda (INGAR)
+	-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+	<xs:element name="SQLSchema">
+		<xs:annotation>
+			<xs:documentation>Root Node</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SchemaObject">
+					<xs:complexType>
+						<xs:choice maxOccurs="unbounded">
+							<xs:element name="BaseTable">
+								<xs:complexType>
+									<xs:sequence maxOccurs="unbounded">
+										<xs:element ref="StructuredType"/>
+									</xs:sequence>
+									<xs:attribute name="name" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="TypedTable">
+								<xs:complexType>
+									<xs:sequence maxOccurs="unbounded">
+										<xs:element ref="StructuredType"/>
+									</xs:sequence>
+									<xs:attribute name="name" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+						<xs:attribute name="name" type="xs:string"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="StructuredType">
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="Attribute">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Type"/>
+						</xs:sequence>
+						<xs:attribute name="name" type="xs:string"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
