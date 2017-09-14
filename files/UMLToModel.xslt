@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="2.1">
+                version="2.0">
 	<xsl:output indent="yes" omit-xml-declaration="yes" />
 	<xsl:param name="UMLMetamodel" select="''" />
 	<xsl:template match="diagram">
@@ -334,13 +334,13 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-			<xsl:if test="contains($superClasses,'-') =  true">
+			<!--<xsl:if test="contains($superClasses,'-') =  true">
 				<xsl:message terminate="yes">
 					Error 1: There is at least one class with multiple hierarchy.
 					<xsl:value-of select="$superClasses" />
 					//
 				</xsl:message>
-			</xsl:if>
+			</xsl:if>-->
 			<AssociationClass uname="{@name}" isAbstract="{@abstract}"
 							  superclass="{$superClasses}">
 				<xsl:for-each select="attribute">

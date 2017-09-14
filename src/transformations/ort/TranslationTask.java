@@ -7,6 +7,8 @@ import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
+import java.nio.file.Path;
+import java.util.LinkedList;
 import java.util.Random;
 
 
@@ -47,6 +49,7 @@ public class TranslationTask extends Task {
         updateMessage("10% Completed. Temp files loaded successfully.");
 
 
+
         // STEP 2
         // Translate from UML to XML
         File preFile = new File(tempPath + File.separator + tempName + ".xml.pre");
@@ -55,26 +58,36 @@ public class TranslationTask extends Task {
         updateMessage("25% Completed. XML translation compleated successfully.");
 
 
+
         // STEP 3
         // Transform towards the metamodel
         File modFile = new File(tempPath + File.separator + tempName + ".xml.mod");
-        transform("files/UMLToModel.xslt", "UMLMetamodel","UMLMetamodel.xsd", preFile, modFile);
+
+        LinkedList<String[]> paramsList1 = new LinkedList<>();
+        String[] params1 = {"UMLMetamodel", "UMLMetamodel.xsd"};
+        paramsList1.add(params1);
+
+        transform("files/UMLToModel.xslt", paramsList1, preFile, modFile);
         updateProgress(40, 100);
         updateMessage("40% Completed. Metamodel transformation achieved.");
+
+
+
+        // STEP 4
+        // First mapping, using types
+        File tpoFile = new File(tempPath + File.separator + tempName + ".xml.tpo");
+        transform("files/FirstMapping.xslt", getParamsFirstStep(modFile.getAbsolutePath()), modFile, tpoFile);
+        updateProgress(55, 100);
+        updateMessage("55% Completed. Types transformation achieved.");
+
+
+
+
 
 
 /*
 
 
-        // Transform towards the metamodel
-        MetamodelMapping guiaMetamodelo = new MetamodelMapping(path, number);
-        guiaMetamodelo.obtainXML();
-        vp.setProgressValue(40);
-
-        // First mapping: types
-        TypeMapping guiaTipos = new TypeMapping(path, number);
-        guiaTipos.obtainXML();
-        vp.setProgressValue(55);
 
         // Second mapping: tables
         TableMapping guiaTablas = new TableMapping(path, number, Implementation.getImplementacion(impl));
@@ -102,13 +115,6 @@ public class TranslationTask extends Task {
 
 
 
-
-
-
-
-
-
-
         return true;
     }
 
@@ -118,7 +124,7 @@ public class TranslationTask extends Task {
 
 
 
-    private void transform(String xslt, String param, String xsd, File preFile, File modFile)
+    private void transform(String xslt, LinkedList<String[]> params, File startFile, File endFile)
             throws TransformerException {
 
         // Prepare the factory and source
@@ -127,15 +133,46 @@ public class TranslationTask extends Task {
 
         // Prepare the transformation
         Transformer transformer = factory.newTransformer(xsltSource);
-        transformer.setParameter(param, xsd);
+        for(String[] p: params) {
+            transformer.setParameter(p[0], p[1]);
+        }
 
         // Obtain the input file
-        Source text = new StreamSource(preFile);
-        transformer.transform(text, new StreamResult(modFile));
+        Source text = new StreamSource(startFile);
+        transformer.transform(text, new StreamResult(endFile));
     }
 
 
 
+
+
+
+
+
+    private LinkedList<String[]> getParamsFirstStep(String modName) {
+        // Prepare the uri
+        String uri = modName.replace(File.separator, "/");
+
+        // Create a list
+        LinkedList<String[]> parameters = new LinkedList<>();
+
+        // Add basic parameters
+        for(int i=1; i<=8; i++) {
+            // Create the element
+            String[] param = {"Param_" + i, "file:///" + uri};
+            parameters.add(param);
+        }
+
+        // Create the last one
+        String[] lastParam = {"SQL2003Metamodel_data_1",
+                (new File("files/SQL2003Metamodel_data.xsd"))
+                        .getAbsolutePath().replace(File.separator, "/")
+        };
+        parameters.addLast(lastParam);
+
+        // Return the list
+        return parameters;
+    }
 
 
 
