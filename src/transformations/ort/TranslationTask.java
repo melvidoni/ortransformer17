@@ -96,27 +96,20 @@ public class TranslationTask extends Task {
 
 
 
+        // STEP 6
+        // Translate towards SQL
+        XMLtoSQL sqlGuide = new XMLtoSQL(tempPath, tempName);
+        String types = sqlGuide.translateORTypes();
+        //String tables = sqlGuide.translateORTables(tStatus.getImplementation());
+        updateProgress(85, 100);
+        updateMessage("85% Completed. Translation towards SQL in progress.");
+
+        System.out.println(types);
 
 
 /*
 
 
-
-        // Second mapping: tables
-        TableMapping guiaTablas = new TableMapping(path, number, Implementation.getImplementacion(impl));
-        guiaTablas.obtainXMLOR();
-        vp.setProgressValue(70);
-
-        // Translate to SQL
-        XMLtoSQL sqlGuide = new XMLtoSQL(path, number);
-        String types = sqlGuide.translateORTypes();
-        String tables = sqlGuide.translateORTables(Implementation.getImplementacion(impl));
-        vp.setProgressValue(85);
-
-        // Remove the files
-        this.removeOR(path, number);
-        vp.setProgressValue(100);
-        vp.dispose();
 
         // Call the results window
         ResultsWindow vr = new ResultsWindow(ortMain, types, tables, true);

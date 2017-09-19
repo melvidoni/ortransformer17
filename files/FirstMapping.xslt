@@ -53,7 +53,7 @@ http://www.altova.com/mapforce
                                 <xsl:sequence select="xs:string(@superclass)"/>
                             </xsl:attribute>
                         </xsl:if>
-                        <xsl:for-each select="UAtribute">
+                        <xsl:for-each select="UAttribute">
                             <Attribute>
                                 <xsl:attribute name="uname">
                                     <xsl:sequence select="xs:string(@uname)"/>
@@ -315,7 +315,7 @@ http://www.altova.com/mapforce
                                 <xsl:sequence select="xs:string(@superclass)"/>
                             </xsl:attribute>
                         </xsl:if>
-                        <xsl:for-each select="UAtribute">
+                        <xsl:for-each select="UAttribute">
                             <Attribute>
                                 <xsl:attribute name="uname">
                                     <xsl:sequence select="xs:string(@uname)"/>
@@ -331,7 +331,7 @@ http://www.altova.com/mapforce
                         </xsl:for-each>
                         <xsl:for-each select="Pseudoattribute">
                             <xsl:variable name="var56_Pseudoattribute" as="node()" select="."/>
-                            <Atributo>
+                            <Attribute>
                                 <xsl:if test="$var56_Pseudoattribute/@uname">
                                     <xsl:attribute name="uname">
                                         <xsl:sequence select="xs:string(@uname)"/>
@@ -370,7 +370,7 @@ http://www.altova.com/mapforce
                                         </StructuredType>
                                     </ReferenceType>
                                 </Type>
-                            </Atributo>
+                            </Attribute>
                         </xsl:for-each>
                     </StructuredType>
                 </xsl:for-each>

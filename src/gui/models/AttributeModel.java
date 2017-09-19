@@ -75,4 +75,13 @@ public class AttributeModel {
         unique.set(u);
     }
 
+
+    public SimpleBooleanProperty orderedProperty() {
+        return ordered;
+    }
+
+    public SimpleBooleanProperty uniqueProperty() {
+        return unique;
+    }
+
 }

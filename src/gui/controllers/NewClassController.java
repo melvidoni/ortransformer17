@@ -72,10 +72,16 @@ public class NewClassController extends GridPane {
         attrOrdCol.setCellValueFactory(new PropertyValueFactory<>("ordered"));
         attrOrdCol.prefWidthProperty().bind(attrTable.widthProperty().divide(4));
         attrOrdCol.setCellFactory(p -> new CheckBoxTableCell<>());
+        attrOrdCol.setOnEditCommit(
+                t -> (t.getTableView().getItems().get(t.getTablePosition().getRow())).setOrdered(t.getNewValue())
+        );
 
         attrUnqCol.setCellValueFactory(new PropertyValueFactory<>("unique"));
         attrUnqCol.prefWidthProperty().bind(attrTable.widthProperty().divide(4));
         attrUnqCol.setCellFactory(p -> new CheckBoxTableCell<>());
+        attrUnqCol.setOnEditCommit(
+                t -> (t.getTableView().getItems().get(t.getTablePosition().getRow())).setUnique(t.getNewValue())
+        );
     }
 
 
