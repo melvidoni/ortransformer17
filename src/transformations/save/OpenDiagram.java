@@ -7,6 +7,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import transformations.ort.enums.XMLLabels;
 import umldiagram.graphical.DrawingDiagram;
 import umldiagram.logical.*;
 import umldiagram.logical.enums.AttributeType;
@@ -26,7 +27,6 @@ import java.io.IOException;
  * to reload the data in the new diagram (logic and graphic). It later
  * updates the parent window. Only works with *.ort files, stored
  * using this system.
- * @see SaveDiagram
  * @author Melina Vidoni, INGAR CONICET-UTN.
  */
 public class OpenDiagram {
@@ -52,67 +52,62 @@ public class OpenDiagram {
         Document document = builder.parse(targetFile);
 
 
-        // For each class
-        NodeList classNodeList =
-                ((Element) document.getElementsByTagName(SaveLabels.DOC_CLASSES.getName()).item(0))
-                        .getElementsByTagName(SaveLabels.CLASS.getName());
+        // Get the first children
+        Node child = document.getElementsByTagName(XMLLabels.ROOT.getName()).item(0).getFirstChild();
 
-        for(int i=0; i<classNodeList.getLength(); i++) {
-            // Prepare the basic values
-            double[] coords = new double[2];
-            UmlClass umlClass = readClass((Element) classNodeList.item(i), false, coords);
+        // While there are children
+        while(child != null) {
+            if(child.getNodeType()==Node.ELEMENT_NODE) {
+                // Convert to element
+                Element eChild = (Element) child;
+                String eLabel = eChild.getNodeName();
 
-            // Update the information
-            diagram.addClass( umlClass );
-            drawing.addNewNode(coords[0], coords[1], umlClass);
+                // If it is a class
+                if (eLabel.equals(XMLLabels.CLASS.getName())) {
+                    // Prepare the basic values
+                    double[] coords = new double[2];
+                    UmlClass umlClass = readClass(eChild, false, coords);
+
+                    // Update the information
+                    diagram.addClass(umlClass);
+                    drawing.addNewNode(coords[0], coords[1], umlClass);
+
+                    // Once the classes are ready, make the layout
+                    drawing.applyCss();
+                    drawing.layout();
+                }
+                // If it is a relationship
+                else if (eLabel.equals(XMLLabels.RELATIONSHIP.getName())) {
+                    // Get the relationship
+                    Relationship umlRel = readRelationship(eChild, false);
+
+                    // Update the information
+                    diagram.addRelationship(umlRel);
+                    drawing.addNewRel(umlRel);
+                }
+                // If it is an association class
+                else if (eLabel.equals(XMLLabels.ASSOCIATION_CLASS.getName())) {
+                    // Create a basic association class
+                    AssociationClass umlAC = new AssociationClass(
+
+                            readClass((Element) eChild.getElementsByTagName(XMLLabels.CLASS.getName()).item(0),
+                                    true, new double[2]),
+                            readRelationship(
+                                    (Element) eChild.getElementsByTagName(XMLLabels.RELATIONSHIP.getName()).item(0),
+                                    true)
+                    );
+
+                    // Update the information
+                    diagram.addAssociationClass(umlAC);
+                    drawing.addNewAssociationClass(umlAC);
+                }
+            }
+
+            // Go to the next
+            child = child.getNextSibling();
         }
-        // Once the classes are ready, make the layout
-        drawing.applyCss();
-        drawing.layout();
-
-
-        // For each relationship
-        NodeList relsNodeList =
-                ((Element) document.getElementsByTagName(SaveLabels.DOC_RELS.getName()).item(0))
-                        .getElementsByTagName(SaveLabels.RELATIONSHIP.getName());
-        for(int j=0; j<relsNodeList.getLength(); j++) {
-            // Get the relationship
-            Relationship umlRel = readRelationship((Element) relsNodeList.item(j), false);
-
-            // Update the information
-            diagram.addRelationship(umlRel);
-            drawing.addNewRel(umlRel);
-        }
-
-
-        // For each association class
-        NodeList assocsNodeList =
-                ((Element) document.getElementsByTagName(SaveLabels.DOC_ASSOCCLASS.getName()).item(0))
-                        .getElementsByTagName(SaveLabels.ASSOC_CLASS.getName());
-        for(int k=0; k<assocsNodeList.getLength(); k++) {
-            // Get the element
-            Element aElement = (Element) assocsNodeList.item(k);
-
-            // Create a basic association class
-            AssociationClass umlAC = new AssociationClass(
-
-                    readClass( (Element) aElement.getElementsByTagName(SaveLabels.CLASS.getName()).item(0),
-                            true, new double[2]),
-                    readRelationship(
-                            (Element) aElement.getElementsByTagName(SaveLabels.RELATIONSHIP.getName()).item(0),
-                            true)
-            );
-
-            // Update the information
-            diagram.addAssociationClass(umlAC);
-            drawing.addNewAssociationClass(umlAC);
-        }
-
+        // Reading completed
     }
-
-
-
-
 
 
 
@@ -126,49 +121,48 @@ public class OpenDiagram {
      */
     private static Relationship readRelationship(Element element, boolean isAssocClass) {
 	    // Create the basic relationship
-        Relationship umlRel = new Relationship( element.getAttribute(SaveLabels.REL_ID.getName()) );
+        Relationship umlRel = new Relationship( element.getAttribute(XMLLabels.REL_ID.getName()) );
         umlRel.setAssociationClass(isAssocClass);
-        umlRel.setName( element.getAttribute(SaveLabels.REL_NAME.getName()) );
+        umlRel.setName( element.getAttribute(XMLLabels.REL_NAME.getName()) );
         umlRel.setType(RelationshipType.getRelType(
-                element.getAttribute(SaveLabels.REL_TYPE.getName())
+                element.getAttribute(XMLLabels.REL_TYPE.getName())
         ));
 
         // Get the diagram
         UMLDiagram diagram = UMLDiagram.getInstance(false);
 
-        // Get the elements
-        NodeList endsList = element.getElementsByTagName(SaveLabels.ENDPOINT_REL.getName());
-        for(int j=0; j<endsList.getLength(); j++) {
-            // Get the node
-            Node epNode = endsList.item(j);
 
-            // If this is usable
-            if (epNode.getNodeType() == Node.ELEMENT_NODE) {
-                // Then convert it
-                Element epElement = (Element) epNode;
+        // Save the origin
+        Element oElem = (Element) element.getElementsByTagName(XMLLabels.REL_START.getName()).item(0);
+        umlRel.setOrigin(
+            new RelationshipEndpoint(
+                    oElem.getAttribute(XMLLabels.REL_EP_NAME.getName()),
+                Boolean.valueOf( oElem.getAttribute(XMLLabels.REL_EP_BROWSABLE.getName()) ),
+                Boolean.valueOf( oElem.getAttribute(XMLLabels.REL_EP_UNIQUE.getName()) ),
+                Boolean.valueOf( oElem.getAttribute(XMLLabels.REL_EP_ORDERED.getName()) ),
+                    oElem.getAttribute(XMLLabels.REL_EP_CARD.getName()),
+                diagram.getClasses( oElem.getAttribute(XMLLabels.REL_EP_CLASS.getName()) ),
+                RelationshipType.getRelEndpointType(
+                        EndpointType.getEndpointType(oElem.getAttribute(XMLLabels.REL_EP_TYPE.getName()))
+                )
+            )
+        );
 
-                // Create the endpoint
-                RelationshipEndpoint umlEndpoint = new RelationshipEndpoint(
-                      epElement.getAttribute(SaveLabels.END_NAME.getName()),
-                      Boolean.valueOf( epElement.getAttribute(SaveLabels.END_BROWSABLE.getName()) ),
-                      Boolean.valueOf( epElement.getAttribute(SaveLabels.END_UNIQUE.getName()) ),
-                      Boolean.valueOf( epElement.getAttribute(SaveLabels.END_ORDERED.getName()) ),
-                      epElement.getAttribute(SaveLabels.END_CARDINALITY.getName()),
-                      diagram.getClasses( epElement.getAttribute(SaveLabels.END_CLASS.getName()) ),
-                      RelationshipType.getRelEndpointType(
-                              EndpointType.getEndpointType(epElement.getAttribute(SaveLabels.END_TYPE.getName()))
-                      )
-                );
-
-                // If this is the origin
-                if(Boolean.valueOf(epElement.getAttribute(SaveLabels.END_ORIGIN.getName()))) {
-                    // Save it as the origin
-                    umlRel.setOrigin(umlEndpoint);
-                }
-                // Otherwise, it is the destination
-                else umlRel.setEnd(umlEndpoint);
-            }
-        }
+        // Set the ending
+        Element eElem = (Element) element.getElementsByTagName(XMLLabels.REL_DEST.getName()).item(0);
+        umlRel.setEnd(
+                new RelationshipEndpoint(
+                        eElem.getAttribute(XMLLabels.REL_EP_NAME.getName()),
+                        Boolean.valueOf( eElem.getAttribute(XMLLabels.REL_EP_BROWSABLE.getName()) ),
+                        Boolean.valueOf( eElem.getAttribute(XMLLabels.REL_EP_UNIQUE.getName()) ),
+                        Boolean.valueOf( eElem.getAttribute(XMLLabels.REL_EP_ORDERED.getName()) ),
+                        eElem.getAttribute(XMLLabels.REL_EP_CARD.getName()),
+                        diagram.getClasses( eElem.getAttribute(XMLLabels.REL_EP_CLASS.getName()) ),
+                        RelationshipType.getRelEndpointType(
+                                EndpointType.getEndpointType(eElem.getAttribute(XMLLabels.REL_EP_TYPE.getName()))
+                        )
+                )
+        );
 
         // Return the relationship
         return umlRel;
@@ -193,40 +187,40 @@ public class OpenDiagram {
     private static UmlClass readClass(Element element, boolean isAssocClass, double[] coords) {
 	    // Create the UML class
         UmlClass umlClass = new UmlClass(
-                element.getAttribute(SaveLabels.CLASS_ID.getName()),
-                element.getAttribute(SaveLabels.CLASS_NAME.getName()),
-                Boolean.valueOf( element.getAttribute(SaveLabels.CLASS_ABSTRACT.getName()) )
+                element.getAttribute(XMLLabels.CLASS_ID.getName()),
+                element.getAttribute(XMLLabels.CLASS_NAME.getName()),
+                Boolean.valueOf( element.getAttribute(XMLLabels.CLASS_ABSTRACT.getName()) )
         );
 
         // If this is not an association class
         if(!isAssocClass) {
             // Save the coords
-            coords[0] = Double.valueOf(element.getAttribute(SaveLabels.NODE_POINT_X.getName()));
-            coords[1] = Double.valueOf(element.getAttribute(SaveLabels.NODE_POINT_Y.getName()));
+            coords[0] = Double.valueOf(element.getAttribute(XMLLabels.NODE_POINT_X.getName()));
+            coords[1] = Double.valueOf(element.getAttribute(XMLLabels.NODE_POINT_Y.getName()));
         }
 
         // Now get the attributes
-        NodeList attrsList =
-                (element.getElementsByTagName(SaveLabels.DOC_ATTRIBUTES.getName()).item(0))
-                .getChildNodes();
+        Node child = element.getFirstChild();
 
-        // For each attribute
-        for(int i=0; i<attrsList.getLength(); i++) {
-            // Get the element
-            Node aNode = attrsList.item(i);
-
-            if (aNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element aElement = (Element) aNode;
+        // While there are children
+        while(child != null) {
+            // If this is an element
+            if(child.getNodeType() == Node.ELEMENT_NODE &&
+                    child.getNodeName().equals(XMLLabels.ATTRIBUTE.getName())) {
+                Element aElement = (Element) child;
 
                 // Add the attribute
                 umlClass.addAttribute(new Attribute(
-                        aElement.getAttribute(SaveLabels.ATTRIBUTE_NAME.getName()),
-                        AttributeType.getAttribute(aElement.getAttribute(SaveLabels.ATTRIBUTE_TYPE.getName())),
-                        Integer.valueOf(aElement.getAttribute(SaveLabels.ATTRIBUTE_ID.getName())),
-                        Boolean.valueOf(aElement.getAttribute(SaveLabels.ATTRIBUTE_ORDERED.getName())),
-                        Boolean.valueOf(aElement.getAttribute(SaveLabels.ATTRIBUTE_UNIQUE.getName()))
+                        aElement.getAttribute(XMLLabels.ATTRIBUTE_NAME.getName()),
+                        AttributeType.getAttribute(aElement.getAttribute(XMLLabels.ATTRIBUTE_TYPE.getName())),
+                        Integer.valueOf(aElement.getAttribute(XMLLabels.ATTRIBUTE_ID.getName())),
+                        Boolean.valueOf(aElement.getAttribute(XMLLabels.ATTRIBUTE_ORDERED.getName())),
+                        Boolean.valueOf(aElement.getAttribute(XMLLabels.ATTRIBUTE_UNIQUE.getName()))
                 ));
             }
+
+            // Go to the next one
+            child = child.getNextSibling();
         }
 
         // Return the class

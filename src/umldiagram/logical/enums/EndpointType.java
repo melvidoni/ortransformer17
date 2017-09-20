@@ -6,11 +6,10 @@ package umldiagram.logical.enums;
  * @author Melina Vidoni, INGAR CONICET-UTN.
  */
 public enum EndpointType {
-    // TODO CHANGE THESE NAMES
-	ASSOCIATION("ninguno"),
-	GENERALIZACION("generalizacion"),
-	AGGREGATION("agregado"),
-	COMPOSITION("compuesto");
+	ASSOCIATION("none"),
+	GENERALIZACION("generalization"),
+	AGGREGATION("aggregated"),
+	COMPOSITION("composed");
 
 	String name;
 
