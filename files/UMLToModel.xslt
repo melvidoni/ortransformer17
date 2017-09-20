@@ -17,12 +17,12 @@
 				<xsl:if test="@type = 'Generalization'">
 					<xsl:for-each select="origin">
 						<xsl:variable name="originClassId" select="@class" />
-						<xsl:if test="$classId = $originClassId">
+						<xsl:if test="$class = $originClassId">
 							<xsl:for-each select="../destination">
 								<xsl:variable name="destinationClassId" select="@class" />
 								<xsl:value-of select="string('-')" />
 								<xsl:for-each select="../../class">
-									<xsl:if test="@id = $destinationClassId">
+									<xsl:if test="@name = $destinationClassId">
 										<xsl:value-of select="@name" />
 									</xsl:if>
 								</xsl:for-each>

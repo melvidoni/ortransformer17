@@ -170,16 +170,15 @@ public class Relationship {
 	 * @param eClass Parent class of the relationship.
 	 */
 	public void newGeneralization(UmlClass oClass, UmlClass eClass) {
-	    // TODO CHANGE NAMES ON THIS PART
-		name = oClass.getName() + "Especializa" + eClass.getName();
+		name = oClass.getName() + "Specializes" + eClass.getName();
 		type = RelationshipType.GENERALIZATION;
 		
 		// Set the origin class
-		origin = new RelationshipEndpoint( (oClass.getName() + "Hijo" ), true, false,
+		origin = new RelationshipEndpoint( (oClass.getName().toLowerCase() + "Child" ), true, false,
                 false, "0..*", oClass, RelationshipType.ASSOCIATION );
 
 		// Set the ending class
-        end = new RelationshipEndpoint( (eClass.getName() + "Padre"), false, false,
+        end = new RelationshipEndpoint( (eClass.getName().toLowerCase() + "Parent"), false, false,
                 false, "0..1", eClass, RelationshipType.GENERALIZATION
         );
 	}
