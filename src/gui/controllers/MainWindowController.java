@@ -1,7 +1,6 @@
 package gui.controllers;
 
 
-import com.sun.org.apache.bcel.internal.generic.POP;
 import gui.components.PopupHandlers;
 import gui.models.RelationshipModel;
 import javafx.application.Platform;
@@ -20,7 +19,7 @@ import javafx.scene.shape.Line;
 import org.apache.commons.lang3.StringUtils;
 import transformations.ort.TransformationStatus;
 import transformations.ort.UMLtoXML;
-import transformations.save.OpenDiagram;
+import transformations.open.OpenDiagram;
 import umldiagram.graphical.DrawingDiagram;
 import umldiagram.graphical.status.DrawingStatus;
 import umldiagram.graphical.status.EditingStatus;

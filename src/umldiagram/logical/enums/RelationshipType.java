@@ -14,6 +14,8 @@ public enum RelationshipType {
 	GENERALIZATION("Generalization", EndpointType.GENERALIZACION);
 
 	private String name;
+
+
 	private EndpointType enpointType;
 
 
@@ -78,4 +80,12 @@ public enum RelationshipType {
 		return name;
 	}
 
+
+	/**
+	 * Getter to obtain the endopoint type.
+	 * @return The endpoint type.
+	 */
+	public EndpointType getEnpointType() {
+		return enpointType;
+	}
 }

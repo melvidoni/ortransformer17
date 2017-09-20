@@ -42,13 +42,13 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<!--<xsl:if test="contains($superClasses,'-') =  true">
+		<xsl:if test="contains($superClasses,'-') =  true">
 			<xsl:message terminate="yes">
-				Error 1: There is at least one multiple hierarchy.
+				Error 1: Existe por lo menos una clase que tiene herencia multiple:
 				<xsl:value-of select="$superClasses" />
 				//
 			</xsl:message>
-		</xsl:if>-->
+		</xsl:if>
 		<UClass uname="{@name}" isAbstract="{@abstract}" superclass="{$superClasses}">
 			<xsl:for-each select="attribute">
 				<UAttribute uname="{@name}" isOrdered="{@ordered}"

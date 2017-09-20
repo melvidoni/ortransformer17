@@ -9,6 +9,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+import transformations.ort.enums.ImplementationType;
 import umldiagram.logical.enums.AttributeType;
 
 
@@ -112,7 +113,8 @@ class XMLtoSQL {
                 if (superType.isEmpty()) {
                     // It does not have a parent
                     definition += " AS OBJECT (";
-                } else {
+                }
+                else {
                     // If it has parent...
                     definition += " UNDER " + superType + "_tip (";
 
@@ -148,7 +150,7 @@ class XMLtoSQL {
                             // Predefined attributes
                             if (t.getNodeName().equals("PredefinedType")) {
                                 // If it is not null...
-                                if (t.getAttribute("type") != null) {
+                                if (t.getAttributeNode("type") != null) {
                                     //...find it among the enums
                                     AttributeType ta = AttributeType.getAttribute(t.getAttribute("type"));
 
@@ -250,7 +252,7 @@ class XMLtoSQL {
 		Element e = (Element) element.getElementsByTagName("StructuredType").item(0);
 
 		// If the name is not null
-		if(!e.getAttribute("uname").isEmpty()){
+		if(e.getAttributeNode("uname") != null){
 			String attrType = e.getAttribute("uname");
 			
 			// If the type has already been translated
@@ -300,7 +302,7 @@ class XMLtoSQL {
             Element tetr = (Element) trList.item(m);
 
             // If the name is not null
-            if(!tetr.getAttribute("uname").isEmpty()) {
+            if(tetr.getAttributeNode("uname") != null) {
                 String attrType = tetr.getAttribute("uname");
 
                 // If it has already been added...
@@ -390,7 +392,7 @@ class XMLtoSQL {
 		String attr = "";
 		
 		// If the name is not null
-		if(e.getAttribute("uname") != null){
+		if(e.getAttributeNode("uname") != null){
 			String attrType = e.getAttribute("uname");
 			
 			// If the type has already been translated...
@@ -440,7 +442,7 @@ class XMLtoSQL {
             Element trte = (Element) trList.item(l);
 
             // If it has a name, it is not empty
-            if (trte.getAttribute("uname") != null) {
+            if (trte.getAttributeNode("uname") != null) {
                 String attrType = trte.getAttribute("uname");
 
                 // If the type has already been translated
@@ -503,10 +505,8 @@ class XMLtoSQL {
 		// Declare the type
 		String attr = "";
 
-		// TODO THE REF TYPES ARE NOT CORRECTLY DONE!! CHECK THIS!!
-
 		// If the name is not null
-		if(te.getAttribute("uname") != null){
+		if(te.getAttributeNode("uname") != null){
 			// If the type has already been added
 			if(typesList.contains(te.getAttribute("uname") + "_tip")){
 				if(!isFirst) attr += ",";
@@ -559,47 +559,56 @@ class XMLtoSQL {
 	 * @return String with the SQL script
 	 * @throws TransformationException For issues when transforming the elements.
 	 */
-	/*String translateORTables(Implementation imp) throws TransformationException {
+	String translateORTables(ImplementationType imp) throws TransformationException {
 		// Read the file
 		Element tbl = read(".xml.tbl");
 
-        //Preparamos el script
+        // Set the script
         String tableScripts = "";
 
         // Go through each element
-        for (Element tt : (Iterable<Element>) tbl.getChild("ObjetoEsquema").getChildren("TablaTipada")) {
-            // Prepare the definition
-            String definition = "";
+        NodeList nodeList = tbl.getElementsByTagName("TypedTable");
+        for(int i=0; i<nodeList.getLength(); i++) {
 
-            if (tt.getAttribute("nombre") != null) {
-                String name = tt.getAttributeValue("nombre");
+            // If this is usable
+            if(nodeList.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                // Get the element
+                Element tt = (Element) nodeList.item(i);
 
-                // Mark the header
-                definition = "CREATE TABLE " + name + "_t OF " + name + "_tip";
+                // Prepare the definition
+                String definition = "";
 
-                // Evaluate hierarchies
-                if (childrenList.contains(name + "_tip"))
-                    definition = definition + "\r\nNOT SUBSTITUTABLE AT ALL LEVELS";
-                else if (parentsList.contains(name + "_tip") && !imp.equals(Implementation.FLAT))
-                    definition = definition + "\r\nNOT SUBSTITUTABLE AT ALL LEVELS";
+                if (tt.getAttributeNode("uname") != null) {
+                    String name = tt.getAttribute("uname");
 
-                // Check the scopes
-                if (nestedScopesList.containsKey(name + "_t")) {
-                    //Recorremos de a uno y vamos agregando
-                    for (String s : nestedScopesList.get(name + "_t")) {
-                        definition += "\r\n" + s;
+                    // Mark the header
+                    definition = "CREATE TABLE " + name + "_t OF " + name + "_tip";
+
+                    // Evaluate hierarchies
+                    if (childrenList.contains(name + "_tip"))
+                        definition = definition + "\r\nNOT SUBSTITUTABLE AT ALL LEVELS";
+                    else if (parentsList.contains(name + "_tip") && !imp.equals(ImplementationType.FLAT))
+                        definition = definition + "\r\nNOT SUBSTITUTABLE AT ALL LEVELS";
+
+                    // Check the scopes
+                    if (nestedScopesList.containsKey(name + "_t")) {
+                        //Recorremos de a uno y vamos agregando
+                        for(String s : nestedScopesList.get(name + "_t")) {
+                            definition += "\r\n" + s;
+                        }
                     }
+
+                    // Add the closure
+                    definition += ";\r\n\r\n";
                 }
 
-                // Add the closure
-                definition += ";\r\n\r\n";
+                tableScripts += definition;
             }
-
-            tableScripts += definition;
         }
-		
-		// Add the alterations to nested tables
-        if(!imp.equals(Implementation.HORIZONTAL)) {
+
+
+        // Add the alterations to nested tables
+        if(!imp.equals(ImplementationType.HORIZONTAL)) {
             for (String key : ntList.keySet()) {
                 tableScripts += ntList.get(key);
             }
@@ -607,7 +616,6 @@ class XMLtoSQL {
 
 		return tableScripts;
 	}
-*/
 
 
 

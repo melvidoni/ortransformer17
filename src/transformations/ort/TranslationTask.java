@@ -100,11 +100,13 @@ public class TranslationTask extends Task {
         // Translate towards SQL
         XMLtoSQL sqlGuide = new XMLtoSQL(tempPath, tempName);
         String types = sqlGuide.translateORTypes();
-        //String tables = sqlGuide.translateORTables(tStatus.getImplementation());
+        String tables = sqlGuide.translateORTables(tStatus.getImplementation());
         updateProgress(85, 100);
         updateMessage("85% Completed. Translation towards SQL in progress.");
 
         System.out.println(types);
+        System.out.println("\n----\n");
+        System.out.println(tables);
 
 
 /*
