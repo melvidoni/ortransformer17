@@ -95,9 +95,9 @@ class XMLtoSQL {
             // Get the structured childs
             NodeList structuredTypesList = tpo.getElementsByTagName("StructuredType");
 
+            for (int i = 0; i < structuredTypesList.getLength() &&
+                    ((Element) structuredTypesList.item(i)).getAttributeNode("uname") != null; i++) {
 
-
-            for (int i = 0; i < structuredTypesList.getLength(); i++) {
                 // Get the element
                 Element e = (Element) structuredTypesList.item(i);
 
@@ -502,7 +502,9 @@ class XMLtoSQL {
 		
 		// Declare the type
 		String attr = "";
-		
+
+		// TODO THE REF TYPES ARE NOT CORRECTLY DONE!! CHECK THIS!!
+
 		// If the name is not null
 		if(te.getAttribute("uname") != null){
 			// If the type has already been added

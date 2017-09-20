@@ -1,6 +1,7 @@
 package gui.controllers;
 
 
+import com.sun.org.apache.bcel.internal.generic.POP;
 import gui.components.PopupHandlers;
 import gui.models.RelationshipModel;
 import javafx.application.Platform;
@@ -18,7 +19,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
 import org.apache.commons.lang3.StringUtils;
 import transformations.ort.TransformationStatus;
-import transformations.ort.TranslationTask;
 import transformations.ort.UMLtoXML;
 import transformations.save.OpenDiagram;
 import umldiagram.graphical.DrawingDiagram;
@@ -316,9 +316,9 @@ public class MainWindowController {
                     // If there are errors
                     if(!errors.isEmpty()) {
                         // Show a message
-                        PopupHandlers.showWarningDialog("Incorrect Relationship",
+                        PopupHandlers.showDialog("Incorrect Relationship",
                                 "Incorrect endpoints for the generalization.",
-                                "The following errors have been found:" + errors);
+                                "The following errors have been found:" + errors, Alert.AlertType.INFORMATION);
                     }
                     // If there are no errors
                     else {
@@ -348,9 +348,9 @@ public class MainWindowController {
                     // If there are errors
                     if(!errors.isEmpty()) {
                         // Show a message
-                        PopupHandlers.showWarningDialog("Incorrect Relationship",
+                        PopupHandlers.showDialog("Incorrect Relationship",
                                 "Incorrect endpoints for the relationship.",
-                                "The following errors have been found:" + errors);
+                                "The following errors have been found:" + errors, Alert.AlertType.INFORMATION);
                     }
                     else {
                         // Set the classes on the status
@@ -393,9 +393,9 @@ public class MainWindowController {
                     // If there are errors
                     if(!errors.isEmpty()) {
                         // Show a message
-                        PopupHandlers.showWarningDialog("Incorrect Association Class",
+                        PopupHandlers.showDialog("Incorrect Association Class",
                                 "Incorrect endpoints for the association class.",
-                                "The following errors have been found:" + errors);
+                                "The following errors have been found:" + errors, Alert.AlertType.INFORMATION);
                     }
                     else {
                         // Set the classes on the status

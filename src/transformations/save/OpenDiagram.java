@@ -56,6 +56,7 @@ public class OpenDiagram {
         NodeList classNodeList =
                 ((Element) document.getElementsByTagName(SaveLabels.DOC_CLASSES.getName()).item(0))
                         .getElementsByTagName(SaveLabels.CLASS.getName());
+
         for(int i=0; i<classNodeList.getLength(); i++) {
             // Prepare the basic values
             double[] coords = new double[2];

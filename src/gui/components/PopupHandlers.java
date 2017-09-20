@@ -2,8 +2,6 @@ package gui.components;
 
 
 import app.Main;
-import gui.controllers.ARelationshipController;
-import gui.controllers.NewRelationshipController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -13,7 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import umldiagram.logical.enums.RelationshipType;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,14 +49,16 @@ public class PopupHandlers {
 
 
 
+
     /**
      * Method that shows a warning dialog, using the information received as parameters.
      * @param title The title of the warning.
      * @param subtitle The subtitle.
      * @param message The main message content.
+     * @param type Of of the message to be shown.
      */
-    public static void showWarningDialog(String title, String subtitle, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    public static void showDialog(String title, String subtitle, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
 
         // Set text information
         alert.setTitle(title);

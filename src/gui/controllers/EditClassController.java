@@ -164,9 +164,9 @@ public class EditClassController extends GridPane {
 
         // If there are errors
         if(!errors.isEmpty()) {
-            PopupHandlers.showWarningDialog("Incorrect Data",
+            PopupHandlers.showDialog("Incorrect Data",
                     "Incorrect data found on attributes.",
-                    "The following errors have been found on the attributes:\n" + errors);
+                    "The following errors have been found on the attributes:\n" + errors, Alert.AlertType.INFORMATION);
         }
         else if(classOk) {
             // Prepare the editing status
