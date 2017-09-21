@@ -42,13 +42,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<!--<xsl:if test="contains($superClasses,'-') =  true()">
-			<xsl:message terminate="yes">
-				Error 1: There is at least one class with multiple hierarchy
-				<xsl:value-of select="$superClasses" />
-				//
-			</xsl:message>
-		</xsl:if>-->
 		<UClass uname="{@name}" isAbstract="{@abstract}" superclass="{$superClasses}">
 			<xsl:for-each select="attribute">
 				<UAttribute uname="{@name}" isOrdered="{@ordered}"
@@ -218,7 +211,7 @@
 							<xsl:variable name="originClassId" select="@class" />
 							<xsl:if test="$class = $originClassId">
 								<xsl:if test="@browsable = 'true'">
-									<Endpoint uname="{@name}" isOrdered="{@ordered}"
+									<Endpoint uname="{@class}" isOrdered="{@ordered}"
 											  isUnique="{@unique}" isComposed="{$isOriginComposed}"
 											  browsable="{@browsable}" endpointType="{@type}">
 										<xsl:variable name="cardinality" select="@cardinality" />
@@ -226,14 +219,21 @@
 											select="substring-before($cardinality,'..')" />
 										<xsl:variable name="max"
 											select="substring-after($cardinality,'..')" />
-										<min type="LiteralInteger" value="1" />
-										<max type="LiteralInteger" value="1" />
+										<min type="LiteralInteger" value="{$min}" />
+										<xsl:choose>
+											<xsl:when test="$max = '*'">
+												<max type="LiteralUnlimitedNatural" value="-1" />
+											</xsl:when>
+											<xsl:otherwise>
+												<max type="LiteralInteger" value="{$max}" />
+											</xsl:otherwise>
+										</xsl:choose>
 									</Endpoint>
 								</xsl:if>
 								<xsl:for-each select="../destination">
 									<xsl:variable name="acName"
 										select="concat($class, $associationClassName)" />
-									<Pseudoattribute uname="{$acName}">
+									<Pseudoattribute uname="{@name}">
 										<xsl:variable name="cardinality" select="@cardinality" />
 										<xsl:variable name="min"
 											select="substring-before($cardinality,'..')" />
@@ -256,7 +256,7 @@
 							<xsl:variable name="destinationClassId" select="@class" />
 							<xsl:if test="$class = $destinationClassId">
 								<xsl:if test="@browsable = 'true'">
-									<Endpoint uname="{@name}" isOrdered="{@ordered}"
+									<Endpoint uname="{@class}" isOrdered="{@ordered}"
 											  isUnique="{@unique}" isComposed="{$isDestinationComposed}"
 											  browsable="{@browsable}" endpointType="{@type}">
 										<xsl:variable name="cardinality" select="@cardinality" />
@@ -264,14 +264,21 @@
 											select="substring-before($cardinality,'..')" />
 										<xsl:variable name="max"
 											select="substring-after($cardinality,'..')" />
-										<min type="LiteralInteger" value="1" />
-										<max type="LiteralInteger" value="1" />
+										<min type="LiteralInteger" value="{$min}" />
+										<xsl:choose>
+											<xsl:when test="$max = '*'">
+												<max type="LiteralUnlimitedNatural" value="-1" />
+											</xsl:when>
+											<xsl:otherwise>
+												<max type="LiteralInteger" value="{$max}" />
+											</xsl:otherwise>
+										</xsl:choose>
 									</Endpoint>
 								</xsl:if>
 								<xsl:for-each select="../origin">
 									<xsl:variable name="acName"
 										select="concat($class, $associationClassName)" />
-									<Pseudoattribute uname="{$acName}">
+									<Pseudoattribute uname="{@name}">
 										<xsl:variable name="cardinality" select="@cardinality" />
 										<xsl:variable name="min"
 											select="substring-before($cardinality,'..')" />
@@ -497,9 +504,10 @@
 						<xsl:variable name="browsable" select="@browsable" />
 						<xsl:variable name="cardinality" select="@cardinality" />
 						<xsl:variable name="originName" select="@name" />
+						<xsl:variable name="originClass" select="@class"/>
 						<xsl:variable name="name"
 							select="concat($destinationClassName, $class)" />
-						<Endpoint uname="{$name}" isOrdered="{$ordered}"
+						<Endpoint uname="{$originName}" isOrdered="{$ordered}"
 								  isUnique="{$unique}" isComposed="{$isOriginComposed}" browsable="{$browsable}"
 								  endpointType="{$originType}">
 							<xsl:variable name="min"
@@ -516,7 +524,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</Endpoint>
-						<Pseudoattribute uname="{$originName}">
+						<Pseudoattribute uname="{$originClass}">
 							<min type="LiteralInteger" value="1" />
 							<max type="LiteralInteger" value="1" />
 						</Pseudoattribute>
@@ -527,10 +535,11 @@
 						<xsl:variable name="unique" select="@unique" />
 						<xsl:variable name="browsable" select="@browsable" />
 						<xsl:variable name="cardinality" select="@cardinality" />
+						<xsl:variable name="destinationClass" select="@class"/>
 						<xsl:variable name="destinationName" select="@name" />
 						<xsl:variable name="name"
 							select="concat($originClassName, $class)" />
-						<Endpoint uname="{$name}" isOrdered="{$ordered}"
+						<Endpoint uname="{$destinationName}" isOrdered="{$ordered}"
 								 isUnique="{$unique}" isComposed="{$isDestinationComposed}" browsable="{$browsable}"
 								 endpointType="{$destinationType}">
 							<xsl:variable name="min"
@@ -547,7 +556,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</Endpoint>
-						<Pseudoattribute uname="{$destinationName}">
+						<Pseudoattribute uname="{$destinationClass}">
 							<min type="LiteralInteger" value="1" />
 							<max type="LiteralInteger" value="1" />
 						</Pseudoattribute>
