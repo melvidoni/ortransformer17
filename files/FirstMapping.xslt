@@ -230,7 +230,7 @@ http://www.altova.com/mapforce
                                                 </xsl:variable>
                                                 <xsl:if test="fn:exists($var36_cond_result_exists)">
                                                     <xsl:attribute name="uname">
-                                                        <xsl:sequence select="xs:string(@nombre)"/>
+                                                        <xsl:sequence select="xs:string(@uname)"/>
                                                     </xsl:attribute>
                                                 </xsl:if>
                                             </xsl:for-each>
@@ -258,8 +258,8 @@ http://www.altova.com/mapforce
                                                         </xsl:if>
                                                     </xsl:variable>
                                                     <xsl:if test="fn:exists($var42_cond_result_exists)">
-                                                        <xsl:attribute name="nombre">
-                                                            <xsl:sequence select="xs:string(@nombre)"/>
+                                                        <xsl:attribute name="uname">
+                                                            <xsl:sequence select="xs:string(@uname)"/>
                                                         </xsl:attribute>
                                                     </xsl:if>
                                                 </xsl:for-each>

@@ -530,7 +530,7 @@
 						<xsl:variable name="destinationName" select="@name" />
 						<xsl:variable name="name"
 							select="concat($originClassName, $class)" />
-						<Enpoint uname="{$name}" isOrdered="{$ordered}"
+						<Endpoint uname="{$name}" isOrdered="{$ordered}"
 								 isUnique="{$unique}" isComposed="{$isDestinationComposed}" browsable="{$browsable}"
 								 endpointType="{$destinationType}">
 							<xsl:variable name="min"
@@ -546,7 +546,7 @@
 									<max type="LiteralInteger" value="{$max}" />
 								</xsl:otherwise>
 							</xsl:choose>
-						</Enpoint>
+						</Endpoint>
 						<Pseudoattribute uname="{$destinationName}">
 							<min type="LiteralInteger" value="1" />
 							<max type="LiteralInteger" value="1" />

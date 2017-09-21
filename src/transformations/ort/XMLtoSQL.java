@@ -92,113 +92,116 @@ class XMLtoSQL {
             String typesScript = "";
 
             // Get the structured childs
-            NodeList structuredTypesList = tpo.getElementsByTagName("StructuredType");
-            for (int i = 0; i < structuredTypesList.getLength() &&
-                    structuredTypesList.item(i).getParentNode().getNodeName().equals("SQLSchema"); i++) {
+			Node child = tpo.getFirstChild();
+			while(child != null) {
+                // If this is usable
+                if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals("StructuredType")) {
 
-                // Get the element
-                Element e = (Element) structuredTypesList.item(i);
-
-                // Get the name
-                String typeName = e.getAttribute("uname");
-
-                // Start the definition
-                String definition = "CREATE OR REPLACE TYPE " + typeName + "_tip";
-
-                // Check if it has supertype
-                String superType = e.getAttribute("supertype");
-                if (superType.isEmpty()) {
-                    // It does not have a parent
-                    definition += " AS OBJECT (";
-                }
-                else {
-                    // If it has parent...
-                    definition += " UNDER " + superType + "_tip (";
-
-                    // Check if the child is not added on the children list
-                    if (!childrenList.contains(typeName + "_tip"))
-                        childrenList.add(typeName + "_tip");
-
-                    // Check if the parent is not contained on the parent list
-                    if (!parentsList.contains(superType + "_tip"))
-                        parentsList.add(superType + "_tip");
-                }
-
-
-                // Now go through the attributes
-                NodeList attrsList = e.getElementsByTagName("Attribute");
-                boolean isFirst = true;
-                for (int j = 0; j < attrsList.getLength(); j++) {
                     // Get the element
-                    Element a = (Element) attrsList.item(j);
+                    Element e = (Element) child;
 
-                    String attrName = a.getAttribute("uname");
+                    // Get the name
+                    String typeName = e.getAttribute("uname");
 
-                    // Get the types
-                    NodeList typesChilds = a.getElementsByTagName("Type").item(0).getChildNodes();
-                    for (int k = 0; k < typesChilds.getLength(); k++) {
+                    // Start the definition
+                    String definition = "CREATE OR REPLACE TYPE " + typeName + "_tip";
 
-                        // If this is usable
-                        if (typesChilds.item(k).getNodeType() == Node.ELEMENT_NODE) {
+                    // Check if it has supertype
+                    String superType = e.getAttribute("supertype");
+                    if (superType.isEmpty()) {
+                        // It does not have a parent
+                        definition += " AS OBJECT (";
+                    } else {
+                        // If it has parent...
+                        definition += " UNDER " + superType + "_tip (";
 
-                            // Get the element
-                            Element t = (Element) typesChilds.item(k);
+                        // Check if the child is not added on the children list
+                        if (!childrenList.contains(typeName + "_tip"))
+                            childrenList.add(typeName + "_tip");
 
-                            // Predefined attributes
-                            if (t.getNodeName().equals("PredefinedType")) {
-                                // If it is not null...
-                                if (t.getAttributeNode("type") != null) {
-                                    //...find it among the enums
-                                    AttributeType ta = AttributeType.getAttribute(t.getAttribute("type"));
-
-                                    // Define the type
-                                    String attrDef = (ta != null) ? ta.getOracleName() : "";
-
-                                    // If not, it is date
-                                    if (ta != null && ta.getLength() > 0) {
-                                        attrDef = attrDef + "(" + ta.getLength() + ")";
-                                    }
-
-                                    // Add the attribute to the definition
-                                    if (isFirst) isFirst = false;
-                                    else definition += ",";
-
-                                    // Complete the definition
-                                    definition += "\r\n" + attrName + " " + attrDef;
-                                }
-                            }
-                            // Reference attributes
-                            else if (t.getNodeName().equals("ReferenceType")) {
-                                // Call the translation method
-                                String attr = translateRefAttr(attrName, t, typeName, isFirst);
-                                definition += attr;
-
-                            }
-                            // Arrangement attributes
-                            else if (t.getNodeName().equals("Arrangement")) {
-                                // Call the translation method
-                                String attr = translateArrangementAttr(attrName, t, typeName, isFirst);
-                                definition += attr;
-
-                            }
-                            // Multiset attributes
-                            else if (t.getNodeName().equals("Multiset")) {
-                                // Call the translation method
-                                String attr = translateMultisetAttr(attrName, t, typeName, isFirst);
-                                definition += attr;
-                            }
-                        }
+                        // Check if the parent is not contained on the parent list
+                        if (!parentsList.contains(superType + "_tip"))
+                            parentsList.add(superType + "_tip");
                     }
 
+
+                    // Now go through the attributes
+                    NodeList attrsList = e.getElementsByTagName("Attribute");
+                    boolean isFirst = true;
+                    for (int j = 0; j < attrsList.getLength(); j++) {
+                        // Get the element
+                        Element a = (Element) attrsList.item(j);
+
+                        String attrName = a.getAttribute("uname");
+
+                        // Get the types
+                        NodeList typesChilds = a.getElementsByTagName("Type").item(0).getChildNodes();
+                        for (int k = 0; k < typesChilds.getLength(); k++) {
+
+                            // If this is usable
+                            if (typesChilds.item(k).getNodeType() == Node.ELEMENT_NODE) {
+
+                                // Get the element
+                                Element t = (Element) typesChilds.item(k);
+
+                                // Predefined attributes
+                                if (t.getNodeName().equals("PredefinedType")) {
+                                    // If it is not null...
+                                    if (t.getAttributeNode("type") != null) {
+                                        //...find it among the enums
+                                        AttributeType ta = AttributeType.getAttribute(t.getAttribute("type"));
+
+                                        // Define the type
+                                        String attrDef = (ta != null) ? ta.getOracleName() : "";
+
+                                        // If not, it is date
+                                        if (ta != null && ta.getLength() > 0) {
+                                            attrDef = attrDef + "(" + ta.getLength() + ")";
+                                        }
+
+                                        // Add the attribute to the definition
+                                        if (isFirst) isFirst = false;
+                                        else definition += ",";
+
+                                        // Complete the definition
+                                        definition += "\r\n" + attrName + " " + attrDef;
+                                    }
+                                }
+                                // Reference attributes
+                                else if (t.getNodeName().equals("ReferenceType")) {
+                                    // Call the translation method
+                                    String attr = translateRefAttr(attrName, t, typeName, isFirst);
+                                    definition += attr;
+
+                                }
+                                // Arrangement attributes
+                                else if (t.getNodeName().equals("Arrangement")) {
+                                    // Call the translation method
+                                    String attr = translateArrangementAttr(attrName, t, typeName, isFirst);
+                                    definition += attr;
+
+                                }
+                                // Multiset attributes
+                                else if (t.getNodeName().equals("Multiset")) {
+                                    // Call the translation method
+                                    String attr = translateMultisetAttr(attrName, t, typeName, isFirst);
+                                    definition += attr;
+                                }
+                            }
+                        }
+
+                    }
+                    // CLOSE THE DEFINITION
+                    definition += "\r\n) NOT FINAL;";
+
+                    // Append the remaining information
+                    typesScript += definition + "\r\n\r\n";
+
+                    // Add the type as translated
+                    typesList.add(typeName + "_tip");
                 }
-                // CLOSE THE DEFINITION
-                definition += "\r\n) NOT FINAL;";
 
-                // Append the remaining information
-                typesScript += definition + "\r\n\r\n";
-
-                // Add the type as translated
-                typesList.add(typeName + "_tip");
+                child = child.getNextSibling();
 
             }
 
