@@ -85,8 +85,6 @@ class XMLtoSQL {
 	 */
 	String translateORTypes() throws IOException, SAXException, ParserConfigurationException {
         try {
-
-
             // Read the tpo file
             Element tpo = read(".xml.tpo");
 
@@ -95,9 +93,8 @@ class XMLtoSQL {
 
             // Get the structured childs
             NodeList structuredTypesList = tpo.getElementsByTagName("StructuredType");
-
             for (int i = 0; i < structuredTypesList.getLength() &&
-                    ((Element) structuredTypesList.item(i)).getAttributeNode("uname") != null; i++) {
+                    structuredTypesList.item(i).getParentNode().getNodeName().equals("SQLSchema"); i++) {
 
                 // Get the element
                 Element e = (Element) structuredTypesList.item(i);
@@ -385,7 +382,7 @@ class XMLtoSQL {
 	 */
 	private String translateArrangementAttr(String attrName, Element element, String typeName, boolean isFirst) {
 		// Prepare the data
-		Element e = (Element) element.getElementsByTagName("Structured Type").item(0);
+		Element e = (Element) element.getElementsByTagName("StructuredType").item(0);
 		String maxNumber = element.getAttribute("max_element_number");
 		
 		// And then the attribute

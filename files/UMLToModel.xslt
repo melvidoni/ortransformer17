@@ -42,13 +42,13 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:if test="contains($superClasses,'-') =  true">
+		<!--<xsl:if test="contains($superClasses,'-') =  true()">
 			<xsl:message terminate="yes">
-				Error 1: Existe por lo menos una clase que tiene herencia multiple:
+				Error 1: There is at least one class with multiple hierarchy
 				<xsl:value-of select="$superClasses" />
 				//
 			</xsl:message>
-		</xsl:if>
+		</xsl:if>-->
 		<UClass uname="{@name}" isAbstract="{@abstract}" superclass="{$superClasses}">
 			<xsl:for-each select="attribute">
 				<UAttribute uname="{@name}" isOrdered="{@ordered}"
@@ -90,7 +90,7 @@
 					</xsl:variable>
 					<xsl:for-each select="origin">
 						<xsl:variable name="originClassId" select="@class" />
-						<xsl:if test="$classId = $originClassId">
+						<xsl:if test="$class = $originClassId">
 							<xsl:if test="@browsable = 'true'">
 								<Endpoint uname="{@name}" isOrdered="{@ordered}"
 										  isUnique="{@unique}" isComposed="{$isOriginComposed}"
@@ -135,7 +135,7 @@
 					</xsl:for-each>
 					<xsl:for-each select="destination">
 						<xsl:variable name="destinationClassId" select="@class" />
-						<xsl:if test="$classId = $destinationClassId">
+						<xsl:if test="$class = $destinationClassId">
 							<xsl:if test="@browsable = 'true'">
 								<Endpoint uname="{@name}" isOrdered="{@ordered}"
 										  isUnique="{@unique}" isComposed="{$isDestinationComposed}"
@@ -216,7 +216,7 @@
 						</xsl:variable>
 						<xsl:for-each select="origin">
 							<xsl:variable name="originClassId" select="@class" />
-							<xsl:if test="$classId = $originClassId">
+							<xsl:if test="$class = $originClassId">
 								<xsl:if test="@browsable = 'true'">
 									<Endpoint uname="{@name}" isOrdered="{@ordered}"
 											  isUnique="{@unique}" isComposed="{$isOriginComposed}"
@@ -254,7 +254,7 @@
 						</xsl:for-each>
 						<xsl:for-each select="destination">
 							<xsl:variable name="destinationClassId" select="@class" />
-							<xsl:if test="$classId = $destinationClassId">
+							<xsl:if test="$class = $destinationClassId">
 								<xsl:if test="@browsable = 'true'">
 									<Endpoint uname="{@name}" isOrdered="{@ordered}"
 											  isUnique="{@unique}" isComposed="{$isDestinationComposed}"
@@ -309,7 +309,7 @@
 					<xsl:if test="@type = 'Generalization'">
 						<xsl:for-each select="origin">
 							<xsl:variable name="originClassId" select="@class" />
-							<xsl:if test="$classId = $originClassId">
+							<xsl:if test="$class = $originClassId">
 								<xsl:for-each select="../destination">
 									<xsl:variable name="destinationClassId" select="@class" />
 									<xsl:value-of select="string('-')" />

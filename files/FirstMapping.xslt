@@ -87,7 +87,7 @@ http://www.altova.com/mapforce
                                                                 <xsl:if test="$var14_Endpoint/@browsable">
                                                                     <xsl:if test="$var14_Endpoint/@endpointType">
                                                                         <xsl:if test="$var14_Endpoint/max/@value">
-                                                                            <xsl:if test="((((xs:string($var8_Pseudoattribute/@uname) = xs:string(@name)) and (xs:string(xs:boolean(@browsable)) = 'true')) and (xs:string(@endpointType) != 'composed')) and (xs:decimal(xs:integer(max/@value)) = xs:decimal(1)))">
+                                                                            <xsl:if test="((((xs:string($var8_Pseudoattribute/@uname) = xs:string(@uname)) and (xs:string(xs:boolean(@browsable)) = 'true')) and (xs:string(@endpointType) != 'composed')) and (xs:decimal(xs:integer(max/@value)) = xs:decimal(1)))">
                                                                                 <xsl:sequence select="fn:true()"/>
                                                                             </xsl:if>
                                                                         </xsl:if>
@@ -116,7 +116,7 @@ http://www.altova.com/mapforce
                                         <StructuredType>
                                             <xsl:for-each select="doc($Param_3)/Package/UClass">
                                                 <xsl:variable name="var18_cond_result_exists" as="xs:boolean*">
-                                                    <xsl:if test="$var8_Pseudoattribute/@name">
+                                                    <xsl:if test="$var8_Pseudoattribute/@uname">
                                                         <xsl:for-each select="Endpoint">
                                                             <xsl:variable name="var20_Endpoint" as="node()" select="."/>
                                                             <xsl:if test="$var20_Endpoint/@uname">
@@ -124,7 +124,7 @@ http://www.altova.com/mapforce
                                                                     <xsl:if test="$var20_Endpoint/@isComposed">
                                                                         <xsl:if test="$var20_Endpoint/max/@value">
                                                                             <xsl:if test="$var20_Endpoint/@browsable">
-                                                                                <xsl:if test="((((((xs:string($var8_Pseudoattribute/@uname) = xs:string(@name)) and (xs:string(@endpointType) = 'none')) and (xs:string(xs:boolean(@isComposed)) = 'true')) and (xs:decimal(xs:integer(max/@value)) &gt; xs:decimal(1))) and (xs:decimal(xs:integer(max/@value)) &lt; xs:decimal(99999))) and (xs:string(xs:boolean(@browsable)) = 'true'))">
+                                                                                <xsl:if test="((((((xs:string($var8_Pseudoattribute/@uname) = xs:string(@uname)) and (xs:string(@endpointType) = 'none')) and (xs:string(xs:boolean(@isComposed)) = 'true')) and (xs:decimal(xs:integer(max/@value)) &gt; xs:decimal(1))) and (xs:decimal(xs:integer(max/@value)) &lt; xs:decimal(99999))) and (xs:string(xs:boolean(@browsable)) = 'true'))">
                                                                                     <xsl:sequence select="fn:true()"/>
                                                                                 </xsl:if>
                                                                             </xsl:if>
@@ -155,7 +155,7 @@ http://www.altova.com/mapforce
                                                                         <xsl:if test="$var26_Endpoint/@isComposed">
                                                                             <xsl:if test="$var26_Endpoint/max/@value">
                                                                                 <xsl:if test="$var26_Endpoint/@browsable">
-                                                                                    <xsl:if test="((((((((xs:string($var8_Pseudoattribute/@uname) = xs:string(@name)) and (xs:string(@endpointType) != 'composed')) and (xs:string(xs:boolean(@isComposed)) = 'false')) and (xs:string(@endpointType) = 'none')) and (xs:decimal(xs:integer(max/@value)) &gt; xs:decimal(1))) and (xs:decimal(xs:integer(max/@value)) != xs:decimal(-1))) and (xs:decimal(xs:integer(max/@value)) &lt; xs:decimal(99999))) and (xs:string(xs:boolean(@browsable)) = 'true'))">
+                                                                                    <xsl:if test="((((((((xs:string($var8_Pseudoattribute/@uname) = xs:string(@uname)) and (xs:string(@endpointType) != 'composed')) and (xs:string(xs:boolean(@isComposed)) = 'false')) and (xs:string(@endpointType) = 'none')) and (xs:decimal(xs:integer(max/@value)) &gt; xs:decimal(1))) and (xs:decimal(xs:integer(max/@value)) != xs:decimal(-1))) and (xs:decimal(xs:integer(max/@value)) &lt; xs:decimal(99999))) and (xs:string(xs:boolean(@browsable)) = 'true'))">
                                                                                         <xsl:sequence
                                                                                                 select="fn:true()"/>
                                                                                     </xsl:if>
@@ -186,7 +186,7 @@ http://www.altova.com/mapforce
                                                                         <xsl:if test="$var32_Endpoint/max/@value">
                                                                             <xsl:if test="$var32_Endpoint/@browsable">
                                                                                 <xsl:if test="$var32_Endpoint/@isComposed">
-                                                                                    <xsl:if test="((((((((xs:string($var8_Pseudoattribute/@uname) = xs:string(@name)) and (xs:string(@endpointType) != 'composed')) and (xs:string(@endpointType) = 'none')) and (xs:decimal(xs:integer(max/@value)) &gt; xs:decimal(1))) and (xs:decimal(xs:integer(max/@value)) != xs:decimal(-1))) and (xs:decimal(xs:integer(max/@value)) &lt; xs:decimal(99999))) and (xs:string(xs:boolean(@browsable)) = 'true')) and (xs:string(xs:boolean(@isComposed)) = 'false'))">
+                                                                                    <xsl:if test="((((((((xs:string($var8_Pseudoattribute/@uname) = xs:string(@uname)) and (xs:string(@endpointType) != 'composed')) and (xs:string(@endpointType) = 'none')) and (xs:decimal(xs:integer(max/@value)) &gt; xs:decimal(1))) and (xs:decimal(xs:integer(max/@value)) != xs:decimal(-1))) and (xs:decimal(xs:integer(max/@value)) &lt; xs:decimal(99999))) and (xs:string(xs:boolean(@browsable)) = 'true')) and (xs:string(xs:boolean(@isComposed)) = 'false'))">
                                                                                         <xsl:sequence
                                                                                                 select="fn:true()"/>
                                                                                     </xsl:if>
@@ -218,7 +218,7 @@ http://www.altova.com/mapforce
                                                                 <xsl:if test="$var38_Endpoint/max/@value">
                                                                     <xsl:if test="$var38_Endpoint/@browsable">
                                                                         <xsl:if test="$var38_Endpoint/@isComposed">
-                                                                            <xsl:if test="((((xs:string($var8_Pseudoattribute/@uname) = xs:string(@name)) and (xs:decimal(xs:integer(max/@value)) = xs:decimal(-1))) and (xs:string(xs:boolean(@browsable)) = 'true')) and (xs:string(xs:boolean(@isComposed)) = 'true'))">
+                                                                            <xsl:if test="((((xs:string($var8_Pseudoattribute/@uname) = xs:string(@uname)) and (xs:decimal(xs:integer(max/@value)) = xs:decimal(-1))) and (xs:string(xs:boolean(@browsable)) = 'true')) and (xs:string(xs:boolean(@isComposed)) = 'true'))">
                                                                                 <xsl:sequence select="fn:true()"/>
                                                                             </xsl:if>
                                                                         </xsl:if>
@@ -247,7 +247,7 @@ http://www.altova.com/mapforce
                                                                     <xsl:if test="$var44_Endpoint/max/@value">
                                                                         <xsl:if test="$var44_Endpoint/@isComposed">
                                                                             <xsl:if test="$var44_Endpoint/@browsable">
-                                                                                <xsl:if test="((((xs:string($var8_Pseudoattribute/@uname) = xs:string(@name)) and (xs:decimal(xs:integer(max/@value)) = xs:decimal(-1))) and (xs:string(xs:boolean(@isComposed)) != 'true')) and (xs:string(xs:boolean(@browsable)) = 'true'))">
+                                                                                <xsl:if test="((((xs:string($var8_Pseudoattribute/@uname) = xs:string(@uname)) and (xs:decimal(xs:integer(max/@value)) = xs:decimal(-1))) and (xs:string(xs:boolean(@isComposed)) != 'true')) and (xs:string(xs:boolean(@browsable)) = 'true'))">
                                                                                     <xsl:sequence select="fn:true()"/>
                                                                                 </xsl:if>
                                                                             </xsl:if>
@@ -275,7 +275,7 @@ http://www.altova.com/mapforce
                                                                     <xsl:if test="$var50_Endpoint/max/@value">
                                                                         <xsl:if test="$var50_Endpoint/@isComposed">
                                                                             <xsl:if test="$var50_Endpoint/@browsable">
-                                                                                <xsl:if test="((((xs:string($var8_Pseudoattribute/@uname) = xs:string(@name)) and (xs:decimal(xs:integer(max/@value)) = xs:decimal(-1))) and (xs:string(xs:boolean(@isComposed)) = 'false')) and (xs:string(xs:boolean(@browsable)) = 'true'))">
+                                                                                <xsl:if test="((((xs:string($var8_Pseudoattribute/@uname) = xs:string(@uname)) and (xs:decimal(xs:integer(max/@value)) = xs:decimal(-1))) and (xs:string(xs:boolean(@isComposed)) = 'false')) and (xs:string(xs:boolean(@browsable)) = 'true'))">
                                                                                     <xsl:sequence select="fn:true()"/>
                                                                                 </xsl:if>
                                                                             </xsl:if>
@@ -350,7 +350,7 @@ http://www.altova.com/mapforce
                                                                     <xsl:if test="$var62_Endpoint/@browsable">
                                                                         <xsl:if test="$var62_Endpoint/@endpointType">
                                                                             <xsl:if test="$var62_Endpoint/max/@value">
-                                                                                <xsl:if test="(((((xs:string($var56_Pseudoattribute/@uname) = xs:string(@name)) and (xs:string(xs:boolean(@isComposed)) = 'false')) and (xs:string(xs:boolean(@browsable)) = 'true')) and (xs:string(@endpointType) != 'composed')) and (xs:decimal(xs:integer(max/@value)) = xs:decimal(1)))">
+                                                                                <xsl:if test="(((((xs:string($var56_Pseudoattribute/@uname) = xs:string(@uname)) and (xs:string(xs:boolean(@isComposed)) = 'false')) and (xs:string(xs:boolean(@browsable)) = 'true')) and (xs:string(@endpointType) != 'composed')) and (xs:decimal(xs:integer(max/@value)) = xs:decimal(1)))">
                                                                                     <xsl:sequence select="fn:true()"/>
                                                                                 </xsl:if>
                                                                             </xsl:if>

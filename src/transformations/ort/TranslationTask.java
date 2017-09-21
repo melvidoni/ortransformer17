@@ -187,7 +187,7 @@ public class TranslationTask extends Task {
         // Add basic parameters
         for(int i=1; i<=max; i++) {
             // Create the element
-            String[] param = {paramName + i, "file:///" + uri};
+            String[] param = {paramName + i, "file:/" + uri};
             parameters.add(param);
         }
 
