@@ -340,7 +340,7 @@ http://www.altova.com/mapforce
                                 <Type>
                                     <ReferenceType>
                                         <StructuredType>
-                                            <xsl:for-each select="doc($Param_8)/Packaeg/UClass">
+                                            <xsl:for-each select="doc($Param_8)/Package/UClass">
                                                 <xsl:variable name="var60_cond_result_exists" as="xs:boolean*">
                                                     <xsl:if test="$var56_Pseudoattribute/@uname">
                                                         <xsl:for-each select="Endpoint">
@@ -350,7 +350,8 @@ http://www.altova.com/mapforce
                                                                     <xsl:if test="$var62_Endpoint/@browsable">
                                                                         <xsl:if test="$var62_Endpoint/@endpointType">
                                                                             <xsl:if test="$var62_Endpoint/max/@value">
-                                                                                <xsl:if test="(((((xs:string($var56_Pseudoattribute/@uname) = xs:string(@uname)) and (xs:string(xs:boolean(@isComposed)) = 'false')) and (xs:string(xs:boolean(@browsable)) = 'true')) and (xs:string(@endpointType) != 'composed')) and (xs:decimal(xs:integer(max/@value)) = xs:decimal(1)))">
+                                                                                <!--removed: and (xs:decimal(xs:integer(max/@value)) = xs:decimal(1)) -->
+                                                                                <xsl:if test="(((((xs:string($var56_Pseudoattribute/@uname) = xs:string(@uname)) and (xs:string(xs:boolean(@isComposed)) = 'false')) and (xs:string(xs:boolean(@browsable)) = 'true')) and (xs:string(@endpointType) != 'composed')) )">
                                                                                     <xsl:sequence select="fn:true()"/>
                                                                                 </xsl:if>
                                                                             </xsl:if>
