@@ -4,8 +4,12 @@ package gui.components;
 import javafx.scene.control.TextFormatter;
 
 
-
-
+/**
+ * Class that generates field formatters for the TextFields on different
+ * graphical interfaces of the system.
+ * @see TextFormatter
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
 public class FieldFormatter {
 
 

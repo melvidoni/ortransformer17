@@ -16,6 +16,7 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
+import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 import transformations.ort.TransformationStatus;
 import transformations.ort.UMLtoXML;
@@ -55,6 +56,7 @@ public class MainWindowController {
 
     @FXML private SplitPane splitPane;
     @FXML private TreeBrowser treePane;
+    @FXML private ScrollPane drawingScroll;
     @FXML private DrawingDiagram drawingCanvas;
 
 
@@ -268,14 +270,9 @@ public class MainWindowController {
             drawingLine.setEndX(me.getX());
             drawingLine.setEndY(me.getY());
 
-            // Calculate the positions
-            double mx = Math.max(drawingLine.getStartX(), drawingLine.getEndX());
-            double my = Math.max(drawingLine.getStartY(), drawingLine.getEndY());
-
-
-            // Resize if it goes outside
-            if (mx > drawingCanvas.getMinWidth())  drawingCanvas.setMinWidth(mx);
-            if (my > drawingCanvas.getMinHeight()) drawingCanvas.setMinHeight(my);
+            // Update the size
+            drawingCanvas.updateSize(Math.max(drawingLine.getStartX(), drawingLine.getEndX()),
+                    Math.max(drawingLine.getStartY(), drawingLine.getEndY()));
         }
     }
 
@@ -620,7 +617,7 @@ public class MainWindowController {
         try {
             // Get the selected file
             File file = PopupHandlers.showSaveFileChooser("Export Diagram as Image",
-                    "PNG Files", "*.png");
+                    "PNG Files", "*.png", (Stage) drawingCanvas.getScene().getWindow());
 
             // If a file was selected
             if (file != null) {
@@ -649,7 +646,7 @@ public class MainWindowController {
         try {
             // Get the selected file
             File file = PopupHandlers.showSaveFileChooser("Save Diagram",
-                    "ORT Files", "*.ort");
+                    "ORT Files", "*.ort", (Stage) drawingCanvas.getScene().getWindow());
 
             // If a file was selected, save the diagram
             if(file != null)
@@ -673,7 +670,7 @@ public class MainWindowController {
        try {
             // Get the selected file
             File file = PopupHandlers.showOpenFileChooser("Open Diagram",
-                    "ORT Files", "*.ort");
+                    "ORT Files", "*.ort", (Stage) drawingCanvas.getScene().getWindow());
 
             // If a file was selected, save the diagram
             if(file != null) {
@@ -682,6 +679,10 @@ public class MainWindowController {
 
                 // Now store get the information
                 OpenDiagram.open(file, drawingCanvas);
+
+                // Resize if it goes outside
+                drawingCanvas.updateSize(drawingCanvas.getBoundsInLocal().getWidth(),
+                        drawingCanvas.getBoundsInLocal().getHeight());
 
                 // Update the tree
                 treePane.update(UMLDiagram.getInstance(false));

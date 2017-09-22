@@ -11,12 +11,16 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
 
+/**
+ * Class that prepares and shows different popups messages, dialogs
+ * and alerts, according the the received parameters.
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
 public class PopupHandlers {
 
 
@@ -114,9 +118,10 @@ public class PopupHandlers {
      * @param title The title of the chooser.
      * @param extTitle The extension title.
      * @param ext The extension ending.
+     * @param stage Main stage of the system.
      * @return The selected file, or null if the user pressed cancel.
      */
-    public static File showSaveFileChooser(String title, String extTitle, String ext) {
+    public static File showSaveFileChooser(String title, String extTitle, String ext, Stage stage) {
         // Prepare the File Chooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(title);
@@ -127,7 +132,7 @@ public class PopupHandlers {
         );
 
         // Get the selected file
-        return fileChooser.showSaveDialog(null);
+        return fileChooser.showSaveDialog(stage);
     }
 
 
@@ -140,9 +145,10 @@ public class PopupHandlers {
      * @param title The title of the chooser.
      * @param extTitle The extension title.
      * @param ext The extension ending.
+     * @param stage Main stage of the system.
      * @return The selected file, or null if the user pressed cancel.
      */
-    public static File showOpenFileChooser(String title, String extTitle, String ext) {
+    public static File showOpenFileChooser(String title, String extTitle, String ext, Stage stage) {
         // Prepare the File Chooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(title);
@@ -153,7 +159,7 @@ public class PopupHandlers {
         );
 
         // Get the selected file
-        return fileChooser.showOpenDialog(null);
+        return fileChooser.showOpenDialog(stage);
     }
 
 }

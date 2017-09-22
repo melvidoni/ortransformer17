@@ -105,7 +105,6 @@ public class OpenDiagram {
             // Go to the next
             child = child.getNextSibling();
         }
-        // Reading completed
     }
 
 

@@ -109,6 +109,8 @@ public class TranslationTask extends Task {
         System.out.println(tables);
 
 
+
+        // TODO COMPLETE TRANSFORMATION TO OPEN THE INTERFACE
 /*
 
 

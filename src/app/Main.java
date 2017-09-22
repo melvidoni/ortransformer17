@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
 
+
     /**
      * Method that constructs the main application.
      * @param primaryStage The primary stage of the application.

@@ -158,7 +158,7 @@
                     <TreeBrowser fx:id="treePane"/>
                 </content>
             </ScrollPane>
-            <ScrollPane fitToHeight="true" fitToWidth="true" >
+            <ScrollPane fitToHeight="true" fitToWidth="true" fx:id="drawingScroll" >
                 <content>
                     <DrawingDiagram fx:id="drawingCanvas" style="-fx-background-color: #FFFFFF"
                                     onMouseClicked="#canvasClicked"

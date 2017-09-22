@@ -11,13 +11,16 @@ import umldiagram.logical.AssociationClass;
 import umldiagram.logical.Relationship;
 import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.UmlClass;
-
 import java.util.LinkedList;
 
 
 
 
-
+/**
+ * Class that represents the drawing space of the system, in which
+ * the user clicks, creates the elements and visualizes a UML diagram.
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
 public class DrawingDiagram extends Pane {
     private LinkedList<Node> nodes;
     private LinkedList<Arrow> arrows;
@@ -482,7 +485,17 @@ public class DrawingDiagram extends Pane {
 
 
 
-
+    /**
+     * Method that updates the size of the pane, in order to add
+     * scrollbars, if corresponds.
+     * @param width The current width.
+     * @param height The current height.
+     */
+    public void updateSize(double width, double height) {
+        // Check each side, and update
+        if (width > getMinWidth())  setMinWidth(width);
+        if (height > getMinHeight()) setMinHeight(height);
+    }
 
 
 
@@ -517,9 +530,5 @@ public class DrawingDiagram extends Pane {
             ((Node)(me.getSource())).setTranslateY(newTranslateY);
         }
     }
-
-
-
-
 
 }
