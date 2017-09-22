@@ -4,10 +4,18 @@ package gui.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.stage.Stage;
 import transformations.ort.TransformationStatus;
 import transformations.ort.TranslationTask;
 
 
+
+
+/**
+ * Controller class for the interface that shows a progress bar when
+ * the transformation task is being executed.
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
 public class ProgressController {
     @FXML private ProgressBar progressBar;
     @FXML protected Label progressLabel;
@@ -23,12 +31,10 @@ public class ProgressController {
     private void initialize() {
         // Prepare the simulation tread
         TranslationTask tTask = new TranslationTask();
+        tTask.setOnSucceeded(ce -> progressListener());
 
-        // Bind the progress bar
+        // Bind the elements
         progressBar.progressProperty().bind(tTask.progressProperty());
-        progressBar.progressProperty().addListener( ce -> progressListener() );
-
-        // Bind the label
         progressLabel.textProperty().bind(tTask.messageProperty());
 
 
@@ -42,14 +48,16 @@ public class ProgressController {
 
 
 
+
     /**
-     * Method that acts as a listener for the progress in the bar.
+     * Method that launches when the task is successfully
+     * completed, closing the progress dialog.
      */
     private void progressListener() {
-        // TODO CHANGE THIS BEHAVIOR
-        if(progressBar.getProgress() == 100)
-            System.out.println("COMPLETED");
+        ((Stage) progressBar.getScene().getWindow()).close();
     }
+
+
 
 
 }

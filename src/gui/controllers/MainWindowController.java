@@ -2,6 +2,7 @@ package gui.controllers;
 
 
 import gui.components.PopupHandlers;
+import gui.components.ScriptTab;
 import gui.models.RelationshipModel;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
@@ -54,9 +55,11 @@ public class MainWindowController {
     @FXML private ToggleButton toggleNewComp;
     @FXML private ToggleButton toggleNewAC;
 
-    @FXML private SplitPane splitPane;
+    @FXML private TabPane tabPane;
+    @FXML private Tab umlTab;
+    private ScriptTab scriptTab;
+
     @FXML private TreeBrowser treePane;
-    @FXML private ScrollPane drawingScroll;
     @FXML private DrawingDiagram drawingCanvas;
 
 
@@ -87,7 +90,8 @@ public class MainWindowController {
 
         // Hide elements
         toolBar.setManaged(false);
-        splitPane.setManaged(false);
+        tabPane.setManaged(false);
+        scriptTab = new ScriptTab();
 
         // Coordinates
         drawingLine = null;
@@ -166,7 +170,8 @@ public class MainWindowController {
 
         // Show the hidden elements
         toolBar.setManaged(true);
-        splitPane.setManaged(true);
+        tabPane.setManaged(true);
+        scriptTab = new ScriptTab();
 
         // Create a new model
         treePane.newModel();
@@ -725,6 +730,13 @@ public class MainWindowController {
                 // Show the progress
                 PopupHandlers.showPopup("/gui/views/ProgressDialog.fxml",
                         "Transformation in Progress", drawingCanvas.getScene());
+
+                // If it was transformed
+                if(transfStatus.wasTransformed()) {
+                    // Set the information on the script tab and show it
+                    scriptTab.showGeneratedScripts();
+                    tabPane.getTabs().add(scriptTab);
+                }
             }
         }
         catch (IOException e) {
@@ -732,4 +744,8 @@ public class MainWindowController {
             e.printStackTrace();
         }
     }
+
+
+
+
 }

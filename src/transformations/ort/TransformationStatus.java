@@ -22,6 +22,10 @@ public class TransformationStatus {
     private ImplementationType implementation;
     private DatabaseType database;
 
+    private boolean transformed;
+    private String typesScript;
+    private String tablesScript;
+
 
 
 
@@ -33,6 +37,10 @@ public class TransformationStatus {
         transform = false;
         implementation = null;
         database = null;
+
+        transformed = false;
+        typesScript = "";
+        tablesScript = "";
     }
 
 
@@ -72,5 +80,30 @@ public class TransformationStatus {
 
     public void setDatabase(DatabaseType d) {
         database = d;
+    }
+
+
+    public boolean wasTransformed() {
+        return transformed;
+    }
+
+    public void setTransformed(boolean t) {
+        transformed = t;
+    }
+
+    public String getTypesScript() {
+        return typesScript;
+    }
+
+    public void setTypesScript(String t) {
+        typesScript = t;
+    }
+
+    public String getTablesScript() {
+        return tablesScript;
+    }
+
+    public void setTablesScript(String t) {
+        tablesScript = t;
     }
 }

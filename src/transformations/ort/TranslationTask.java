@@ -96,35 +96,22 @@ public class TranslationTask extends Task {
 
 
 
-        // STEP 6
-        // Translate towards SQL
+        // STEP 6a
+        // Translate types towards SQL
         XMLtoSQL sqlGuide = new XMLtoSQL(tempPath, tempName);
-        String types = sqlGuide.translateORTypes();
-        String tables = sqlGuide.translateORTables(tStatus.getImplementation());
+        tStatus.setTypesScript( sqlGuide.translateORTypes() );
         updateProgress(85, 100);
         updateMessage("85% Completed. Translation towards SQL in progress.");
 
-        System.out.println(types);
-        System.out.println("\n----\n");
-        System.out.println(tables);
+        // STEP 6b
+        // Translate tables towards SQL
+        tStatus.setTablesScript( sqlGuide.translateORTables(tStatus.getImplementation()) );
+        tStatus.setTransformed(true);
+        updateProgress(100, 100);
+        updateMessage("100% Completed. Preparing results visualization.");
 
 
-
-        // TODO COMPLETE TRANSFORMATION TO OPEN THE INTERFACE
-/*
-
-
-
-        // Call the results window
-        ResultsWindow vr = new ResultsWindow(ortMain, types, tables, true);
-        vr.setLocationRelativeTo(null);
-        ortMain.setEnabled(false);
-        vr.setVisible(true);
-*/
-
-
-
-
+        // Return a value from the transformation
         return true;
     }
 
