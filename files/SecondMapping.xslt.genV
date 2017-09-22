@@ -28,15 +28,15 @@ http://www.altova.com/mapforce
 				<xsl:for-each select="$var1_instance/StructuredType">
 					<xsl:variable name="var2_StructuredType" select="."/>
 					<TypedTable>
-						<xsl:if test="$var2_StructuredType/@name">
+						<xsl:if test="$var2_StructuredType/@uname">
 							<xsl:variable name="var4_cond_result_exists" as="xs:boolean*">
 								<xsl:if test="$var2_StructuredType/@uninstantiable">
 									<xsl:for-each
 										select="doc($SQL2003Metamodel_data2)/SQLSchema/StructuredType">
 										<xsl:variable name="var6_StructuredType" select="." />
-										<xsl:if test="$var6_StructuredType/@name">
+										<xsl:if test="$var6_StructuredType/@uname">
 											<xsl:if
-												test="((xs:string(xs:boolean($var2_StructuredType/@uninstantiable)) = 'false') and (xs:string($var2_StructuredType/@name) != xs:string(@name)))">
+												test="((xs:string(xs:boolean($var2_StructuredType/@uninstantiable)) = 'false') and (xs:string($var2_StructuredType/@uname) != xs:string(@uname)))">
 												<xsl:sequence select="fn:true()" />
 											</xsl:if>
 										</xsl:if>
@@ -44,21 +44,21 @@ http://www.altova.com/mapforce
 								</xsl:if>
 							</xsl:variable>
 							<xsl:if test="fn:exists($var4_cond_result_exists)">
-								<xsl:attribute name="name">
-									<xsl:sequence select="fn:concat(xs:string(@name), '')" />
+								<xsl:attribute name="uname">
+									<xsl:sequence select="fn:concat(xs:string(@uname), '')" />
 								</xsl:attribute>
 							</xsl:if>
 						</xsl:if>
 						<StructuredType>
-							<xsl:if test="$var2_StructuredType/@name">
+							<xsl:if test="$var2_StructuredType/@uname">
 								<xsl:variable name="var8_cond_result_exists" as="xs:boolean*">
 									<xsl:if test="$var2_StructuredType/@uninstantiable">
 										<xsl:for-each
 											select="doc($SQL2003Metamodel_data1)/SQLSchema/StructuredType">
 											<xsl:variable name="var10_StructuredType" select=" . " />
-											<xsl:if test="$var10_StructuredType/@name">
+											<xsl:if test="$var10_StructuredType/@uname">
 												<xsl:if
-													test="((xs:string(xs:boolean($var2_StructuredType/@uninstantiable)) = 'false') and (xs:string($var2_StructuredType/@name) != xs:string(@name)))">
+													test="((xs:string(xs:boolean($var2_StructuredType/@uninstantiable)) = 'false') and (xs:string($var2_StructuredType/@uname) != xs:string(@uname)))">
 													<xsl:sequence select="fn:true()" />
 												</xsl:if>
 											</xsl:if>
@@ -66,8 +66,8 @@ http://www.altova.com/mapforce
 									</xsl:if>
 								</xsl:variable>
 								<xsl:if test="fn:exists($var8_cond_result_exists)">
-									<xsl:attribute name="name">
-										<xsl:sequence select="xs:string(@name)" />
+									<xsl:attribute name="uname">
+										<xsl:sequence select="xs:string(@uname)" />
 									</xsl:attribute>
 								</xsl:if>
 							</xsl:if>

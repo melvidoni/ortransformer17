@@ -530,7 +530,7 @@ class XMLtoSQL {
 			 */
 			// Create the scope definition
 			String scope = "ADD (SCOPE FOR (" + attrName
-				+ "_ref) IS " + te.getAttribute("name").toLowerCase() +"_t)";
+				+ "_ref) IS " + te.getAttribute("uname").toLowerCase() +"_t)";
 
 			// If it is not contained...
 			if(nestedScopesList.containsKey(typeName + "_t")){

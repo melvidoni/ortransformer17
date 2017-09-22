@@ -18,7 +18,7 @@
 									<xs:sequence maxOccurs="unbounded">
 										<xs:element ref="StructuredType"/>
 									</xs:sequence>
-									<xs:attribute name="name" type="xs:string" use="required"/>
+									<xs:attribute name="uname" type="xs:string" use="required"/>
 								</xs:complexType>
 							</xs:element>
 							<xs:element name="TypedTable">
@@ -26,15 +26,15 @@
 									<xs:sequence maxOccurs="unbounded">
 										<xs:element ref="StructuredType"/>
 									</xs:sequence>
-									<xs:attribute name="name" type="xs:string" use="required"/>
+									<xs:attribute name="uname" type="xs:string" use="required"/>
 								</xs:complexType>
 							</xs:element>
 						</xs:choice>
-						<xs:attribute name="name" type="xs:string"/>
+						<xs:attribute name="uname" type="xs:string"/>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="name" type="xs:string"/>
+			<xs:attribute name="uname" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="StructuredType">
@@ -45,11 +45,11 @@
 						<xs:sequence>
 							<xs:element name="Type"/>
 						</xs:sequence>
-						<xs:attribute name="name" type="xs:string"/>
+						<xs:attribute name="uname" type="xs:string"/>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="name" type="xs:string"/>
+			<xs:attribute name="uname" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

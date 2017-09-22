@@ -27,7 +27,7 @@ http://www.altova.com/mapforce
 				<xsl:for-each select="StructuredType">
 					<xsl:variable name="Vvar3_StructuredType" select="."/>
 					<TypedTable>
-						<xsl:for-each select="@name">
+						<xsl:for-each select="@uname">
 							<xsl:variable name="Vvar5_name" select="xs:string( . )"/>
 							<xsl:variable name="Vvar6_CONST" select="''"/>
 							<xsl:variable name="Vvar7_RESULTOF_concat" select="fn:concat($Vvar5_name, $Vvar6_CONST)"/>
@@ -37,7 +37,7 @@ http://www.altova.com/mapforce
 								<xsl:variable name="Vvar11_RESULTOF_equal" select="xs:string( $Vvar9_uninstantiable ) = xs:string( $Vvar10_CONST )"/>
 								<xsl:for-each select="doc($SQL2003Metamodel_data1)/SQLSchema">
 									<xsl:for-each select="StructuredType">
-														<xsl:for-each select="@name">
+														<xsl:for-each select="@uname">
 															<xsl:variable name="Vvar19_name" select="xs:string( . )"/>
 															<xsl:variable name="Vvar20_RESULTOF_notequal" select="xs:string( $Vvar5_name ) != xs:string( $Vvar19_name )"/>
 															<xsl:for-each select="$Vvar3_StructuredType/@supertype">
@@ -47,7 +47,7 @@ http://www.altova.com/mapforce
 																<xsl:variable name="Vvar25_RESULTOF_logicaland_PART1" select="(if (fn:string($Vvar11_RESULTOF_equal) castable as xs:boolean ) then xs:boolean(fn:string($Vvar11_RESULTOF_equal)) else if ( fn:string($Vvar11_RESULTOF_equal) castable as xs:double ) then fn:boolean( fn:number( fn:string($Vvar11_RESULTOF_equal))) else fn:boolean( fn:string($Vvar11_RESULTOF_equal))) and (if (fn:string($Vvar20_RESULTOF_notequal) castable as xs:boolean ) then xs:boolean(fn:string($Vvar20_RESULTOF_notequal)) else if ( fn:string($Vvar20_RESULTOF_notequal) castable as xs:double ) then fn:boolean( fn:number( fn:string($Vvar20_RESULTOF_notequal))) else fn:boolean( fn:string($Vvar20_RESULTOF_notequal)))"/>
 																<xsl:variable name="Vvar25_RESULTOF_logicaland" select="(if (fn:string($Vvar25_RESULTOF_logicaland_PART1) castable as xs:boolean ) then xs:boolean(fn:string($Vvar25_RESULTOF_logicaland_PART1)) else if ( fn:string($Vvar25_RESULTOF_logicaland_PART1) castable as xs:double ) then fn:boolean( fn:number( fn:string($Vvar25_RESULTOF_logicaland_PART1))) else fn:boolean( fn:string($Vvar25_RESULTOF_logicaland_PART1))) and (if (fn:string($Vvar24_RESULTOF_equal) castable as xs:boolean ) then xs:boolean(fn:string($Vvar24_RESULTOF_equal)) else if ( fn:string($Vvar24_RESULTOF_equal) castable as xs:double ) then fn:boolean( fn:number( fn:string($Vvar24_RESULTOF_equal))) else fn:boolean( fn:string($Vvar24_RESULTOF_equal)))"/>
 																<xsl:if test="string($Vvar25_RESULTOF_logicaland)='true'">
-																	<xsl:attribute name="name">
+																	<xsl:attribute name="uname">
 																		<xsl:value-of select="$Vvar7_RESULTOF_concat"/>
 																	</xsl:attribute>
 																</xsl:if>
@@ -58,7 +58,7 @@ http://www.altova.com/mapforce
 							</xsl:for-each>
 						</xsl:for-each>
 						<StructuredType>
-							<xsl:for-each select="@name">
+							<xsl:for-each select="@uname">
 								<xsl:variable name="Vvar27_name" select="xs:string( . )"/>
 								<xsl:for-each select="$Vvar3_StructuredType/@uninstantiable">
 									<xsl:variable name="Vvar29_uninstantiable" select="for $i in fn:string( . ) return if ($i castable as xs:boolean ) then xs:boolean($i) else if ( $i castable as xs:double ) then fn:boolean( fn:number($i) ) else fn:boolean($i )"/>
@@ -70,7 +70,7 @@ http://www.altova.com/mapforce
 												<xsl:for-each select="Type">
 													<xsl:for-each select="Arrangement">
 														<xsl:for-each select="StructuredType">
-															<xsl:for-each select="@name">
+															<xsl:for-each select="@uname">
 																<xsl:variable name="Vvar39_name" select="xs:string( . )"/>
 																<xsl:variable name="Vvar40_RESULTOF_notequal" select="xs:string( $Vvar27_name ) != xs:string( $Vvar39_name )"/>
 																<xsl:for-each select="$Vvar3_StructuredType/@supertype">
