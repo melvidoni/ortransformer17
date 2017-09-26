@@ -4,7 +4,6 @@ package gui.components;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
@@ -60,7 +59,6 @@ public class ScriptTab extends Tab {
         scrollTypes.setFitToHeight(true);
         scrollTypes.setMinWidth(200);
         scrollTypes.setPadding(new Insets(10,10,10,10));
-        SplitPane.setResizableWithParent(scrollTypes, Boolean.FALSE);
 
         // Start the scrolltables pane
         scrollTables = new ScrollPane();
@@ -68,7 +66,6 @@ public class ScriptTab extends Tab {
         scrollTables.setFitToWidth(true);
         scrollTables.setMinWidth(200);
         scrollTables.setPadding(new Insets(10,10,10,10));
-        SplitPane.setResizableWithParent(scrollTables, Boolean.FALSE);
     }
 
 
@@ -85,12 +82,10 @@ public class ScriptTab extends Tab {
 
         // Load the types on a label
         Text typesLabel = new Text(tStatus.getTypesScript());
-        typesLabel.wrappingWidthProperty().bind(scrollTypes.widthProperty());
         scrollTypes.setContent(typesLabel);
 
         // Load the tables on a Label
         Text tablesLabel = new Text(tStatus.getTablesScript());
-        tablesLabel.wrappingWidthProperty().bind(scrollTables.widthProperty());
         scrollTables.setContent(tablesLabel);
     }
 }

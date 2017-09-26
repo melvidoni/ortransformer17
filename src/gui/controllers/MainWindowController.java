@@ -735,6 +735,10 @@ public class MainWindowController {
                     // Set the information on the script tab and show it
                     scriptTab.showGeneratedScripts();
                     tabPane.getTabs().add(scriptTab);
+
+                    // Set the selected tab
+                    tabPane.getSelectionModel().select(scriptTab);
+                    transfStatus = TransformationStatus.getInstance(true);
                 }
             }
         }

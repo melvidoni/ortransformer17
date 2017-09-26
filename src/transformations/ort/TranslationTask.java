@@ -88,13 +88,6 @@ public class TranslationTask extends Task {
         // STEP 5
         // Second mapping, using tables
         File tblFile = new File(tempPath + File.separator + tempName + ".xml.tbl");
-
-        // If this is horizontal
-        if(tStatus.getImplementation().equals(ImplementationType.HORIZONTAL)) {
-
-        }
-
-
         transform("files/SecondMapping.xslt." + tStatus.getImplementation().getExtension(),
                 getParamsList(tpoFile.getAbsolutePath(),2, "SQL2003Metamodel_data",
                         "SQL2003Metamodel_schema_1", "files/SQL2003Metamodel_schema.xsd"),

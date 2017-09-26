@@ -68,10 +68,6 @@ public class DrawingDiagram extends Pane {
 
 
 
-
-
-
-
     /**
      * Method that checks if the point received belongs to another
      * node, or not. If it is contained in at least one, it returns.
@@ -132,6 +128,9 @@ public class DrawingDiagram extends Pane {
         // Add the nodes
         nodes.add(node);
         getChildren().add(node);
+
+        // Update the size
+        updateSize(getBoundsInLocal().getWidth(), getBoundsInLocal().getHeight());
     }
 
 
@@ -232,6 +231,9 @@ public class DrawingDiagram extends Pane {
         // Add it to the diagram
         complexNodes.addFirst(complexNode);
         getChildren().add(complexNode);
+
+        // Update the size
+        updateSize(getBoundsInLocal().getWidth(), getBoundsInLocal().getHeight());
     }
 
 
@@ -284,6 +286,9 @@ public class DrawingDiagram extends Pane {
             // Else, it is a normal relationship
             else  deleteRelationship(rof[0]);
         }
+
+        // Update the size
+        updateSize(getBoundsInLocal().getWidth(), getBoundsInLocal().getHeight());
     }
 
 
@@ -303,6 +308,9 @@ public class DrawingDiagram extends Pane {
                 break;
             }
         }
+
+        // Update the size
+        updateSize(getBoundsInLocal().getWidth(), getBoundsInLocal().getHeight());
     }
 
 
@@ -404,6 +412,8 @@ public class DrawingDiagram extends Pane {
         }
 
 
+        // Update the size
+        updateSize(getBoundsInLocal().getWidth(), getBoundsInLocal().getHeight());
     }
 
 
@@ -492,6 +502,10 @@ public class DrawingDiagram extends Pane {
      * @param height The current height.
      */
     public void updateSize(double width, double height) {
+        // Apply the elements
+        applyCss();
+        layoutChildren();
+
         // Check each side, and update
         if (width > getMinWidth())  setMinWidth(width);
         if (height > getMinHeight()) setMinHeight(height);
