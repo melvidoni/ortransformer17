@@ -1,19 +1,17 @@
 package gui.components;
 
 
+
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.text.Text;
 import transformations.ort.TransformationStatus;
+
+
 
 
 /**
@@ -33,18 +31,16 @@ public class ScriptTab extends Tab {
     /**
      * Default constructor of the component.
      */
-    public ScriptTab() {
+    @FXML
+    public void initialize() {
         // Prepare the split pane
         splitPane = new SplitPane();
         setContent(splitPane);
 
         // Start the scrolltypes pane
         newModel();
+        splitPane.setDividerPositions(0.5);
         splitPane.getItems().setAll(scrollTypes, scrollTables);
-
-        // Add the title and image
-        this.setText("SQL Scripts");
-        this.setGraphic(new ImageView(new Image("/gui/views/img/icon_script.png")));
 
         // Allow for this to be closed and add the listeners
         this.setClosable(true);
@@ -62,20 +58,21 @@ public class ScriptTab extends Tab {
         scrollTypes = new ScrollPane();
         scrollTypes.setFitToWidth(true);
         scrollTypes.setFitToHeight(true);
-        scrollTypes.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollTypes.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollTypes.setMinWidth(200);
+        scrollTypes.setPadding(new Insets(10,10,10,10));
         SplitPane.setResizableWithParent(scrollTypes, Boolean.FALSE);
 
         // Start the scrolltables pane
         scrollTables = new ScrollPane();
         scrollTables.setFitToHeight(true);
         scrollTables.setFitToWidth(true);
-        scrollTables.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollTables.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollTables.setMinWidth(200);
+        scrollTables.setPadding(new Insets(10,10,10,10));
         SplitPane.setResizableWithParent(scrollTables, Boolean.FALSE);
     }
+
+
+
 
 
     /**
@@ -87,15 +84,13 @@ public class ScriptTab extends Tab {
         TransformationStatus tStatus = TransformationStatus.getInstance(false);
 
         // Load the types on a label
-        Label typesLabel = new Label(tStatus.getTypesScript());
-        typesLabel.setWrapText(true);
-        typesLabel.setPadding(new Insets(10,10,10,10));
-        scrollTypes.setContent(new Pane(typesLabel));
+        Text typesLabel = new Text(tStatus.getTypesScript());
+        typesLabel.wrappingWidthProperty().bind(scrollTypes.widthProperty());
+        scrollTypes.setContent(typesLabel);
 
         // Load the tables on a Label
-        Label tablesLabel = new Label(tStatus.getTablesScript());
-        tablesLabel.setWrapText(true);
-        tablesLabel.setPadding(new Insets(10,10,10,10));
-        scrollTables.setContent(new Pane(tablesLabel));
+        Text tablesLabel = new Text(tStatus.getTablesScript());
+        tablesLabel.wrappingWidthProperty().bind(scrollTables.widthProperty());
+        scrollTables.setContent(tablesLabel);
     }
 }

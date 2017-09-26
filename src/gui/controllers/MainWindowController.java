@@ -56,12 +56,10 @@ public class MainWindowController {
     @FXML private ToggleButton toggleNewAC;
 
     @FXML private TabPane tabPane;
-    @FXML private Tab umlTab;
-    private ScriptTab scriptTab;
+    @FXML private ScriptTab scriptTab;
 
     @FXML private TreeBrowser treePane;
     @FXML private DrawingDiagram drawingCanvas;
-
 
     private ContextMenu classContextMenu = new ContextMenu();
     private ContextMenu acContextMenu = new ContextMenu();
@@ -91,7 +89,7 @@ public class MainWindowController {
         // Hide elements
         toolBar.setManaged(false);
         tabPane.setManaged(false);
-        scriptTab = new ScriptTab();
+        tabPane.getTabs().remove(scriptTab);
 
         // Coordinates
         drawingLine = null;
@@ -171,7 +169,8 @@ public class MainWindowController {
         // Show the hidden elements
         toolBar.setManaged(true);
         tabPane.setManaged(true);
-        scriptTab = new ScriptTab();
+        scriptTab.initialize();
+        tabPane.getTabs().remove(scriptTab);
 
         // Create a new model
         treePane.newModel();

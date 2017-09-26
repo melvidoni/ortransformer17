@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+
+
 
 <GridPane maxHeight="200.0" maxWidth="500.0" minHeight="200.0" minWidth="500.0" prefHeight="200.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.40" fx:controller="gui.controllers.ProgressController">
   <columnConstraints>
@@ -15,16 +14,15 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
-   <children>
-      <ProgressBar fx:id="progressBar" maxHeight="25.0" maxWidth="400.0" minHeight="25.0" minWidth="400.0" prefHeight="25.0" prefWidth="400.0" progress="0.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="BOTTOM">
-         <GridPane.margin>
-            <Insets bottom="5.0" />
-         </GridPane.margin>
-      </ProgressBar>
-      <Label fx:id="progressLabel" text="Working..." GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
-         <GridPane.margin>
-            <Insets top="10.0" />
-         </GridPane.margin>
-      </Label>
-   </children>
+
+  <ProgressBar fx:id="progressBar" maxHeight="25.0" maxWidth="400.0" minHeight="25.0" minWidth="400.0" prefHeight="25.0" prefWidth="400.0" progress="0.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="BOTTOM">
+     <GridPane.margin>
+        <Insets bottom="5.0" />
+     </GridPane.margin>
+  </ProgressBar>
+  <Label fx:id="progressLabel" text="Working..." GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
+     <GridPane.margin>
+        <Insets top="10.0" />
+     </GridPane.margin>
+  </Label>
 </GridPane>
