@@ -6,18 +6,15 @@ import gui.models.RelationshipModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import org.apache.commons.lang3.StringUtils;
 import umldiagram.graphical.status.EditingStatus;
 import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.enums.RelationshipType;
-import java.io.IOException;
-
-
 
 
 
@@ -85,9 +82,9 @@ public class ListRelationshipController {
     private void deleteRelationships() {
         // If nothing is selected
         if(relsTable.getSelectionModel().getSelectedIndices().isEmpty()) {
-            PopupHandlers.showWarningDialog("Incorrect Selection",
+            PopupHandlers.showDialog("Incorrect Selection",
                     "Incorrect selection to remove relationships.",
-                    "At least one relationship must be selected to be deleted.");
+                    "At least one relationship must be selected to be deleted.", Alert.AlertType.INFORMATION);
         }
         else {
             // Ask for confirmation
@@ -154,8 +151,8 @@ public class ListRelationshipController {
         // If there are errors...
         else {
             // Show a message
-            PopupHandlers.showWarningDialog("Incorrect Selection",
-                    "Incorrect selection to edit a relationship.", errors);
+            PopupHandlers.showDialog("Incorrect Selection",
+                    "Incorrect selection to edit a relationship.", errors, Alert.AlertType.INFORMATION);
         }
     }
 

@@ -6,13 +6,17 @@ import javafx.beans.property.SimpleStringProperty;
 
 
 
-
-
+/**
+ * Model class used in the visual tables of the interface that
+ * allows operating on classes' attributes.
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
 public class AttributeModel {
     private final SimpleStringProperty name;
     private final SimpleStringProperty type;
     private final SimpleBooleanProperty ordered;
     private final SimpleBooleanProperty unique;
+
 
 
     /**
@@ -25,6 +29,7 @@ public class AttributeModel {
         ordered = new SimpleBooleanProperty(false);
         unique = new SimpleBooleanProperty(false);
     }
+
 
 
     /**
@@ -41,6 +46,8 @@ public class AttributeModel {
         ordered = new SimpleBooleanProperty(o);
         unique = new SimpleBooleanProperty(u);
     }
+
+
 
 
     public String getName() {
@@ -73,6 +80,15 @@ public class AttributeModel {
 
     public void setUnique(boolean u) {
         unique.set(u);
+    }
+
+
+    public SimpleBooleanProperty orderedProperty() {
+        return ordered;
+    }
+
+    public SimpleBooleanProperty uniqueProperty() {
+        return unique;
     }
 
 }

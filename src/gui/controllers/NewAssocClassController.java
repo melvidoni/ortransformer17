@@ -9,11 +9,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import umldiagram.logical.*;
-import umldiagram.logical.enums.RelationshipType;
 
 
 
 
+
+/**
+ * Controller class for the interface that allows creating a new
+ * AssociationClass in the UML diagram. It also has the relationship
+ * components.
+ * @see gui.controllers.ARelationshipController
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
 public class NewAssocClassController extends ARelationshipController {
     @FXML private TextField classNameField;
     @FXML private CheckBox abstractClass;
@@ -140,11 +147,6 @@ public class NewAssocClassController extends ARelationshipController {
         }
 
     }
-
-
-
-
-
 
 
 

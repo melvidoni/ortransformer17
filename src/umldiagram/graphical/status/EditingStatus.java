@@ -5,7 +5,7 @@ import gui.models.RelationshipModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.LinkedList;
+
 
 
 

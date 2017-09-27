@@ -10,11 +10,17 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import umldiagram.graphical.status.EditingStatus;
 import umldiagram.logical.Relationship;
-import umldiagram.logical.RelationshipEndpoint;
 import umldiagram.logical.UMLDiagram;
-import umldiagram.logical.enums.RelationshipType;
 
 
+
+
+/**
+ * Controller for the interface that allows editing a relationship
+ * in the UML diagram of the system.
+ * @see gui.controllers.ARelationshipController
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
 public class EditRelationshipController extends ARelationshipController {
     private Relationship relationship;
 
@@ -101,11 +107,6 @@ public class EditRelationshipController extends ARelationshipController {
 
 
 
-
-
-
-
-
     /**
      * Method that closes the current frame.
      * It is the action listener of the cancel button.
@@ -128,13 +129,10 @@ public class EditRelationshipController extends ARelationshipController {
     @FXML
     private void editRelationship() {
         // Get the diagram instance
-        UMLDiagram diagram = UMLDiagram.getInstance(false);
         EditingStatus eStatus = EditingStatus.getInstance(false);
 
         // Clean the information
         cleanFields();
-
-
 
         // Validate the relationship
         boolean relationshipOk = UmlValidation.validateEditedRelationship(nameField,

@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		edited with XMLSpy v2007 (http://www.altova.com) by Fernanda (INGAR)
+	-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:element name="Package">
+		<xs:annotation>
+			<xs:documentation>Root Element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="Class">
+					<xs:complexType>
+						<xs:choice maxOccurs="unbounded">
+							<xs:element name="Attribute">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="minimum">
+											<xs:complexType>
+												<xs:attribute name="type" default="LiteralInteger">
+												<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="LiteralBoolean"/>
+												<xs:enumeration value="LiteralInteger"/>
+												<xs:enumeration value="LiteralString"/>
+												<xs:enumeration value="LiteralUnlimitedNatural"/>
+												<xs:enumeration value="LiteralNull"/>
+												</xs:restriction>
+												</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="value" type="xs:integer"
+												default="1"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="maximum">
+											<xs:complexType>
+												<xs:attribute name="type" default="LiteralInteger">
+												<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="LiteralBoolean"/>
+												<xs:enumeration value="LiteralInteger"/>
+												<xs:enumeration value="LiteralString"/>
+												<xs:enumeration value="LiteralUnlimitedNatural"/>
+												<xs:enumeration value="LiteralNull"/>
+												</xs:restriction>
+												</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="value" type="xs:integer"
+												default="1"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="attributeType">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="fecha"/>
+												<xs:enumeration value="entero"/>
+												<xs:enumeration value="caracter"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="name" type="xs:string" use="required"/>
+									<xs:attribute name="isOrdered" type="xs:boolean" default="false"/>
+									<xs:attribute name="isUnique" type="xs:boolean" default="true"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Endpoint">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="minimum">
+											<xs:complexType>
+												<xs:attribute name="type" default="LiteralInteger">
+												<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="LiteralBoolean"/>
+												<xs:enumeration value="LiteralInteger"/>
+												<xs:enumeration value="LiteralString"/>
+												<xs:enumeration value="LiteralUnlimitedNatural"/>
+												<xs:enumeration value="LiteralNull"/>
+												</xs:restriction>
+												</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="value" type="xs:integer"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="maximum">
+											<xs:complexType>
+												<xs:attribute name="type" default="LiteralInteger">
+												<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="LiteralBoolean"/>
+												<xs:enumeration value="LiteralInteger"/>
+												<xs:enumeration value="LiteralString"/>
+												<xs:enumeration value="LiteralUnlimitedNatural"/>
+												<xs:enumeration value="LiteralNull"/>
+												</xs:restriction>
+												</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="value" type="xs:integer"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="name" type="xs:string"/>
+									<xs:attribute name="isOrdered" type="xs:boolean" default="false"/>
+									<xs:attribute name="isUnique" default="true"/>
+									<xs:attribute name="isComposed" type="xs:boolean"
+										default="false"/>
+									<xs:attribute name="browsabl" type="xs:boolean"/>
+									<xs:attribute name="endpointType">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="ninguno"/>
+												<xs:enumeration value="agregado"/>
+												<xs:enumeration value="compuesto"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Pseudoattribute">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="minimum">
+											<xs:complexType>
+												<xs:attribute name="type" default="LiteralInteger">
+												<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="LiteralBoolean"/>
+												<xs:enumeration value="LiteralInteger"/>
+												<xs:enumeration value="LiteralString"/>
+												<xs:enumeration value="LiteralUnlimitedNatural"/>
+												<xs:enumeration value="LiteralNull"/>
+												</xs:restriction>
+												</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="value" type="xs:integer"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="maximum">
+											<xs:complexType>
+												<xs:attribute name="type" default="LiteralInteger">
+												<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="LiteralBoolean"/>
+												<xs:enumeration value="LiteralInteger"/>
+												<xs:enumeration value="LiteralString"/>
+												<xs:enumeration value="LiteralUnlimitedNatural"/>
+												<xs:enumeration value="LiteralNull"/>
+												</xs:restriction>
+												</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="value" type="xs:integer"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="name" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+						<xs:attribute name="name" type="xs:string" use="required"/>
+						<xs:attribute name="isAbstract" type="xs:boolean" default="false"/>
+						<xs:attribute name="superclass" type="xs:string" use="optional"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Association">
+					<xs:complexType>
+						<xs:attribute name="name" type="xs:string" use="required"/>
+						<xs:attribute name="associationType" use="required">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="Asociacion"/>
+									<xs:enumeration value="Composicion"/>
+									<xs:enumeration value="Agregacion"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="AssociationClass">
+					<xs:complexType>
+						<xs:choice maxOccurs="unbounded">
+							<xs:element name="Attribute">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="minimum">
+											<xs:complexType>
+												<xs:attribute name="type" default="LiteralInteger">
+												<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="LiteralBoolean"/>
+												<xs:enumeration value="LiteralInteger"/>
+												<xs:enumeration value="LiteralString"/>
+												<xs:enumeration value="LiteralUnlimitedNatural"/>
+												<xs:enumeration value="LiteralNull"/>
+												</xs:restriction>
+												</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="value" type="xs:integer"
+												default="1"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="maximum">
+											<xs:complexType>
+												<xs:attribute name="type" default="LiteralInteger">
+												<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="LiteralBoolean"/>
+												<xs:enumeration value="LiteralInteger"/>
+												<xs:enumeration value="LiteralString"/>
+												<xs:enumeration value="LiteralUnlimitedNatural"/>
+												<xs:enumeration value="LiteralNull"/>
+												</xs:restriction>
+												</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="value" type="xs:integer"
+												default="1"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="attributeType">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="fecha"/>
+												<xs:enumeration value="entero"/>
+												<xs:enumeration value="caracter"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="name" type="xs:string" use="required"/>
+									<xs:attribute name="isOrdered" type="xs:boolean" default="false"/>
+									<xs:attribute name="isUnique" type="xs:boolean" default="true"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Endpoint">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="minimum">
+											<xs:complexType>
+												<xs:attribute name="type" default="LiteralInteger">
+												<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="LiteralBoolean"/>
+												<xs:enumeration value="LiteralInteger"/>
+												<xs:enumeration value="LiteralString"/>
+												<xs:enumeration value="LiteralUnlimitedNatural"/>
+												<xs:enumeration value="LiteralNull"/>
+												</xs:restriction>
+												</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="value" type="xs:integer"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="maximum">
+											<xs:complexType>
+												<xs:attribute name="type" default="LiteralInteger">
+												<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="LiteralBoolean"/>
+												<xs:enumeration value="LiteralInteger"/>
+												<xs:enumeration value="LiteralString"/>
+												<xs:enumeration value="LiteralUnlimitedNatural"/>
+												<xs:enumeration value="LiteralNull"/>
+												</xs:restriction>
+												</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="value" type="xs:integer"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="name" type="xs:string"/>
+									<xs:attribute name="isOrdered" type="xs:boolean" default="false"/>
+									<xs:attribute name="isUnique" default="true"/>
+									<xs:attribute name="isComposed" type="xs:boolean"
+										default="false"/>
+									<xs:attribute name="browsable" type="xs:boolean"/>
+									<xs:attribute name="endpointType">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="ninguno"/>
+												<xs:enumeration value="agregado"/>
+												<xs:enumeration value="compuesto"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Pseudoattribute">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="minimum">
+											<xs:complexType>
+												<xs:attribute name="type" default="LiteralInteger">
+												<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="LiteralBoolean"/>
+												<xs:enumeration value="LiteralInteger"/>
+												<xs:enumeration value="LiteralString"/>
+												<xs:enumeration value="LiteralUnlimitedNatural"/>
+												<xs:enumeration value="LiteralNull"/>
+												</xs:restriction>
+												</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="value" type="xs:integer"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="maximum">
+											<xs:complexType>
+												<xs:attribute name="type" default="LiteralInteger">
+												<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="LiteralBoolean"/>
+												<xs:enumeration value="LiteralInteger"/>
+												<xs:enumeration value="LiteralString"/>
+												<xs:enumeration value="LiteralUnlimitedNatural"/>
+												<xs:enumeration value="LiteralNull"/>
+												</xs:restriction>
+												</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="value" type="xs:integer"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="name" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+						<xs:attribute name="name" type="xs:string" use="required"/>
+						<xs:attribute name="isAbstract" type="xs:boolean" default="false"/>
+						<xs:attribute name="superclass" type="xs:string"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+			<xs:attribute name="name" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

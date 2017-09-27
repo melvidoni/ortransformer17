@@ -11,20 +11,23 @@ import umldiagram.logical.AssociationClass;
 import umldiagram.logical.Relationship;
 import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.UmlClass;
-
 import java.util.LinkedList;
 
 
 
 
-
+/**
+ * Class that represents the drawing space of the system, in which
+ * the user clicks, creates the elements and visualizes a UML diagram.
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
 public class DrawingDiagram extends Pane {
     private LinkedList<Node> nodes;
     private LinkedList<Arrow> arrows;
     private LinkedList<ComplexNode> complexNodes;
 
-    double orgSceneX, orgSceneY;
-    double orgTranslateX, orgTranslateY;
+    private double orgSceneX, orgSceneY;
+    private double orgTranslateX, orgTranslateY;
 
 
 
@@ -60,10 +63,6 @@ public class DrawingDiagram extends Pane {
         // Clean the children
         getChildren().clear();
     }
-
-
-
-
 
 
 
@@ -129,6 +128,9 @@ public class DrawingDiagram extends Pane {
         // Add the nodes
         nodes.add(node);
         getChildren().add(node);
+
+        // Update the size
+        updateSize(getBoundsInLocal().getWidth(), getBoundsInLocal().getHeight());
     }
 
 
@@ -229,6 +231,9 @@ public class DrawingDiagram extends Pane {
         // Add it to the diagram
         complexNodes.addFirst(complexNode);
         getChildren().add(complexNode);
+
+        // Update the size
+        updateSize(getBoundsInLocal().getWidth(), getBoundsInLocal().getHeight());
     }
 
 
@@ -281,6 +286,9 @@ public class DrawingDiagram extends Pane {
             // Else, it is a normal relationship
             else  deleteRelationship(rof[0]);
         }
+
+        // Update the size
+        updateSize(getBoundsInLocal().getWidth(), getBoundsInLocal().getHeight());
     }
 
 
@@ -300,6 +308,9 @@ public class DrawingDiagram extends Pane {
                 break;
             }
         }
+
+        // Update the size
+        updateSize(getBoundsInLocal().getWidth(), getBoundsInLocal().getHeight());
     }
 
 
@@ -401,6 +412,8 @@ public class DrawingDiagram extends Pane {
         }
 
 
+        // Update the size
+        updateSize(getBoundsInLocal().getWidth(), getBoundsInLocal().getHeight());
     }
 
 
@@ -482,7 +495,21 @@ public class DrawingDiagram extends Pane {
 
 
 
+    /**
+     * Method that updates the size of the pane, in order to add
+     * scrollbars, if corresponds.
+     * @param width The current width.
+     * @param height The current height.
+     */
+    public void updateSize(double width, double height) {
+        // Apply the elements
+        applyCss();
+        layoutChildren();
 
+        // Check each side, and update
+        if (width > getMinWidth())  setMinWidth(width);
+        if (height > getMinHeight()) setMinHeight(height);
+    }
 
 
 
@@ -517,9 +544,5 @@ public class DrawingDiagram extends Pane {
             ((Node)(me.getSource())).setTranslateY(newTranslateY);
         }
     }
-
-
-
-
 
 }

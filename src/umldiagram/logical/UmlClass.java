@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 
+
+
 /**
  * Representation of an UML umldiagram.logical class, in the umldiagram.logical model of the system.
  * @author Melina Vidoni, INGAR CONICET-UTN.
@@ -15,16 +17,6 @@ public class UmlClass {
 	private boolean isAbstract;
 
 
-    /**
-     * Default constructor that initializes the instance
-     * with empty default values.
-     */
-	UmlClass(){
-		id = "";
-		name = "";
-		attrList = new LinkedList<>();
-		isAbstract = false;
-	}
 
 
     /**
@@ -41,34 +33,6 @@ public class UmlClass {
 		isAbstract = a;
 		attrList = new LinkedList<>();
 	}
-
-
-    /**
-     * Method that checks for the longest attribute on the class.
-     * If there are none, it returns the class name.
-     * @return The longest attribute as a string, or the class name.
-     */
-    public String getLongestAttribute() {
-        // If there are no attributes return the name
-        if(attrList.isEmpty()) return name;
-
-        // Otherwise, check the attributes
-        else {
-            String longestAttr = "";
-            for(Attribute a : attrList) {
-                if(a.toString().length() >= longestAttr.length()) longestAttr = a.toString();
-            }
-
-            // Return a value
-            return longestAttr;
-        }
-    }
-
-
-
-
-
-
 
 
 

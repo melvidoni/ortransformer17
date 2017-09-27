@@ -19,9 +19,6 @@ import umldiagram.logical.Attribute;
 import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.UmlClass;
 import umldiagram.logical.enums.AttributeType;
-import java.util.stream.Collectors;
-
-
 
 
 /**
@@ -38,7 +35,7 @@ public class NewClassController extends GridPane {
     @FXML private TableColumn<AttributeModel, Boolean> attrOrdCol;
     @FXML private TableColumn<AttributeModel, Boolean> attrUnqCol;
 
-    private final ObservableList<AttributeModel> attrData  = FXCollections.observableArrayList();;
+    private final ObservableList<AttributeModel> attrData  = FXCollections.observableArrayList();
 
 
     /**
@@ -59,8 +56,7 @@ public class NewClassController extends GridPane {
         attrNameCol.setCellFactory(TextFieldTableCell.forTableColumn());
         attrNameCol.prefWidthProperty().bind(attrTable.widthProperty().divide(4));
         attrNameCol.setOnEditCommit(
-                t -> { t.getTableView().getItems().get(t.getTablePosition().getRow()).setName(t.getNewValue());
-        });
+                t -> t.getTableView().getItems().get(t.getTablePosition().getRow()).setName(t.getNewValue()));
 
         attrTypeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
         attrTypeCol.setCellFactory(ComboBoxTableCell.forTableColumn( AttributeType.getNamesValues() ));
@@ -72,10 +68,16 @@ public class NewClassController extends GridPane {
         attrOrdCol.setCellValueFactory(new PropertyValueFactory<>("ordered"));
         attrOrdCol.prefWidthProperty().bind(attrTable.widthProperty().divide(4));
         attrOrdCol.setCellFactory(p -> new CheckBoxTableCell<>());
+        attrOrdCol.setOnEditCommit(
+                t -> (t.getTableView().getItems().get(t.getTablePosition().getRow())).setOrdered(t.getNewValue())
+        );
 
         attrUnqCol.setCellValueFactory(new PropertyValueFactory<>("unique"));
         attrUnqCol.prefWidthProperty().bind(attrTable.widthProperty().divide(4));
         attrUnqCol.setCellFactory(p -> new CheckBoxTableCell<>());
+        attrUnqCol.setOnEditCommit(
+                t -> (t.getTableView().getItems().get(t.getTablePosition().getRow())).setUnique(t.getNewValue())
+        );
     }
 
 
@@ -125,9 +127,9 @@ public class NewClassController extends GridPane {
 
         // If there are errors
         if(!errors.isEmpty()) {
-            PopupHandlers.showWarningDialog("Incorrect Data",
+            PopupHandlers.showDialog("Incorrect Data",
                     "Incorrect data found on attributes.",
-                    "The following errors have been found on the attributes:\n" + errors);
+                    "The following errors have been found on the attributes:\n" + errors, Alert.AlertType.INFORMATION);
         }
         // If attributes are ok, and the class is ok as well
         else if(classOk) {

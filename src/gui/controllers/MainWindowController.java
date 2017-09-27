@@ -2,7 +2,9 @@ package gui.controllers;
 
 
 import gui.components.PopupHandlers;
+import gui.components.ScriptTab;
 import gui.models.RelationshipModel;
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,15 +13,16 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import gui.components.TreeBrowser;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
-import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import transformations.save.OpenDiagram;
-import transformations.save.SaveDiagram;
+import transformations.ort.TransformationStatus;
+import transformations.ort.UMLtoXML;
+import transformations.open.OpenDiagram;
 import umldiagram.graphical.DrawingDiagram;
 import umldiagram.graphical.status.DrawingStatus;
 import umldiagram.graphical.status.EditingStatus;
@@ -27,7 +30,6 @@ import umldiagram.logical.AssociationClass;
 import umldiagram.logical.Relationship;
 import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.UmlClass;
-
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
@@ -45,6 +47,7 @@ public class MainWindowController {
     @FXML private MenuItem menuSave;
     @FXML private MenuItem menuTransform;
     @FXML private MenuItem menuPng;
+    @FXML private MenuItem menuTxt;
 
     @FXML private ToolBar toolBar;
     @FXML private ToggleButton toggleNewClass;
@@ -54,16 +57,19 @@ public class MainWindowController {
     @FXML private ToggleButton toggleNewComp;
     @FXML private ToggleButton toggleNewAC;
 
-    @FXML private SplitPane splitPane;
+    @FXML private TabPane tabPane;
+    @FXML private ScriptTab scriptTab;
+
     @FXML private TreeBrowser treePane;
     @FXML private DrawingDiagram drawingCanvas;
-
 
     private ContextMenu classContextMenu = new ContextMenu();
     private ContextMenu acContextMenu = new ContextMenu();
 
     private DrawingStatus drawingStatus;
     private EditingStatus editingStatus;
+    private TransformationStatus transfStatus;
+
     private Line drawingLine;
 
 
@@ -80,11 +86,13 @@ public class MainWindowController {
         // Block menus until activated
         menuSave.setDisable(true);
         menuTransform.setDisable(true);
+        menuTxt.setDisable(true);
         menuPng.setDisable(true);
 
         // Hide elements
         toolBar.setManaged(false);
-        splitPane.setManaged(false);
+        tabPane.setManaged(false);
+        tabPane.getTabs().remove(scriptTab);
 
         // Coordinates
         drawingLine = null;
@@ -94,8 +102,9 @@ public class MainWindowController {
                 toggleNewAgg.selectedProperty(), toggleNewComp.selectedProperty(),
                 toggleNewAC.selectedProperty());
 
-        // Class name for menu
+        // Prepare other statuses
         editingStatus = EditingStatus.getInstance(true);
+        transfStatus = TransformationStatus.getInstance(true);
 
 
         // Prepare the context menu
@@ -158,11 +167,14 @@ public class MainWindowController {
         // Enable the menus
         menuSave.setDisable(false);
         menuTransform.setDisable(false);
+        menuTxt.setDisable(true);
         menuPng.setDisable(false);
 
         // Show the hidden elements
         toolBar.setManaged(true);
-        splitPane.setManaged(true);
+        tabPane.setManaged(true);
+        scriptTab.initialize();
+        tabPane.getTabs().remove(scriptTab);
 
         // Create a new model
         treePane.newModel();
@@ -176,8 +188,9 @@ public class MainWindowController {
                 toggleNewAgg.selectedProperty(), toggleNewComp.selectedProperty(),
                 toggleNewAC.selectedProperty());
 
-        // Clean the edition
+        // Clean the statuses
         editingStatus = EditingStatus.getInstance(true);
+        transfStatus = TransformationStatus.getInstance(true);
     }
 
 
@@ -265,14 +278,9 @@ public class MainWindowController {
             drawingLine.setEndX(me.getX());
             drawingLine.setEndY(me.getY());
 
-            // Calculate the positions
-            double mx = Math.max(drawingLine.getStartX(), drawingLine.getEndX());
-            double my = Math.max(drawingLine.getStartY(), drawingLine.getEndY());
-
-
-            // Resize if it goes outside
-            if (mx > drawingCanvas.getMinWidth())  drawingCanvas.setMinWidth(mx);
-            if (my > drawingCanvas.getMinHeight()) drawingCanvas.setMinHeight(my);
+            // Update the size
+            drawingCanvas.updateSize(Math.max(drawingLine.getStartX(), drawingLine.getEndX()),
+                    Math.max(drawingLine.getStartY(), drawingLine.getEndY()));
         }
     }
 
@@ -312,9 +320,9 @@ public class MainWindowController {
                     // If there are errors
                     if(!errors.isEmpty()) {
                         // Show a message
-                        PopupHandlers.showWarningDialog("Incorrect Relationship",
+                        PopupHandlers.showDialog("Incorrect Relationship",
                                 "Incorrect endpoints for the generalization.",
-                                "The following errors have been found:" + errors);
+                                "The following errors have been found:" + errors, Alert.AlertType.INFORMATION);
                     }
                     // If there are no errors
                     else {
@@ -344,9 +352,9 @@ public class MainWindowController {
                     // If there are errors
                     if(!errors.isEmpty()) {
                         // Show a message
-                        PopupHandlers.showWarningDialog("Incorrect Relationship",
+                        PopupHandlers.showDialog("Incorrect Relationship",
                                 "Incorrect endpoints for the relationship.",
-                                "The following errors have been found:" + errors);
+                                "The following errors have been found:" + errors, Alert.AlertType.INFORMATION);
                     }
                     else {
                         // Set the classes on the status
@@ -389,9 +397,9 @@ public class MainWindowController {
                     // If there are errors
                     if(!errors.isEmpty()) {
                         // Show a message
-                        PopupHandlers.showWarningDialog("Incorrect Association Class",
+                        PopupHandlers.showDialog("Incorrect Association Class",
                                 "Incorrect endpoints for the association class.",
-                                "The following errors have been found:" + errors);
+                                "The following errors have been found:" + errors, Alert.AlertType.INFORMATION);
                     }
                     else {
                         // Set the classes on the status
@@ -617,7 +625,7 @@ public class MainWindowController {
         try {
             // Get the selected file
             File file = PopupHandlers.showSaveFileChooser("Export Diagram as Image",
-                    "PNG Files", "*.png");
+                    "PNG Files", "*.png", (Stage) drawingCanvas.getScene().getWindow());
 
             // If a file was selected
             if (file != null) {
@@ -646,10 +654,11 @@ public class MainWindowController {
         try {
             // Get the selected file
             File file = PopupHandlers.showSaveFileChooser("Save Diagram",
-                    "ORT Files", "*.ort");
+                    "ORT Files", "*.ort", (Stage) drawingCanvas.getScene().getWindow());
 
             // If a file was selected, save the diagram
-            if(file != null)  SaveDiagram.export(file, drawingCanvas.getNodes());
+            if(file != null)
+                UMLtoXML.transformToXML(file, false, drawingCanvas.getNodes());
         }
         catch (Exception ex) {
             // TODO COMPLETE THIS MESSAGE
@@ -669,7 +678,7 @@ public class MainWindowController {
        try {
             // Get the selected file
             File file = PopupHandlers.showOpenFileChooser("Open Diagram",
-                    "ORT Files", "*.ort");
+                    "ORT Files", "*.ort", (Stage) drawingCanvas.getScene().getWindow());
 
             // If a file was selected, save the diagram
             if(file != null) {
@@ -679,6 +688,10 @@ public class MainWindowController {
                 // Now store get the information
                 OpenDiagram.open(file, drawingCanvas);
 
+                // Resize if it goes outside
+                drawingCanvas.updateSize(drawingCanvas.getBoundsInLocal().getWidth(),
+                        drawingCanvas.getBoundsInLocal().getHeight());
+
                 // Update the tree
                 treePane.update(UMLDiagram.getInstance(false));
             }
@@ -687,6 +700,122 @@ public class MainWindowController {
             // TODO COMPLETE THIS MESSAGE
             ex.printStackTrace();
         }
+    }
+
+
+
+
+
+    /**
+     * Method that exits the application without asking for
+     * any type of input.
+     */
+    @FXML
+    private void exitMenu() {
+        // Show confirmation
+        Platform.exit();
+    }
+
+
+
+
+
+
+    /**
+     * Method that acts as an action listener to start the transformation
+     * process, and decide whether to show or not the results.
+     */
+    @FXML
+    private void transformDiagram() {
+        try {
+            // Start showing the transformation information
+            PopupHandlers.showPopup(
+                    "/gui/views/TransformDialog.fxml",
+                    "Configure Transformation", drawingCanvas.getScene()
+            );
+
+            // If the transformation was configured
+            if(transfStatus.needsTransformation()) {
+                // Show the progress
+                PopupHandlers.showPopup("/gui/views/ProgressDialog.fxml",
+                        "Transformation in Progress", drawingCanvas.getScene());
+
+                // If it was transformed
+                if(transfStatus.wasTransformed()) {
+                    // Set the information on the script tab and show it
+                    scriptTab.showGeneratedScripts();
+                    tabPane.getTabs().add(scriptTab);
+
+                    // Set the selected tab
+                    tabPane.getSelectionModel().select(scriptTab);
+                    menuTxt.setDisable(false);
+
+                    // Clean the status
+                    transfStatus = TransformationStatus.getInstance(true);
+                }
+            }
+        }
+        catch (IOException e) {
+            // TODO CORRECT THIS CATCH
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+    /**
+     * Method that saves te current SQL script on the file selected
+     * by the user. It shows a filechooser to pick the file up. However,
+     * it later splits the content into two files: one for types and
+     * one for tables.
+     */
+    @FXML
+    private void exportToTextMenu() {
+        try {
+            // Get the selected file
+            File file = PopupHandlers.showSaveFileChooser("Save Diagram",
+                    "Text Files", "*.txt", (Stage) drawingCanvas.getScene().getWindow());
+
+            // If a file was selected, save the diagram
+            if(file != null) {
+                // Prepare new files
+                String originalPath = file.getAbsolutePath();
+
+                // Prepare the new files for types
+                FileUtils.writeStringToFile(
+                        new File(originalPath.replace(".txt", "_types.txt")),
+                        scriptTab.getTypesScript(), "UTF-8"
+                );
+
+                // Prepare the new files for tables
+                FileUtils.writeStringToFile(
+                        new File(originalPath.replace(".txt", "_tables.txt")),
+                        scriptTab.getTablesScript(), "UTF-8"
+                );
+            }
+        }
+        catch (Exception ex) {
+            // TODO COMPLETE THIS MESSAGE
+            ex.printStackTrace();
+        }
+    }
+
+
+
+
+    /**
+     * Method  to disable the transformation menu, once the scripts
+     * tab has been closed. It also cleans the transformation status.
+     */
+    @FXML
+    private void scriptsClosed() {
+        // Clean the transformation status
+        transfStatus = TransformationStatus.getInstance(true);
+
+        // Block the menu
+        menuTxt.setDisable(true);
     }
 
 }

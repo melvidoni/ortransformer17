@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		edited with XMLSpy v2007 (http://www.altova.com) by Fernanda (INGAR)
+	-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:element name="ReferenceType">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="StructuredType"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Arrangement">
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element ref="StructuredType"/>
+				<xs:element ref="ReferenceType"/>
+			</xs:choice>
+			<xs:attribute name="max_element_number" type="xs:integer"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Multiset">
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element ref="StructuredType"/>
+				<xs:element ref="ReferenceType"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SQLSchema">
+		<xs:annotation>
+			<xs:documentation>Root Element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="StructuredType" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="nombre" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="StructuredType">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Attribute" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Type">
+								<xs:complexType>
+									<xs:choice maxOccurs="unbounded">
+										<xs:element name="PredefinedType">
+											<xs:complexType>
+												<xs:attribute name="type" use="required">
+												<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="fecha"/>
+												<xs:enumeration value="entero"/>
+												<xs:enumeration value="caracter"/>
+												</xs:restriction>
+												</xs:simpleType>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+										<xs:element ref="ReferenceType"/>
+										<xs:element ref="Arrangement"/>
+										<xs:element ref="Multiset"/>
+									</xs:choice>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="name" type="xs:string"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string"/>
+			<xs:attribute name="uninstantiable" type="xs:boolean"/>
+			<xs:attribute name="supertype" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

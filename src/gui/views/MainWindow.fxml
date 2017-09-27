@@ -8,168 +8,165 @@
 <?import umldiagram.graphical.DrawingDiagram?>
 
 
+<?import gui.components.ScriptTab?>
 <AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.MainWindowController">
-   <children>
       <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-         <menus>
             <Menu mnemonicParsing="false" text="File">
-               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#newModelMenu" text="New">
-                     <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@img/menu_newmodel.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </MenuItem>
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Open" onAction="#openDiagramMenu">
-                     <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@img/menu_openmodel.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </MenuItem>
-                  <MenuItem fx:id="menuSave" mnemonicParsing="false" text="Save" onAction="#saveDiagramMenu">
-                     <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@img/menu_savemodel.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </MenuItem>
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Exit">
-                     <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@img/menu_exit.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </MenuItem>
-               </items>
+               <MenuItem mnemonicParsing="false" onAction="#newModelMenu" text="New">
+                  <graphic>
+                     <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <Image url="@img/menu_newmodel.png" />
+                     </ImageView>
+                  </graphic>
+               </MenuItem>
+               <SeparatorMenuItem mnemonicParsing="false" />
+               <MenuItem mnemonicParsing="false" onAction="#openDiagramMenu" text="Open">
+                  <graphic>
+                     <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <Image url="@img/menu_openmodel.png" />
+                     </ImageView>
+                  </graphic>
+               </MenuItem>
+               <MenuItem fx:id="menuSave" mnemonicParsing="false" onAction="#saveDiagramMenu" text="Save">
+                  <graphic>
+                     <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <Image url="@img/menu_savemodel.png" />
+                     </ImageView>
+                  </graphic>
+               </MenuItem>
+               <SeparatorMenuItem mnemonicParsing="false" />
+               <MenuItem mnemonicParsing="false" onAction="#exitMenu" text="Exit">
+                  <graphic>
+                     <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <Image url="@img/menu_exit.png" />
+                     </ImageView>
+                  </graphic>
+               </MenuItem>
             </Menu>
-            <Menu mnemonicParsing="false" text="Model">
-               <items>
-                  <MenuItem fx:id="menuTransform" mnemonicParsing="false" text="Transform">
-                     <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@img/menu_transform.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </MenuItem>
 
-                  <MenuItem fx:id="menuPng" mnemonicParsing="false" text="Export PNG" onAction="#exportToPNGMenu">
-                     <graphic>
+
+
+            <Menu mnemonicParsing="false" text="Model">
+               <MenuItem fx:id="menuTransform" mnemonicParsing="false" onAction="#transformDiagram" text="Transform">
+                  <graphic>
+                     <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <Image url="@img/menu_transform.png" />
+                     </ImageView>
+                  </graphic>
+               </MenuItem>
+
+                <SeparatorMenuItem mnemonicParsing="false" />
+
+                <MenuItem fx:id="menuPng" mnemonicParsing="false" onAction="#exportToPNGMenu" text="Export PNG">
+                    <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@img/menu_png.png" />
-                           </image>
+                            <Image url="@img/menu_png.png" />
                         </ImageView>
-                     </graphic>
-                  </MenuItem>
-               </items>
+                    </graphic>
+                </MenuItem>
+
+                <MenuItem fx:id="menuTxt" mnemonicParsing="false" onAction="#exportToTextMenu" text="Export TXT">
+                    <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@img/menu_text.png" />
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
+
             </Menu>
+
             <Menu mnemonicParsing="false" text="?">
-               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#showAboutMenu" text="About">
-                     <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@img/menu_about.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </MenuItem>
-               </items>
+               <MenuItem mnemonicParsing="false" onAction="#showAboutMenu" text="About">
+                  <graphic>
+                     <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <Image url="@img/menu_about.png" />
+                     </ImageView>
+                  </graphic>
+               </MenuItem>
             </Menu>
-         </menus>
       </MenuBar>
 
-
        <fx:define>
-           <ToggleGroup fx:id="toggleButtonsGroup"/>
+           <ToggleGroup fx:id="toggleButtonsGroup" />
        </fx:define>
 
       <ToolBar fx:id="toolBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0">
-         <items>
-            <ToggleButton mnemonicParsing="false" fx:id="toggleNewClass" toggleGroup="$toggleButtonsGroup">
+            <ToggleButton fx:id="toggleNewClass" mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
                         <Image url="@img/tool_class.gif" />
-                     </image></ImageView>
+                     </ImageView>
                </graphic>
             </ToggleButton>
-            <ToggleButton mnemonicParsing="false" fx:id="toggleNewAC" toggleGroup="$toggleButtonsGroup">
+            <ToggleButton fx:id="toggleNewAC" mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
                <graphic>
-                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" >
-                     <image>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+
                         <Image url="@img/tool_assocclass.gif" />
-                     </image></ImageView>
+                     </ImageView>
                </graphic>
             </ToggleButton>
-            <ToggleButton mnemonicParsing="false" fx:id="toggleNewAssoc" toggleGroup="$toggleButtonsGroup">
+            <ToggleButton fx:id="toggleNewAssoc" mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
                         <Image url="@img/tool_association.gif" />
-                     </image></ImageView>
+                     </ImageView>
                </graphic>
             </ToggleButton>
-            <ToggleButton mnemonicParsing="false" fx:id="toggleNewGen" toggleGroup="$toggleButtonsGroup">
+            <ToggleButton fx:id="toggleNewGen" mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
                         <Image url="@img/tool_generalization.gif" />
-                     </image></ImageView>
+                     </ImageView>
                </graphic>
             </ToggleButton>
-            <ToggleButton mnemonicParsing="false" fx:id="toggleNewAgg" toggleGroup="$toggleButtonsGroup">
+            <ToggleButton fx:id="toggleNewAgg" mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
                         <Image url="@img/tool_aggregation.gif" />
-                     </image></ImageView>
+                     </ImageView>
                </graphic>
             </ToggleButton>
-            <ToggleButton mnemonicParsing="false" fx:id="toggleNewComp" toggleGroup="$toggleButtonsGroup">
+            <ToggleButton fx:id="toggleNewComp" mnemonicParsing="false" toggleGroup="$toggleButtonsGroup">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
                         <Image url="@img/tool_composition.gif" />
-                     </image></ImageView>
+                   </ImageView>
                </graphic>
             </ToggleButton>
-         </items></ToolBar>
-      <SplitPane fx:id="splitPane" dividerPositions="0.5" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="56.0">
-         <items>
-            <ScrollPane fitToHeight="true" fitToWidth="true" prefWidth="200.0"
-                        maxHeight="Infinity" maxWidth="400.0" minWidth="200.0"
-                        hbarPolicy="AS_NEEDED">
-                <content>
-                    <TreeBrowser fx:id="treePane"/>
-                </content>
-            </ScrollPane>
-            <ScrollPane fitToHeight="true" fitToWidth="true" >
-                <content>
-                    <DrawingDiagram fx:id="drawingCanvas" style="-fx-background-color: #FFFFFF"
-                                    onMouseClicked="#canvasClicked"
+      </ToolBar>
 
-                                    onMousePressed="#canvasPressed"
-                                    onMouseDragged="#canvasDragged"
-                                    onMouseReleased="#canvasReleased"
+      <TabPane fx:id="tabPane" AnchorPane.bottomAnchor="0.0"
+               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="56.0">
+         <Tab text="UML Diagram" closable="false">
+            <graphic>
+               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@img/icon_uml.png" />
+               </ImageView>
+            </graphic>
+            <SplitPane dividerPositions="0.5" >
+               <ScrollPane fitToHeight="true" fitToWidth="true" maxWidth="350.0" minWidth="200.0"
+                           SplitPane.resizableWithParent="false">
+                  <TreeBrowser fx:id="treePane" />
+               </ScrollPane>
+               <ScrollPane fitToHeight="true" fitToWidth="true">
+                  <DrawingDiagram fx:id="drawingCanvas" style="-fx-background-color: #FFFFFF"
+                                  onMouseClicked="#canvasClicked"
 
-                                    onContextMenuRequested="#contextMenuRequested"/>
-                </content>
-            </ScrollPane>
-         </items></SplitPane>
-   </children>
+                                  onMousePressed="#canvasPressed"
+                                  onMouseDragged="#canvasDragged"
+                                  onMouseReleased="#canvasReleased"
+
+                                  onContextMenuRequested="#contextMenuRequested"/>
+               </ScrollPane>
+            </SplitPane>
+         </Tab>
+         <ScriptTab fx:id="scriptTab" text="SQL Scripts" onClosed="#scriptsClosed">
+            <graphic>
+               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@img/icon_script.png" />
+               </ImageView>
+            </graphic>
+         </ScriptTab>
+      </TabPane>
 </AnchorPane>

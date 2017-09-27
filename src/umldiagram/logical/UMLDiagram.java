@@ -1,13 +1,13 @@
 package umldiagram.logical;
 
-import gui.models.RelationshipModel;
-import javafx.collections.ObservableList;
-import umldiagram.logical.enums.RelationshipType;
 
+import umldiagram.logical.enums.RelationshipType;
 import java.util.IntSummaryStatistics;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
+
+
 
 
 /**
@@ -24,7 +24,7 @@ public class UMLDiagram {
 
     private boolean undrawnClass;
     private boolean undrawnRelationship;
-    public boolean undrawnAssocClass;
+    private boolean undrawnAssocClass;
 
 
     /**
@@ -399,27 +399,6 @@ public class UMLDiagram {
 
 
 
-	
-	/**
-	 * Method that evaluates if there are generalziation relationships
-     * on this UML diagram.
-	 * @return true if there is at least one, false if there is none.
-	 */
-	public boolean existGeneralizationRels() {
-        for(Relationship r : relationships) {
-            if (r.getType().equals(RelationshipType.GENERALIZATION))
-                return true;
-        }
-		return false;
-	}
-
-
-
-
-
-
-
-
 
 
     /**
@@ -555,39 +534,6 @@ public class UMLDiagram {
 
 
 
-
-
-
-
-
-
-
-    /**
-     * Getter to obtain the next id of an association class.
-     * @return The next id of an association class.
-     */
-	public String newAssocClassId() {
-        IntSummaryStatistics summaryStatistics =
-                associationClasses.stream().map(AssociationClass::getId)
-                        .mapToInt(Integer::parseInt).summaryStatistics();
-
-        return String.valueOf(summaryStatistics.getMax()+1);
-	}
-
-
-    /**
-     * Getter to obtain a list of names of the association classes.
-     * @return A list of names as strings.
-     */
-	public LinkedList<String> getAssocClassName() {
-		LinkedList<String> names = new LinkedList<>();
-        for(AssociationClass ca : associationClasses) {
-            names.add(ca.getUmlClass().getName().toUpperCase());
-        }
-		return names;
-	}
-
-
 	/**
 	 * Method that searches all the relationships of the umldiagram.logical diagram,
      * that link with the class which name matches with the ones received
@@ -691,24 +637,6 @@ public class UMLDiagram {
 		return null;
 	}
 
-
-	
-	/**
-	 * Method that obtains the names of all existing relationships.
-	 * @return A list with the names of all the relationships, regardless
-     * of the type, and including association classes.
-	 */
-	public LinkedList<String> getRelationshipsNames() {
-        LinkedList<String> names =
-                relationships.stream().map(r -> r.getName().toUpperCase())
-                        .collect(Collectors.toCollection(LinkedList::new));
-
-        for (AssociationClass ca : associationClasses) {
-            names.add(ca.getRelationship().getName().toUpperCase());
-        }
-		
-		return names;
-	}
 
 
 }
