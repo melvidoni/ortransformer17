@@ -14,6 +14,14 @@ import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.enums.RelationshipType;
 
 
+
+
+/**
+ * Controller class for the interface that allows creating a new
+ * relationship of the type association, aggregation or composition.
+ * @see gui.controllers.ARelationshipController
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
 public class NewRelationshipController extends ARelationshipController {
     @FXML private TextField nameField;
 
@@ -32,6 +40,8 @@ public class NewRelationshipController extends ARelationshipController {
     @FXML private CheckBox originBrowsable;
     @FXML private CheckBox originUnique;
     @FXML private CheckBox originOrdered;
+
+
 
 
     /**
@@ -58,11 +68,6 @@ public class NewRelationshipController extends ARelationshipController {
         endMaxCard.setTextFormatter(FieldFormatter.getStarFormatter(2));
         originMaxCard.setTextFormatter(FieldFormatter.getStarFormatter(2));
     }
-
-
-
-
-
 
 
 

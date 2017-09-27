@@ -9,6 +9,8 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.text.Text;
 import transformations.ort.TransformationStatus;
+import transformations.ort.enums.DatabaseType;
+
 
 
 
@@ -20,9 +22,10 @@ import transformations.ort.TransformationStatus;
  * @author Melina Vidoni, INGAR CONICET-UTN.
  */
 public class ScriptTab extends Tab {
-    private SplitPane splitPane;
     private ScrollPane scrollTypes;
     private ScrollPane scrollTables;
+
+    private DatabaseType databaseType;
 
 
 
@@ -33,7 +36,7 @@ public class ScriptTab extends Tab {
     @FXML
     public void initialize() {
         // Prepare the split pane
-        splitPane = new SplitPane();
+        SplitPane splitPane = new SplitPane();
         setContent(splitPane);
 
         // Start the scrolltypes pane
@@ -66,6 +69,9 @@ public class ScriptTab extends Tab {
         scrollTables.setFitToWidth(true);
         scrollTables.setMinWidth(200);
         scrollTables.setPadding(new Insets(10,10,10,10));
+
+        // Clean the type
+        databaseType = null;
     }
 
 
@@ -87,5 +93,32 @@ public class ScriptTab extends Tab {
         // Load the tables on a Label
         Text tablesLabel = new Text(tStatus.getTablesScript());
         scrollTables.setContent(tablesLabel);
+
+        // Store the type
+        databaseType = tStatus.getDatabase();
+    }
+
+
+
+
+    /**
+     * Method to obtain the scripts for the types displayed on
+     * the script tabs.
+     * @return The text contained on as a types SQL script.
+     */
+    public String getTypesScript() {
+        return ((Text) scrollTypes.getContent()).getText();
+    }
+
+
+
+
+    /**
+     * Method to obtain the scripts for the tables displayed on
+     * the script tabs.
+     * @return The text contained on as a tables SQL script.
+     */
+    public String getTablesScript() {
+        return ((Text) scrollTables.getContent()).getText();
     }
 }

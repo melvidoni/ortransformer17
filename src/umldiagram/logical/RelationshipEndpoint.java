@@ -4,6 +4,8 @@ package umldiagram.logical;
 import umldiagram.logical.enums.EndpointType;
 import umldiagram.logical.enums.RelationshipType;
 
+
+
 /**
  * Class that represents and endpoint in a UML relationship
  * between two classes.
@@ -18,24 +20,6 @@ public class RelationshipEndpoint {
 	private String cardinality;
 	private EndpointType type;
 	private UmlClass lclass;
-
-
-
-
-
-	/**
-	 * Default empty constructor of the class.
-	 */
-	public RelationshipEndpoint() {
-		name = "";
-		browsable = false;
-		unique = false;
-		ordered = false;
-		cardinality = "";
-		type = EndpointType.ASSOCIATION;
-		lclass = null;
-	}
-
 
 
 

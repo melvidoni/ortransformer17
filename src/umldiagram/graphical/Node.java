@@ -31,16 +31,12 @@ public class Node extends Label {
         super();
         name = umlClass.getName();
 
-        // Get the attribute
-        String attr = umlClass.getLongestAttribute();
-
 
         // Prepare the text
         String text = name.toUpperCase();
         for(Attribute a: umlClass.getAttributes()) {
             text += "\n" + a.toString();
         }
-
 
         // Get a label for the text
         setText(text);

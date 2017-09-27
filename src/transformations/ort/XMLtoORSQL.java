@@ -38,7 +38,7 @@ import java.util.List;
  * creation sentences.
  * @author Melina Vidoni, INGAR CONICET-UTN.
  */
-class XMLtoSQL {
+class XMLtoORSQL {
 	private String path;
 	private String number;
 
@@ -60,7 +60,7 @@ class XMLtoSQL {
      * @param r The working directory.
      * @param n The number of transformation.
      */
-	XMLtoSQL(String r, String n){
+	XMLtoORSQL(String r, String n){
 		path = r;
 		number = n;
 
@@ -616,6 +616,19 @@ class XMLtoSQL {
 
 		return tableScripts;
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

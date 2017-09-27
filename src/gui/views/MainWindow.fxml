@@ -43,6 +43,9 @@
                   </graphic>
                </MenuItem>
             </Menu>
+
+
+
             <Menu mnemonicParsing="false" text="Model">
                <MenuItem fx:id="menuTransform" mnemonicParsing="false" onAction="#transformDiagram" text="Transform">
                   <graphic>
@@ -52,14 +55,26 @@
                   </graphic>
                </MenuItem>
 
-               <MenuItem fx:id="menuPng" mnemonicParsing="false" onAction="#exportToPNGMenu" text="Export PNG">
-                  <graphic>
-                     <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <Image url="@img/menu_png.png" />
-                     </ImageView>
-                  </graphic>
-               </MenuItem>
+                <SeparatorMenuItem mnemonicParsing="false" />
+
+                <MenuItem fx:id="menuPng" mnemonicParsing="false" onAction="#exportToPNGMenu" text="Export PNG">
+                    <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@img/menu_png.png" />
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
+
+                <MenuItem fx:id="menuTxt" mnemonicParsing="false" onAction="#exportToTextMenu" text="Export TXT">
+                    <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@img/menu_text.png" />
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
+
             </Menu>
+
             <Menu mnemonicParsing="false" text="?">
                <MenuItem mnemonicParsing="false" onAction="#showAboutMenu" text="About">
                   <graphic>
@@ -146,7 +161,7 @@
                </ScrollPane>
             </SplitPane>
          </Tab>
-         <ScriptTab fx:id="scriptTab" text="SQL Scripts">
+         <ScriptTab fx:id="scriptTab" text="SQL Scripts" onClosed="#scriptsClosed">
             <graphic>
                <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                   <Image url="@img/icon_script.png" />

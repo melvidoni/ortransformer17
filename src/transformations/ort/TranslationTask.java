@@ -2,7 +2,6 @@ package transformations.ort;
 
 
 import javafx.concurrent.Task;
-import transformations.ort.enums.ImplementationType;
 
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
@@ -32,7 +31,11 @@ public class TranslationTask extends Task {
 
 
 
-
+    /**
+     * Main method that executes the translation task
+     * @return true if it was completed successfully.
+     * @throws Exception For diverse errors when transforming.
+     */
     @Override
     protected Boolean call() throws Exception {
         // Get the transformation status
@@ -97,28 +100,30 @@ public class TranslationTask extends Task {
 
 
 
-        // STEP 6a
-        // Translate types towards SQL
-        XMLtoSQL sqlGuide = new XMLtoSQL(tempPath, tempName);
-        tStatus.setTypesScript( sqlGuide.translateORTypes() );
-        updateProgress(85, 100);
-        updateMessage("85% Completed. Translation towards SQL in progress.");
+        // STEP 6
+        // Translate towards SQL
+        XMLtoORSQL sqlGuide = new XMLtoORSQL(tempPath, tempName);
+        switch(tStatus.getDatabase()) {
+            case OBJECT_RELATIONAL: // Translate types
+                                    tStatus.setTypesScript( sqlGuide.translateORTypes() );
+                                    updateProgress(85, 100);
+                                    updateMessage("85% Completed. Translation towards SQL in progress.");
 
-        // STEP 6b
-        // Translate tables towards SQL
-        tStatus.setTablesScript( sqlGuide.translateORTables(tStatus.getImplementation()) );
-        tStatus.setTransformed(true);
-        updateProgress(100, 100);
-        updateMessage("100% Completed. Preparing results visualization.");
+                                    // Translate tables
+                                    tStatus.setTablesScript( sqlGuide.translateORTables(tStatus.getImplementation()) );
+                                    tStatus.setTransformed(true);
+                                    updateProgress(100, 100);
+                                    updateMessage("100% Completed. Preparing results visualization.");
 
+                                    break;
+
+            case RELATIONAL_MSQL: // TODO: FUTURE WORK RELATIONAL_MSQL MODEL
+                             break;
+        }
 
         // Return a value from the transformation
         return true;
     }
-
-
-
-
 
 
 

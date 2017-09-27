@@ -6,6 +6,11 @@ import javafx.beans.property.SimpleStringProperty;
 
 
 
+/**
+ * Visual model for the table used when listing the relationships
+ * associated to a given class, in order to operate over them.
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
 public class RelationshipModel {
     private final SimpleStringProperty name;
     private final SimpleStringProperty type;
@@ -35,6 +40,8 @@ public class RelationshipModel {
         name = new SimpleStringProperty(n);
         type = new SimpleStringProperty(t);
     }
+
+
 
 
     public String getName() {

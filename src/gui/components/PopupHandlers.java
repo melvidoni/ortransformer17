@@ -104,7 +104,7 @@ public class PopupHandlers {
 
         // Get the button type
         Optional<ButtonType> result = alert.showAndWait();
-        return (result.get() == ButtonType.OK);
+        return (result.isPresent() && result.get() == ButtonType.OK);
     }
 
 

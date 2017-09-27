@@ -1,8 +1,9 @@
 package umldiagram.logical;
 
 
-import umldiagram.logical.enums.EndpointType;
 import umldiagram.logical.enums.RelationshipType;
+
+
 
 /**
  * Class that represents an UML relationship among classes.

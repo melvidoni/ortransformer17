@@ -17,6 +17,7 @@ import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.enums.RelationshipType;
 
 
+
 /**
  * Controller for the interface that lists relationships and
  * allows operations on them.

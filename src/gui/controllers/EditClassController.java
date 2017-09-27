@@ -40,7 +40,7 @@ public class EditClassController extends GridPane {
     @FXML private TableColumn<AttributeModel, Boolean> attrOrdCol;
     @FXML private TableColumn<AttributeModel, Boolean> attrUnqCol;
 
-    private final ObservableList<AttributeModel> attrData  = FXCollections.observableArrayList();;
+    private final ObservableList<AttributeModel> attrData  = FXCollections.observableArrayList();
 
 
 
@@ -86,8 +86,7 @@ public class EditClassController extends GridPane {
         attrNameCol.setCellFactory(TextFieldTableCell.forTableColumn());
         attrNameCol.prefWidthProperty().bind(attrTable.widthProperty().divide(4));
         attrNameCol.setOnEditCommit(
-                t -> { t.getTableView().getItems().get(t.getTablePosition().getRow()).setName(t.getNewValue());
-        });
+                t -> t.getTableView().getItems().get(t.getTablePosition().getRow()).setName(t.getNewValue()));
 
         attrTypeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
         attrTypeCol.setCellFactory(ComboBoxTableCell.forTableColumn( AttributeType.getNamesValues() ));
@@ -190,20 +189,6 @@ public class EditClassController extends GridPane {
             cancelCreation();
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

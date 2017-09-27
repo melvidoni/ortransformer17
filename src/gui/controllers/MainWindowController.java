@@ -18,6 +18,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import transformations.ort.TransformationStatus;
 import transformations.ort.UMLtoXML;
@@ -46,6 +47,7 @@ public class MainWindowController {
     @FXML private MenuItem menuSave;
     @FXML private MenuItem menuTransform;
     @FXML private MenuItem menuPng;
+    @FXML private MenuItem menuTxt;
 
     @FXML private ToolBar toolBar;
     @FXML private ToggleButton toggleNewClass;
@@ -84,6 +86,7 @@ public class MainWindowController {
         // Block menus until activated
         menuSave.setDisable(true);
         menuTransform.setDisable(true);
+        menuTxt.setDisable(true);
         menuPng.setDisable(true);
 
         // Hide elements
@@ -164,6 +167,7 @@ public class MainWindowController {
         // Enable the menus
         menuSave.setDisable(false);
         menuTransform.setDisable(false);
+        menuTxt.setDisable(true);
         menuPng.setDisable(false);
 
         // Show the hidden elements
@@ -715,6 +719,12 @@ public class MainWindowController {
 
 
 
+
+
+    /**
+     * Method that acts as an action listener to start the transformation
+     * process, and decide whether to show or not the results.
+     */
     @FXML
     private void transformDiagram() {
         try {
@@ -738,6 +748,9 @@ public class MainWindowController {
 
                     // Set the selected tab
                     tabPane.getSelectionModel().select(scriptTab);
+                    menuTxt.setDisable(false);
+
+                    // Clean the status
                     transfStatus = TransformationStatus.getInstance(true);
                 }
             }
@@ -750,5 +763,59 @@ public class MainWindowController {
 
 
 
+
+
+    /**
+     * Method that saves te current SQL script on the file selected
+     * by the user. It shows a filechooser to pick the file up. However,
+     * it later splits the content into two files: one for types and
+     * one for tables.
+     */
+    @FXML
+    private void exportToTextMenu() {
+        try {
+            // Get the selected file
+            File file = PopupHandlers.showSaveFileChooser("Save Diagram",
+                    "Text Files", "*.txt", (Stage) drawingCanvas.getScene().getWindow());
+
+            // If a file was selected, save the diagram
+            if(file != null) {
+                // Prepare new files
+                String originalPath = file.getAbsolutePath();
+
+                // Prepare the new files for types
+                FileUtils.writeStringToFile(
+                        new File(originalPath.replace(".txt", "_types.txt")),
+                        scriptTab.getTypesScript(), "UTF-8"
+                );
+
+                // Prepare the new files for tables
+                FileUtils.writeStringToFile(
+                        new File(originalPath.replace(".txt", "_tables.txt")),
+                        scriptTab.getTablesScript(), "UTF-8"
+                );
+            }
+        }
+        catch (Exception ex) {
+            // TODO COMPLETE THIS MESSAGE
+            ex.printStackTrace();
+        }
+    }
+
+
+
+
+    /**
+     * Method  to disable the transformation menu, once the scripts
+     * tab has been closed. It also cleans the transformation status.
+     */
+    @FXML
+    private void scriptsClosed() {
+        // Clean the transformation status
+        transfStatus = TransformationStatus.getInstance(true);
+
+        // Block the menu
+        menuTxt.setDisable(true);
+    }
 
 }

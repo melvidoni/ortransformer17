@@ -8,8 +8,8 @@ package transformations.ort.enums;
  * @author Melina Vidoni, INGAR CONICET-UTN.
  */
 public enum DatabaseType {
-	OBJECT_RELATIONAL("Object-Relational"),
-	RELATIONAL("Relational");
+	OBJECT_RELATIONAL("Object-Relational (Oracle)"),
+	RELATIONAL_MSQL("Relational (MySQL)");
 	
 	private String type;
 
@@ -44,8 +44,8 @@ public enum DatabaseType {
 	public static DatabaseType getType(String t){
 		if(OBJECT_RELATIONAL.getStringType().equals(t))
 			return OBJECT_RELATIONAL;
-		else if(RELATIONAL.getStringType().equals(t))
-			return RELATIONAL;
+		else if(RELATIONAL_MSQL.getStringType().equals(t))
+			return RELATIONAL_MSQL;
 		return null;
 	}
 	

@@ -2,8 +2,7 @@
 	<!--
 		edited with XMLSpy v2007 (http://www.altova.com) by Fernanda (INGAR)
 	-->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-	attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 	<xs:element name="Package">
 		<xs:annotation>
 			<xs:documentation>Root Element</xs:documentation>

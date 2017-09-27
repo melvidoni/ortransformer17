@@ -26,8 +26,8 @@ public class DrawingDiagram extends Pane {
     private LinkedList<Arrow> arrows;
     private LinkedList<ComplexNode> complexNodes;
 
-    double orgSceneX, orgSceneY;
-    double orgTranslateX, orgTranslateY;
+    private double orgSceneX, orgSceneY;
+    private double orgTranslateX, orgTranslateY;
 
 
 

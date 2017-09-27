@@ -7,8 +7,11 @@ import javafx.beans.property.SimpleBooleanProperty;
 import umldiagram.logical.enums.RelationshipType;
 
 
-
-
+/**
+ * Singleton class that mantains the drawing status, and that is
+ * used to pass parameters accross the drawing tools of the system.
+ * @author Melina Vidoni, INGAR CONICET-UTN.
+ */
 public class DrawingStatus {
     private static DrawingStatus instance = new DrawingStatus();
 
@@ -39,6 +42,8 @@ public class DrawingStatus {
         originClass = "";
         endClass = "";
     }
+
+
 
 
     /**
