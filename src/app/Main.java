@@ -28,6 +28,9 @@ public class Main extends Application {
             primaryStage.setScene(new Scene(root));
             primaryStage.getIcons().add(new Image("/gui/views/img/logo.png"));
 
+
+
+
             // Prepare sizes
             primaryStage.setMinHeight(500);
             primaryStage.setMinWidth(600);

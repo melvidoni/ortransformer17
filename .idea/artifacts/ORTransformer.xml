@@ -1,0 +1,31 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="ORTransformer">
+    <output-path>$PROJECT_DIR$/out/artifacts/ORTransformer</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="app.Main" />
+        <option name="description" value="Tool to transform UML diagrams into Object-Relational SQL scripts." />
+        <option name="height" value="500" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="icons">
+          <JavaFxApplicationIcons>
+            <option name="linuxIcon" value="$PROJECT_DIR$/src/gui/views/img/logo.png" />
+            <option name="windowsIcon" value="$PROJECT_DIR$/src/gui/views/img/logo.ico" />
+          </JavaFxApplicationIcons>
+        </option>
+        <option name="nativeBundle" value="all" />
+        <option name="title" value="OR Transformer" />
+        <option name="vendor" value="INGAR CONICET-UTN" />
+        <option name="version" value="" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="ORTransformer.jar">
+        <element id="module-output" name="ORTransformer" />
+        <element id="library" level="project" name="commons-io-2.5" />
+        <element id="library" level="project" name="commons-lang3-3.6" />
+        <element id="library" level="project" name="saxon9he" />
+      </element>
+    </root>
+  </artifact>
+</component>

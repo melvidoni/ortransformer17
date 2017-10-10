@@ -13,6 +13,8 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import umldiagram.graphical.status.EditingStatus;
@@ -20,8 +22,12 @@ import umldiagram.logical.Attribute;
 import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.UmlClass;
 import umldiagram.logical.enums.AttributeType;
-
 import java.util.LinkedList;
+
+
+
+
+
 
 
 /**
@@ -108,6 +114,7 @@ public class EditClassController extends GridPane {
         attrUnqCol.setOnEditCommit(
                 t -> (t.getTableView().getItems().get(t.getTablePosition().getRow())).setUnique(t.getNewValue())
         );
+
     }
 
 

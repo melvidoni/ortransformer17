@@ -23,7 +23,9 @@ public class FieldFormatter {
         // Return the formatter
         return new TextFormatter<>( change -> {
                     String newText = change.getControlNewText() ;
-                    if (newText.matches("[0-9a-zA-Z]{0," + maxLength + "}")) {
+                    // newText.matches("[0-9a-zA-Z]{0," + maxLength + "}")
+
+                    if(newText.matches("[A-Za-z][A-Za-z0-9_]{0," + maxLength + "}")) {
                         return change ;
                     }
                     else return null ;

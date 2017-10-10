@@ -145,7 +145,7 @@ public class MainWindowController {
         alert.setTitle("About OR-Transformer");
         alert.setHeaderText("Object-Relational Transforming Tool");
         alert.setContentText("This tool was created at the Institute of Design and Development" +
-                " (INGAR CONICET-UTN) by Dr. Aldo Vecchietti, Dr. Fernanda Golobysky, and Dr. Melina Vidoni.");
+                " (INGAR CONICET-UTN) by Dr. Melina Vidoni, Dr. Fernanda Golobisky and Dr. Aldo Vecchietti.");
 
         // Change the image
         Image image = new Image("/gui/views/img/icon_about.png");

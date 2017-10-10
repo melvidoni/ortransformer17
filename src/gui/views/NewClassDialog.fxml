@@ -68,7 +68,7 @@
             <Insets left="130.0" />
          </GridPane.margin>
       </Button>
-      <Button mnemonicParsing="false" onAction="#cancelCreation" text="Cancel" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+      <Button cancelButton="true" mnemonicParsing="false" onAction="#cancelCreation" text="Cancel" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets right="10.0" />
          </GridPane.margin>

@@ -1,11 +1,12 @@
 package gui.controllers;
 
 
+import gui.components.PopupHandlers;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
-import transformations.ort.TransformationStatus;
 import transformations.ort.TranslationTask;
 
 
@@ -32,6 +33,17 @@ public class ProgressController {
         // Prepare the simulation tread
         TranslationTask tTask = new TranslationTask();
         tTask.setOnSucceeded(ce -> progressListener());
+
+        tTask.exceptionProperty().addListener((observable, oldValue, newValue) ->  {
+            if(newValue != null) {
+                Exception ex = (Exception) newValue;
+
+                PopupHandlers.showDialog("Error", "Something bad happened",
+                        ex.getMessage(), Alert.AlertType.ERROR);
+            }
+        });
+
+
 
         // Bind the elements
         progressBar.progressProperty().bind(tTask.progressProperty());
