@@ -8,6 +8,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 import transformations.ort.TransformationStatus;
 import transformations.ort.enums.DatabaseType;
@@ -35,13 +38,26 @@ public class ScriptTab extends Tab {
      */
     @FXML
     public void initialize() {
-        // Prepare the split pane
-        SplitPane splitPane = new SplitPane();
-        setContent(splitPane);
+        // Prepare grid pane
+        GridPane gridPane = new GridPane();
+        setContent(gridPane);
+
+        // Prepare constraints
+        ColumnConstraints cc1 = new ColumnConstraints();
+        cc1.setPercentWidth(50);
+        gridPane.getColumnConstraints().add(cc1);
+
+        ColumnConstraints cc2 = new ColumnConstraints();
+        cc2.setPercentWidth(50);
+        gridPane.getColumnConstraints().add(cc2);
+
+        RowConstraints rc1 = new RowConstraints();
+        rc1.setPercentHeight(100);
+        gridPane.getRowConstraints().add(rc1);
+
 
         // Start the scrolltypes pane
         newModel();
-        splitPane.setDividerPositions(0.5);
 
         // Create title panes
         TitledPane titleTypes = new TitledPane("Types Scripts", scrollTypes);
@@ -55,7 +71,8 @@ public class ScriptTab extends Tab {
         titleTables.setMaxHeight(Double.MAX_VALUE);
 
         // Add the titled panes
-        splitPane.getItems().setAll(titleTypes, titleTables);
+        gridPane.add(titleTypes,0,0);
+        gridPane.add(titleTables,1,0);
 
         // Allow for this to be closed and add the listeners
         this.setClosable(true);
