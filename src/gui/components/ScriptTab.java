@@ -7,12 +7,12 @@ import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TitledPane;
 import javafx.scene.text.Text;
 import transformations.ort.TransformationStatus;
 import transformations.ort.enums.DatabaseType;
 
-
-
+import javax.script.Bindings;
 
 
 /**
@@ -42,7 +42,20 @@ public class ScriptTab extends Tab {
         // Start the scrolltypes pane
         newModel();
         splitPane.setDividerPositions(0.5);
-        splitPane.getItems().setAll(scrollTypes, scrollTables);
+
+        // Create title panes
+        TitledPane titleTypes = new TitledPane("Types Scripts", scrollTypes);
+        titleTypes.setCollapsible(false);
+        titleTypes.setExpanded(true);
+        titleTypes.setMaxHeight(Double.MAX_VALUE);
+
+        TitledPane titleTables = new TitledPane("Tables Scripts", scrollTables);
+        titleTables.setCollapsible(false);
+        titleTables.setExpanded(true);
+        titleTables.setMaxHeight(Double.MAX_VALUE);
+
+        // Add the titled panes
+        splitPane.getItems().setAll(titleTypes, titleTables);
 
         // Allow for this to be closed and add the listeners
         this.setClosable(true);

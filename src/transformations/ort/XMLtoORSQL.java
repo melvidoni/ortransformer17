@@ -2,8 +2,6 @@ package transformations.ort;
 
 
 
-
-import com.sun.org.apache.xml.internal.security.transforms.TransformationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -270,7 +268,7 @@ class XMLtoORSQL {
 				if(!isFirst) attrScript += ",";
 				else isFirst = false;
 
-                attrScript += "\r\n" + attrName + "_mult " + attrType.toLowerCase() + "_tab";
+                attrScript += "\r\n" + attrName + "_mult " + attrType + "_tab";
 			}
 			// If it has not been processes
 			else{
@@ -319,7 +317,7 @@ class XMLtoORSQL {
                     // Add the attribute
                     if (!isFirst) attrScript += ",";
                     else  isFirst = false;
-                    attrScript += "\r\n" + attrName + "_mult " + attrType.toLowerCase() + "_tab";
+                    attrScript += "\r\n" + attrName + "_mult " + attrType + "_tab";
                 }
                 // If it has not been added
                 else {
@@ -344,7 +342,7 @@ class XMLtoORSQL {
 				 * Add the nested tables
 				 */
                 String nested = "NESTED TABLE " + attrName + "_mult STORE AS "
-                        + attrType.toLowerCase() + "_nt";
+                        + attrType + "_nt";
                 // If the key is already on the list
                 if (nestedScopesList.containsKey(typeName + "_t")) {
                     nestedScopesList.get(typeName + "_t").add(nested);
@@ -359,11 +357,11 @@ class XMLtoORSQL {
 				 * And the remaining scopes
 				 */
                 // Generate the definition
-                String alter = "ALTER TABLE " + attrType.toLowerCase()
+                String alter = "ALTER TABLE " + attrType
                         + "_nt ADD (SCOPE FOR (column_value) IS "
-                        + attrType.toLowerCase() + "_t);\r\n\r\n";
+                        + attrType + "_t);\r\n\r\n";
                 // And add it to the list
-                ntList.put(attrType.toLowerCase() + "_nt", alter);
+                ntList.put(attrType + "_nt", alter);
             }
         }
 		
@@ -409,7 +407,7 @@ class XMLtoORSQL {
 				if(!isFirst) attr += ",";
 				else isFirst = false;
 
-				attr += "\r\n" + attrName + "_arr " + attrType.toLowerCase() + "_va";
+				attr += "\r\n" + attrName + "_arr " + attrType + "_va";
 
 			}
 			// If the attribute has not been added...
@@ -461,7 +459,7 @@ class XMLtoORSQL {
                     if (!isFirst) attr += ",";
                     else isFirst = false;
 
-                    attr += "\r\n" + attrName + "_arr " + attrType.toLowerCase() + "_va";
+                    attr += "\r\n" + attrName + "_arr " + attrType + "_va";
                 }
                 // If it has not been added
                 else {
@@ -512,13 +510,13 @@ class XMLtoORSQL {
 				if(!isFirst) attr += ",";
 				else isFirst = false;
 
-				attr += "\r\n" + attrName + "_ref REF " + te.getAttribute("uname").toLowerCase() + "_tip";
+				attr += "\r\n" + attrName + "_ref REF " + te.getAttribute("uname") + "_tip";
 			}
 			// If the type has not been processed
 			else{
 				// Create the modification
 				String alterType = "ALTER TYPE " + typeName + "_tip ADD ATTRIBUTE ("
-							+ attrName + "_ref REF " + te.getAttribute("uname").toLowerCase()
+							+ attrName + "_ref REF " + te.getAttribute("uname")
 							+ "_tip) CASCADE;\r\n\r\n";
 				
 				// Add it to the list
@@ -530,7 +528,7 @@ class XMLtoORSQL {
 			 */
 			// Create the scope definition
 			String scope = "ADD (SCOPE FOR (" + attrName
-				+ "_ref) IS " + te.getAttribute("uname").toLowerCase() +"_t)";
+				+ "_ref) IS " + te.getAttribute("uname") +"_t)";
 
 			// If it is not contained...
 			if(nestedScopesList.containsKey(typeName + "_t")){
@@ -557,9 +555,9 @@ class XMLtoORSQL {
      * OR modelling, towards the SQL script.
 	 * @param imp Type of implementation.
 	 * @return String with the SQL script
-	 * @throws TransformationException For issues when transforming the elements.
+	 * @throws Exception For issues when transforming the elements.
 	 */
-	String translateORTables(ImplementationType imp) throws TransformationException {
+	String translateORTables(ImplementationType imp) throws Exception {
 		// Read the file
 		Element tbl = read(".xml.tbl");
 

@@ -7,7 +7,7 @@
     <resource url="http://www.altova.com/Mapforce/grouping" location="$PROJECT_DIR$" />
     <resource url="https://www.w3.org/2005/xpath-functions/" location="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.8 Newest" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_9" default="false" project-jdk-name="9" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

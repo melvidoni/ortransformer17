@@ -180,7 +180,7 @@
             </GridPane>
          </content>
       </TitledPane>
-      <Button mnemonicParsing="false" onAction="#editRelationship" text="Edit" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+      <Button mnemonicParsing="false" onAction="#editRelationship" text="Save" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets bottom="10.0" left="90.0" />
          </GridPane.margin>
