@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import umldiagram.graphical.status.EditingStatus;
 import umldiagram.logical.Relationship;
@@ -63,15 +64,15 @@ public class EditRelationshipController extends ARelationshipController {
 
 
         // Put controllers on the name fields
-        nameField.setTextFormatter(FieldFormatter.getMixedFormatter(20));
-        endRole.setTextFormatter(FieldFormatter.getMixedFormatter(15));
-        originRole.setTextFormatter(FieldFormatter.getMixedFormatter(15));
+        nameField.setTextFormatter(new TextFormatter<>(FieldFormatter.FILTER_MIX));
+        endRole.setTextFormatter(new TextFormatter<>(FieldFormatter.FILTER_MIX));
+        originRole.setTextFormatter(new TextFormatter<>(FieldFormatter.FILTER_MIX));
 
         // Put controllers on the cardinalities
-        endMinCard.setTextFormatter(FieldFormatter.getNumberFormatter(2));
-        originMinCard.setTextFormatter(FieldFormatter.getNumberFormatter(2));
-        endMaxCard.setTextFormatter(FieldFormatter.getStarFormatter(2));
-        originMaxCard.setTextFormatter(FieldFormatter.getStarFormatter(2));
+        endMinCard.setTextFormatter(new TextFormatter<>(FieldFormatter.FILTER_NUMERIC));
+        originMinCard.setTextFormatter(new TextFormatter<>(FieldFormatter.FILTER_NUMERIC));
+        endMaxCard.setTextFormatter(new TextFormatter<>(FieldFormatter.FILTER_STAR));
+        originMaxCard.setTextFormatter(new TextFormatter<>(FieldFormatter.FILTER_STAR));
 
 
 

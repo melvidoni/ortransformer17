@@ -234,6 +234,9 @@ public class MainWindowController {
                     }
                 }
             }
+            else if(me.getButton() == MouseButton.SECONDARY) {
+                contextMenuRequested(me);
+            }
         }
         catch(IOException ioe) {
             // TODO REMOVE STACK TRACE
@@ -449,8 +452,7 @@ public class MainWindowController {
      * the user, if it corresponds.
      * @param e The listened context menu event .
      */
-    @FXML
-    private void contextMenuRequested(ContextMenuEvent e) {
+    private void contextMenuRequested(MouseEvent e) {
         // If we are not drawing
         if(!drawingStatus.isDrawing()) {
             // Hide the menus

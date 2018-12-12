@@ -34,7 +34,7 @@ public class Main extends Application {
             // Prepare sizes
             primaryStage.setMinHeight(500);
             primaryStage.setMinWidth(600);
-            //primaryStage.setMaximized(true);
+            primaryStage.setMaximized(true);
 
             // Show the interface
             primaryStage.show();

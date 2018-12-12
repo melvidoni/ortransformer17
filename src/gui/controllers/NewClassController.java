@@ -1,6 +1,7 @@
 package gui.controllers;
 
 
+import gui.components.EditableStringTableCell;
 import gui.components.FieldFormatter;
 import gui.components.PopupHandlers;
 import gui.controllers.validation.UmlValidation;
@@ -15,10 +16,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import javafx.util.converter.IntegerStringConverter;
 import umldiagram.logical.Attribute;
 import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.UmlClass;
 import umldiagram.logical.enums.AttributeType;
+
 
 
 /**
@@ -44,7 +48,7 @@ public class NewClassController extends GridPane {
     @FXML
     private void initialize() {
         // Prepare the class field
-        className.setTextFormatter(FieldFormatter.getMixedFormatter(30));
+        className.setTextFormatter( new TextFormatter<>(FieldFormatter.FILTER_MIX) );
 
         // Prepare the table
         attrTable.setEditable(true);
@@ -53,7 +57,7 @@ public class NewClassController extends GridPane {
 
         // Prepare the table columns
         attrNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        attrNameCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        attrNameCol.setCellFactory(cellValue -> new EditableStringTableCell<>());
         attrNameCol.prefWidthProperty().bind(attrTable.widthProperty().divide(4));
         attrNameCol.setOnEditCommit(
                 t -> t.getTableView().getItems().get(t.getTablePosition().getRow()).setName(t.getNewValue()));

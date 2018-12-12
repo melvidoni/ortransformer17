@@ -1,6 +1,7 @@
 package gui.controllers;
 
 
+import gui.components.EditableStringTableCell;
 import gui.components.FieldFormatter;
 import gui.components.PopupHandlers;
 import gui.controllers.validation.UmlValidation;
@@ -68,7 +69,7 @@ public class EditClassController extends GridPane {
 
 
         // Prepare the class field
-        className.setTextFormatter(FieldFormatter.getMixedFormatter(30));
+        className.setTextFormatter(new TextFormatter<>(FieldFormatter.FILTER_MIX));
         className.setText(umlClass.getName());
 
         // Check if abstract
@@ -89,7 +90,7 @@ public class EditClassController extends GridPane {
 
         // Prepare the table columns
         attrNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        attrNameCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        attrNameCol.setCellFactory(cellValue -> new EditableStringTableCell<>());
         attrNameCol.prefWidthProperty().bind(attrTable.widthProperty().divide(4));
         attrNameCol.setOnEditCommit(
                 t -> t.getTableView().getItems().get(t.getTablePosition().getRow()).setName(t.getNewValue()));

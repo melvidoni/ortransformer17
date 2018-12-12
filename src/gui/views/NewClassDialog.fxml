@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<GridPane minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.NewClassController">
+<GridPane minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.NewClassController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="60.0" prefWidth="80.0" />
@@ -21,12 +29,17 @@
       <RowConstraints maxHeight="80.0" minHeight="50.0" prefHeight="80.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label alignment="BOTTOM_RIGHT" text="Class Name:" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
+      <Label alignment="BOTTOM_RIGHT" text="Name:" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets bottom="5.0" right="5.0" />
          </GridPane.margin>
       </Label>
-      <TextField fx:id="className" prefHeight="24.0" prefWidth="260.0" GridPane.columnIndex="2" GridPane.valignment="BOTTOM" />
+      <Button mnemonicParsing="false" onAction="#createNewClass" text="Create" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets left="120.0" />
+         </GridPane.margin>
+      </Button>
+      <TextField fx:id="className" GridPane.columnIndex="2" GridPane.valignment="BOTTOM" />
       <CheckBox fx:id="isAbstract" mnemonicParsing="false" text="Abstract" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets bottom="5.0" left="30.0" />
@@ -71,11 +84,6 @@
       <Button cancelButton="true" mnemonicParsing="false" onAction="#cancelCreation" text="Cancel" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets right="10.0" />
-         </GridPane.margin>
-      </Button>
-      <Button mnemonicParsing="false" onAction="#createNewClass" text="Create" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3">
-         <GridPane.margin>
-            <Insets left="80.0" />
          </GridPane.margin>
       </Button>
    </children>

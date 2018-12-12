@@ -155,9 +155,7 @@
 
                                   onMousePressed="#canvasPressed"
                                   onMouseDragged="#canvasDragged"
-                                  onMouseReleased="#canvasReleased"
-
-                                  onContextMenuRequested="#contextMenuRequested"/>
+                                  onMouseReleased="#canvasReleased"/>
                </ScrollPane>
             </SplitPane>
          </Tab>
