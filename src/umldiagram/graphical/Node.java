@@ -4,6 +4,10 @@ package umldiagram.graphical;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import umldiagram.logical.Attribute;
 import umldiagram.logical.UmlClass;
 
@@ -52,8 +56,9 @@ public class Node extends Label {
 
         setPadding(new Insets(10,10,10,10));
 
-        setLayoutX(x);
-        setLayoutY(y);
+        setTranslateX(x);
+        setTranslateY(y);
+
     }
 
 
@@ -68,8 +73,8 @@ public class Node extends Label {
      */
     @Override
     public boolean contains(double x, double y) {
-        return getLayoutX() <= x && getLayoutY()<=y
-            && (getLayoutX() + getWidth())>=x && (getLayoutY()+getHeight())>=y;
+        return getTranslateX() <= x && getTranslateY()<=y
+            && (getTranslateX() + getWidth())>=x && (getTranslateY()+getHeight())>=y;
     }
 
 
@@ -94,30 +99,30 @@ public class Node extends Label {
         Point2D[] vector = new Point2D[2];
 
         // If the origin is under
-        if(getLayoutY() >= (targetNode.getLayoutY() + targetNode.getHeight())){
-            vector[0] = new Point2D(getLayoutX() + getWidth() / 2, getLayoutY());
-            vector[1] = new Point2D(targetNode.getLayoutX() + targetNode.getWidth() / 2,
-                    targetNode.getLayoutY() + targetNode.getHeight() - 1);
+        if(getTranslateY() >= (targetNode.getTranslateY() + targetNode.getHeight())){
+            vector[0] = new Point2D(getTranslateX() + getWidth() / 2, getTranslateY());
+            vector[1] = new Point2D(targetNode.getTranslateX() + targetNode.getWidth() / 2,
+                    targetNode.getTranslateY() + targetNode.getHeight() - 1);
         }
         // If not, it is up
-        else if( (getLayoutY() + getHeight()) <= targetNode.getLayoutY()){
-            vector[0] = new Point2D(getLayoutX() + getWidth() / 2,
-                    getLayoutY() + getHeight() - 1);
+        else if( (getTranslateY() + getHeight()) <= targetNode.getTranslateY()){
+            vector[0] = new Point2D(getTranslateX() + getWidth() / 2,
+                    getTranslateY() + getHeight() - 1);
             vector[1] = new Point2D(targetNode.getLayoutX() + targetNode.getWidth() / 2,
-                    targetNode.getLayoutY());
+                    targetNode.getTranslateY());
         }
         // If it is at the the origin's right.
-        else if( (getLayoutX() + getWidth()) <= targetNode.getLayoutX()){
-            vector[0] = new Point2D(getLayoutX() + getWidth(),
-                    getLayoutY() + getHeight() / 2);
-            vector[1] = new Point2D(targetNode.getLayoutX(),
-                    targetNode.getLayoutY() + targetNode.getHeight() / 2);
+        else if( (getTranslateX() + getWidth()) <= targetNode.getTranslateX()){
+            vector[0] = new Point2D(getTranslateX() + getWidth(),
+                    getTranslateY() + getHeight() / 2);
+            vector[1] = new Point2D(targetNode.getTranslateX(),
+                    targetNode.getTranslateY() + targetNode.getHeight() / 2);
         }
         // If it is at the origin's left.
-        else if ( getLayoutX() >= (targetNode.getLayoutX() + targetNode.getWidth()) ){
-            vector[0] = new Point2D(getLayoutX(), getLayoutY() + getHeight() / 2);
-            vector[1] = new Point2D(targetNode.getLayoutX() + targetNode.getWidth(),
-                    targetNode.getLayoutY() + targetNode.getHeight() / 2);
+        else if ( getTranslateX() >= (targetNode.getTranslateX() + targetNode.getWidth()) ){
+            vector[0] = new Point2D(getTranslateX(), getTranslateY() + getHeight() / 2);
+            vector[1] = new Point2D(targetNode.getTranslateX() + targetNode.getWidth(),
+                    targetNode.getTranslateY() + targetNode.getHeight() / 2);
         }
         return vector;
     }
@@ -132,13 +137,13 @@ public class Node extends Label {
      *         T (up) and B (down).
      */
     char getSide(Point2D p) {
-        if(getLayoutX() == p.getX()){
+        if(getTranslateX() == p.getX()){
             return 'L';
         }
-        else if((getLayoutX() + getWidth()) == p.getX() ){
+        else if((getTranslateX() + getWidth()) == p.getX() ){
             return 'R';
         }
-        else if(getLayoutY() == p.getY()){
+        else if(getTranslateY() == p.getY()){
             return 'T';
         }
         else

@@ -2,8 +2,7 @@ package umldiagram.graphical;
 
 
 import javafx.geometry.Point2D;
-import javafx.scene.Cursor;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import umldiagram.graphical.status.DrawingStatus;
 import umldiagram.graphical.status.EditingStatus;
@@ -26,9 +25,8 @@ public class DrawingDiagram extends Pane {
     private LinkedList<Arrow> arrows;
     private LinkedList<ComplexNode> complexNodes;
 
-    private double orgSceneX, orgSceneY;
-    private double orgTranslateX, orgTranslateY;
-
+    Point2D orgScene = null;
+    Point2D orgTranslate = null;
 
 
 
@@ -120,10 +118,13 @@ public class DrawingDiagram extends Pane {
         // Draw the basic rectangle
         Node node = new Node(x, y, c, false);
 
+
         // Add the listeners for dragging
-        //node.setOnMousePressed(this::pressedClass);
-        //node.setOnMouseDragged(this::draggedClass);
-        node.setCursor(Cursor.CROSSHAIR);
+        node.setOnMouseDragged(this::draggedClass);
+        node.setOnMouseReleased(this::releasedClass);
+
+
+
 
         // Add the nodes
         nodes.add(node);
@@ -132,6 +133,12 @@ public class DrawingDiagram extends Pane {
         // Update the size
         updateSize(getBoundsInLocal().getWidth(), getBoundsInLocal().getHeight());
     }
+
+
+
+
+
+
 
 
 
@@ -519,30 +526,39 @@ public class DrawingDiagram extends Pane {
 
 
 
-    private void pressedClass(MouseEvent me) {
-        // If it is not drawing anything else
-        if(!DrawingStatus.getInstance(false).isDrawing()) {
-            orgSceneX = me.getSceneX();
-            orgSceneY = me.getSceneY();
-            orgTranslateX = ((Node)(me.getSource())).getTranslateX();
-            orgTranslateY = ((Node)(me.getSource())).getTranslateY();
-        }
-    }
 
 
 
 
     private void draggedClass(MouseEvent me) {
         // If it is not drawing anything else
-        if(!DrawingStatus.getInstance(false).isDrawing()) {
-            double offsetX = me.getSceneX() - orgSceneX;
-            double offsetY = me.getSceneY() - orgSceneY;
-            double newTranslateX = orgTranslateX + offsetX;
-            double newTranslateY = orgTranslateY + offsetY;
+        if(!DrawingStatus.getInstance(false).isDrawing() && me.getButton() == MouseButton.SECONDARY) {
+            // Save the values
+            if (orgScene == null && orgTranslate == null) {
+                orgScene = new Point2D(me.getSceneX(), me.getSceneY());
+                orgTranslate = new Point2D( ((Node)me.getSource()).getTranslateX(),
+                        ((Node)me.getSource()).getTranslateY());
+            }
 
-            ((Node)(me.getSource())).setTranslateX(newTranslateX);
-            ((Node)(me.getSource())).setTranslateY(newTranslateY);
+            // Calculate the movement
+            double newTranslateX = orgTranslate.getX() + me.getSceneX() - orgScene.getX();
+            double newTranslateY = orgTranslate.getY() + me.getSceneY() - orgScene.getY();
+
+            // Update it!
+            Node node = (Node) me.getSource();
+            node.setTranslateX(newTranslateX);
+            node.setTranslateY(newTranslateY);
         }
     }
 
+
+
+    private void releasedClass(MouseEvent me) {
+        // If it is not drawing anything else
+        if(!DrawingStatus.getInstance(false).isDrawing() && me.getButton() == MouseButton.SECONDARY) {
+            // Back to nothing
+            orgTranslate = null;
+            orgScene = null;
+        }
+    }
 }
