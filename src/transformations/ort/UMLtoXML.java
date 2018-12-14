@@ -35,10 +35,9 @@ public class UMLtoXML {
 
 	/**
 	 * Method that effectively transforms the diagram into XML.
-	 * @throws IOException For reading/writting issues with the file.
-	 */
+     */
 	public static void transformToXML(File file, boolean forTransformation, LinkedList<Node> nodes)
-            throws IOException, ParserConfigurationException, TransformerException {
+            throws ParserConfigurationException, TransformerException {
 
 	    System.out.println(file.getAbsolutePath());
 

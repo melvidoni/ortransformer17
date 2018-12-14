@@ -5,7 +5,6 @@ package gui.components;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -14,8 +13,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 import transformations.ort.TransformationStatus;
 import transformations.ort.enums.DatabaseType;
-
-import javax.script.Bindings;
 
 
 /**

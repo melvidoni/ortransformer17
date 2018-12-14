@@ -7,7 +7,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import umldiagram.logical.UMLDiagram;
 
-import java.util.LinkedList;
 import java.util.stream.Collectors;
 
 

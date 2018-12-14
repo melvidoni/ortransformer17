@@ -81,7 +81,7 @@ class XMLtoORSQL {
      * towards the SQL types in object-relational mode.
 	 * @return The SQL scripts as text.
 	 */
-	String translateORTypes() throws IOException, SAXException, ParserConfigurationException {
+	String translateORTypes() {
         try {
             // Read the tpo file
             Element tpo = read(".xml.tpo");
@@ -143,48 +143,53 @@ class XMLtoORSQL {
                                 Element t = (Element) typesChilds.item(k);
 
                                 // Predefined attributes
-                                if (t.getNodeName().equals("PredefinedType")) {
-                                    // If it is not null...
-                                    if (t.getAttributeNode("type") != null) {
-                                        //...find it among the enums
-                                        AttributeType ta = AttributeType.getAttribute(t.getAttribute("type"));
+								switch (t.getNodeName()) {
+									case "PredefinedType":
+										// If it is not null...
+										if (t.getAttributeNode("type") != null) {
+											//...find it among the enums
+											AttributeType ta = AttributeType.getAttribute(t.getAttribute("type"));
 
-                                        // Define the type
-                                        String attrDef = (ta != null) ? ta.getOracleName() : "";
+											// Define the type
+											String attrDef = (ta != null) ? ta.getOracleName() : "";
 
-                                        // If not, it is date
-                                        if (ta != null && ta.getLength() > 0) {
-                                            attrDef = attrDef + "(" + ta.getLength() + ")";
-                                        }
+											// If not, it is date
+											if (ta != null && ta.getLength() > 0) {
+												attrDef = attrDef + "(" + ta.getLength() + ")";
+											}
 
-                                        // Add the attribute to the definition
-                                        if (isFirst) isFirst = false;
-                                        else definition += ",";
+											// Add the attribute to the definition
+											if (isFirst) isFirst = false;
+											else definition += ",";
 
-                                        // Complete the definition
-                                        definition += "\r\n" + attrName + " " + attrDef;
-                                    }
-                                }
-                                // Reference attributes
-                                else if (t.getNodeName().equals("ReferenceType")) {
-                                    // Call the translation method
-                                    String attr = translateRefAttr(attrName, t, typeName, isFirst);
-                                    definition += attr;
+											// Complete the definition
+											definition += "\r\n" + attrName + " " + attrDef;
+										}
+										break;
+									// Reference attributes
+									case "ReferenceType": {
+										// Call the translation method
+										String attr = translateRefAttr(attrName, t, typeName, isFirst);
+										definition += attr;
 
-                                }
-                                // Arrangement attributes
-                                else if (t.getNodeName().equals("Arrangement")) {
-                                    // Call the translation method
-                                    String attr = translateArrangementAttr(attrName, t, typeName, isFirst);
-                                    definition += attr;
+										break;
+									}
+									// Arrangement attributes
+									case "Arrangement": {
+										// Call the translation method
+										String attr = translateArrangementAttr(attrName, t, typeName, isFirst);
+										definition += attr;
 
-                                }
-                                // Multiset attributes
-                                else if (t.getNodeName().equals("Multiset")) {
-                                    // Call the translation method
-                                    String attr = translateMultisetAttr(attrName, t, typeName, isFirst);
-                                    definition += attr;
-                                }
+										break;
+									}
+									// Multiset attributes
+									case "Multiset": {
+										// Call the translation method
+										String attr = translateMultisetAttr(attrName, t, typeName, isFirst);
+										definition += attr;
+										break;
+									}
+								}
                             }
                         }
 
@@ -555,9 +560,8 @@ class XMLtoORSQL {
      * OR modelling, towards the SQL script.
 	 * @param imp Type of implementation.
 	 * @return String with the SQL script
-	 * @throws Exception For issues when transforming the elements.
 	 */
-	String translateORTables(ImplementationType imp) throws Exception {
+	String translateORTables(ImplementationType imp) {
 		// Read the file
 		Element tbl = read(".xml.tbl");
 

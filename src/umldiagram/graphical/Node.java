@@ -4,10 +4,6 @@ package umldiagram.graphical;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import umldiagram.logical.Attribute;
 import umldiagram.logical.UmlClass;
 

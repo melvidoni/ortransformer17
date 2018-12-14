@@ -41,7 +41,7 @@ public class EditableStringTableCell<T, E> extends TableCell<T, String> {
     @Override
     public void cancelEdit() {
         super.cancelEdit();
-        setText((String) getItem());
+        setText(getItem());
         setGraphic(null);
     }
 
@@ -87,7 +87,7 @@ public class EditableStringTableCell<T, E> extends TableCell<T, String> {
 
 
     protected String getString() {
-        return getItem() == null ? "" : getItem().toString();
+        return getItem() == null ? "" : getItem();
     }
 
     @Override

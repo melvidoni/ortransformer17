@@ -27,8 +27,8 @@ class Arrow extends Group {
     private String name;
     private RelationshipType type;
 
-    private Line mainLine = null;
-    private Polyline loopMainLine = null;
+    private Line mainLine;
+    private Polyline loopMainLine;
 
     private Polygon arrowHead;
     private Label nameLabel;
