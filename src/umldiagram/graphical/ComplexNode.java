@@ -9,8 +9,7 @@ import javafx.scene.shape.Line;
 import umldiagram.logical.AssociationClass;
 import umldiagram.logical.Relationship;
 import umldiagram.logical.UmlClass;
-
-
+import umldiagram.logical.enums.RelationshipType;
 
 
 /**
@@ -26,6 +25,9 @@ class ComplexNode extends Group {
     private Node node;
     private Line line;
     private char side;
+
+    private String originNode;
+    private String endNode;
 
 
 
@@ -44,18 +46,52 @@ class ComplexNode extends Group {
         className = ac.getUmlClass().getName();
         relName = ac.getRelationship().getName();
 
+        // Update the nodes
+        originNode = ac.getRelationship().getOrigin().getClassOf().getName();
+        endNode = ac.getRelationship().getEnd().getClassOf().getName();
+
         // Create the basic arrow
         arrow = new Arrow(relName, startPoint, endPoint, ac.getRelationship().getType(),
-                ac.getRelationship().getOrigin().getName() + "\n"
-                        + ac.getRelationship().getOrigin().getCardinality(),
-                ac.getRelationship().getEnd().getName() + "\n"
-                        + ac.getRelationship().getEnd().getCardinality(),
+                ac.getRelationship().getOrigin(), ac.getRelationship().getEnd(),
                 fromSide, toSide
         );
 
         // Add it to the group
         getChildren().add(arrow);
 
+        // Create the midline and the node
+        Point2D finalMidPoint = drawMidLine(startPoint, endPoint);
+        drawNode(finalMidPoint, ac.getUmlClass());
+    }
+
+
+    /**
+     * Method that draws the node of the association class, using the point
+     * where the mid line ends.
+     * @param finalMidPoint Point where the mid line ends.
+     * @param umlClass The UML Class of the Association Class.
+     */
+    private void drawNode(Point2D finalMidPoint, UmlClass umlClass) {
+        // Get the point for the association class
+        Point2D classStartPoint = getNodeStartPoint(finalMidPoint, umlClass);
+
+        // Draw the node
+        node = new Node(classStartPoint.getX(), classStartPoint.getY(), umlClass, true);
+
+        // Add it
+        getChildren().add(node);
+    }
+
+
+
+
+    /**
+     * Method that draws mid line for the association class.
+     * @param startPoint The starting point of the relationship.
+     * @param endPoint The ending point of the relationship.
+     * @return the mid point of the regular relationship line, as a Point2D.
+     */
+    private Point2D drawMidLine(Point2D startPoint, Point2D endPoint) {
         // For the midline, get the points
         Point2D startingMidPoint = new Point2D(
                 (startPoint.getX() + endPoint.getX()) / 2,
@@ -69,15 +105,8 @@ class ComplexNode extends Group {
         line.setStyle("-fx-stroke: #565656;");
         getChildren().add(line);
 
-
-        // Get the point for the association class
-        Point2D classStartPoint = getNodeStartPoint(finalMidPoint, ac.getUmlClass());
-
-        // Draw the node
-        node = new Node(classStartPoint.getX(), classStartPoint.getY(), ac.getUmlClass(), true);
-
-        // Add it
-        getChildren().add(node);
+        // Return the mid point
+        return finalMidPoint;
     }
 
 
@@ -161,8 +190,6 @@ class ComplexNode extends Group {
 
 
 
-
-
     /**
      * Method that returns the ending point for the line towards the
      * association class in a ComplexLine.
@@ -223,4 +250,50 @@ class ComplexNode extends Group {
         return relName;
     }
 
+
+
+
+    /**
+     * Method that checks if this arrow starts on a specific node. This is done
+     * by comparing the name of a class to the one saved.
+     * @param originClass The class name to be compared.
+     * @return true if it starts there, false otherwise.
+     */
+    boolean startsOn(String originClass) {
+        return originNode.equals(originClass);
+    }
+
+
+
+
+    /**
+     * Method that checks if this arrow ends on a specific node. This is done
+     * by comparing the name of a class to the one saved.
+     * @param endClass The class name to be compared.
+     * @return true if it ends there, false otherwise.
+     */
+    boolean endsOn(String endClass) {
+        return endNode.equals(endClass);
+    }
+
+
+
+
+
+
+    void updateDrawing(Arrow newArrow, RelationshipType type, UmlClass umlClass) {
+        // Update the arrow
+        arrow.updateDrawing(newArrow, type);
+
+        // Remove the other bits
+        getChildren().removeAll(line, node);
+
+        // Update the line
+        Line mainLine = newArrow.getMainLine();
+        Point2D finalMidPoint = drawMidLine(new Point2D(mainLine.getStartX(), mainLine.getStartY()),
+                                            new Point2D(mainLine.getEndX(), mainLine.getEndY()));
+
+        // Update the node
+        drawNode(finalMidPoint, umlClass);
+    }
 }

@@ -10,6 +10,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Polyline;
 import javafx.scene.text.Text;
 import umldiagram.logical.Relationship;
+import umldiagram.logical.RelationshipEndpoint;
 import umldiagram.logical.enums.RelationshipType;
 import javafx.geometry.Point2D;
 
@@ -26,13 +27,18 @@ class Arrow extends Group {
     private String name;
     private RelationshipType type;
 
-    private Line mainLine;
-    private Polyline loopMainLine;
+    private Line mainLine = null;
+    private Polyline loopMainLine = null;
 
     private Polygon arrowHead;
     private Label nameLabel;
     private Label originLabel;
     private Label endLabel;
+
+    private String originNode;
+    private String endNode;
+
+
 
 
 
@@ -45,18 +51,25 @@ class Arrow extends Group {
      * @param startPoint The starting point.
      * @param endPoint The ending point.
      * @param rt The type of relationship.
-     * @param textOrigin The role name and cardinality of the origin.
-     * @param textEnd The role name and cardinality of the ending.
+     * @param oNode Origin node of the relationship.
+     * @param eNode Destination node of the relationship.
      * @param fromSide A character indicating from which side the origin is located.
      * @param toSide A character indicating from which side the end is located.
      */
     Arrow(String n, Point2D startPoint, Point2D endPoint, RelationshipType rt,
-          String textOrigin, String textEnd, char fromSide, char toSide) {
+          RelationshipEndpoint oNode, RelationshipEndpoint eNode, char fromSide, char toSide) {
 
         // Initialize the basics
         super();
         name = n;
         type = rt;
+
+        // Get values
+        String textOrigin = oNode.getName() + "\n" + oNode.getCardinality();
+        String textEnd = eNode.getName() + "\n" + eNode.getCardinality();
+
+        originNode = oNode.getClassOf().getName();
+        endNode = eNode.getClassOf().getName();
 
         // Create the basic line
         mainLine = new Line(startPoint.getX(), startPoint.getY(),
@@ -106,6 +119,7 @@ class Arrow extends Group {
                               break;
         }
 
+        loopMainLine = null;
     }
 
 
@@ -123,6 +137,10 @@ class Arrow extends Group {
         super();
         name = rel.getName();
         type = rel.getType();
+
+        // Fill origin and ending
+        originNode = rel.getOrigin().getClassOf().getName();
+        endNode = rel.getEnd().getClassOf().getName();
 
         // Get the random separation
         int randomSeparation = (int) (10 + Math.random() * (40 - 10));
@@ -165,7 +183,15 @@ class Arrow extends Group {
                 'R', 'T'
          );
 
+        mainLine = null;
+
     }
+
+
+
+
+
+
 
 
     /**
@@ -225,6 +251,8 @@ class Arrow extends Group {
         nameLabel.setStyle("-fx-text-fill: #4a4b4b;");
         getChildren().add(nameLabel);
     }
+
+
 
 
 
@@ -324,13 +352,6 @@ class Arrow extends Group {
 
 
 
-
-
-
-
-
-
-
     /**
      * Method that returns a coordinate on the y axis,
      * depending the direction and length received.
@@ -365,5 +386,137 @@ class Arrow extends Group {
     String getName() {
         return name;
     }
+
+
+
+    /**
+     * Method that checks if this arrow starts on a specific node. This is done
+     * by comparing the name of a class to the one saved.
+     * @param originClass The class name to be compared.
+     * @return true if it starts there, false otherwise.
+     */
+    boolean startsOn(String originClass) {
+        return originNode.equals(originClass);
+    }
+
+
+
+
+    /**
+     * Method that checks if this arrow ends on a specific node. This is done
+     * by comparing the name of a class to the one saved.
+     * @param endClass The class name to be compared.
+     * @return true if it ends there, false otherwise.
+     */
+    boolean endsOn(String endClass) {
+        return endNode.equals(endClass);
+    }
+
+
+
+
+    /**
+     * Updates the value of a relationship when it is being dragged.
+     * @param a The new arrow created with the value.
+     * @param type The type of the relationship being dragged.
+     */
+    void updateDrawing(Arrow a, RelationshipType type) {
+        // Remove the things
+        if(mainLine != null) {
+            // Remove existing one
+            getChildren().remove(mainLine);
+
+            // Update
+            mainLine = a.getMainLine();
+            getChildren().add(mainLine);
+        }
+        else {
+            // Remove existing
+            getChildren().remove(loopMainLine);
+
+            // Update
+            loopMainLine = a.getLoopLine();
+            getChildren().add(loopMainLine);
+        }
+
+        // Arrow head
+        if(type != RelationshipType.ASSOCIATION) {
+            getChildren().remove(arrowHead);
+            arrowHead = a.getArrowHead();
+            getChildren().add(arrowHead);
+        }
+
+        // Name labels
+        if(type != RelationshipType.GENERALIZATION) {
+            // Remove
+            getChildren().removeAll(nameLabel, originLabel, endLabel);
+
+            // Update
+            nameLabel = a.getNameLabel();
+            originLabel = a.getOriginLabel();
+            endLabel = a.getEndLabel();
+
+            // Add again
+            getChildren().addAll(nameLabel, originLabel, endLabel);
+        }
+    }
+
+
+
+    /**
+     * Private getter for the label on the ending point.
+     * @return The label at the ending point.
+     */
+    private Label getEndLabel() {
+        return endLabel;
+    }
+
+
+    /**
+     * Private getter for the label on the origin point.
+     * @return The label at the origin point.
+     */
+    private Label getOriginLabel() {
+        return originLabel;
+    }
+
+
+    /**
+     * Private getter for the label on the relationship.
+     * @return The main label of the relationship.
+     */
+    private Label getNameLabel() {
+        return nameLabel;
+    }
+
+
+    /**
+     * Private getter for the arrowhead of the relationship.
+     * @return The arrowhead polygon for the relationship.
+     */
+    private Polygon getArrowHead() {
+        return arrowHead;
+    }
+
+
+    /**
+     * Private getter for the main line of the relationship, if
+     * this one is a loop (starts and end on the same node).
+     * @return The loopline multi-line of the relationship.
+     */
+    private Polyline getLoopLine() {
+        return loopMainLine;
+    }
+
+
+    /**
+     * Private getter for the main line of the relationship, if
+     * this one is not a loop (starts and end on the same node).
+     * @return The single line of the relationship.
+     */
+    Line getMainLine() {
+        return mainLine;
+    }
+
 
 }

@@ -454,7 +454,7 @@ public class MainWindowController {
      */
     private void contextMenuRequested(MouseEvent e) {
         // If we are not drawing
-        if(!drawingStatus.isDrawing()) {
+        if(!drawingStatus.isDrawing() && e.isControlDown()) {
             // Hide the menus
             classContextMenu.hide();
             acContextMenu.hide();

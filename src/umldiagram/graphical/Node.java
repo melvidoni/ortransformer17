@@ -108,7 +108,7 @@ public class Node extends Label {
         else if( (getTranslateY() + getHeight()) <= targetNode.getTranslateY()){
             vector[0] = new Point2D(getTranslateX() + getWidth() / 2,
                     getTranslateY() + getHeight() - 1);
-            vector[1] = new Point2D(targetNode.getLayoutX() + targetNode.getWidth() / 2,
+            vector[1] = new Point2D(targetNode.getTranslateX() + targetNode.getWidth() / 2,
                     targetNode.getTranslateY());
         }
         // If it is at the the origin's right.

@@ -84,6 +84,8 @@
                   </graphic>
                </MenuItem>
             </Menu>
+
+          <Menu mnemonicParsing="false" disable="true" text="| Edit Item: CTRL + RightClick"></Menu>
       </MenuBar>
 
        <fx:define>
@@ -134,6 +136,7 @@
                    </ImageView>
                </graphic>
             </ToggleButton>
+
       </ToolBar>
 
       <TabPane fx:id="tabPane" AnchorPane.bottomAnchor="0.0"

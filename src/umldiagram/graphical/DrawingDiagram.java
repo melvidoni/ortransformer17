@@ -11,8 +11,7 @@ import umldiagram.logical.Relationship;
 import umldiagram.logical.UMLDiagram;
 import umldiagram.logical.UmlClass;
 import java.util.LinkedList;
-
-
+import java.util.stream.Collectors;
 
 
 /**
@@ -27,6 +26,8 @@ public class DrawingDiagram extends Pane {
 
     Point2D orgScene = null;
     Point2D orgTranslate = null;
+    private LinkedList<Arrow> draggedArrows;
+    private LinkedList<ComplexNode> draggedCN;
 
 
 
@@ -41,6 +42,8 @@ public class DrawingDiagram extends Pane {
         nodes = new LinkedList<>();
         arrows = new LinkedList<>();
         complexNodes = new LinkedList<>();
+        draggedArrows = new LinkedList<>();
+        draggedCN = new LinkedList<>();
 
         // Clean the children
         getChildren().clear();
@@ -118,12 +121,11 @@ public class DrawingDiagram extends Pane {
         // Draw the basic rectangle
         Node node = new Node(x, y, c, false);
 
-
         // Add the listeners for dragging
         node.setOnMouseDragged(this::draggedClass);
-        node.setOnMouseReleased(this::releasedClass);
+        //node.setOnMouseReleased(this::releasedClass);
 
-
+        node.setOnDragOver(this::releasedClass);
 
 
         // Add the nodes
@@ -139,16 +141,28 @@ public class DrawingDiagram extends Pane {
 
 
 
-
-
-
-
     /**
      * Method to create a new relationship,
      * with the information received as a parameter.
      * @param rel The new relationship to create.
      */
     public void addNewRel(Relationship rel) {
+        // Get the arrow
+        Arrow arrow = createNewArrow(getOriginEnding(rel), rel);
+
+        // Add the loop
+        arrows.add(arrow);
+        getChildren().add(arrow);
+    }
+
+
+
+    /**
+     * Method to obtain the origin and ending nodes of a relationship.
+     * @param rel The relationship to be analyzed.
+     * @return An array with two nodes. Position 0 is origin, and position 1 is ending.
+     */
+    private Node[] getOriginEnding(Relationship rel) {
         // Prepare the nodes
         Node origin = null;
         Node ending = null;
@@ -161,6 +175,22 @@ public class DrawingDiagram extends Pane {
             if(origin!=null && ending!=null) break;
         }
 
+        // Return the pair
+        return new Node[]{origin, ending};
+    }
+
+
+
+
+    /**
+     * Method that creates a new arrow, using the information required for it.
+     * @param originEnding A origin-ending tuple of nodes.
+     * @param rel The relationship that matches this arrow.
+     * @return A graphical arrows initialized.
+     */
+    private Arrow createNewArrow(Node[] originEnding, Relationship rel) {
+        Node origin = originEnding[0];
+        Node ending = originEnding[1];
 
         // If origin and end are different
         if(!origin.equals(ending)) {
@@ -170,36 +200,26 @@ public class DrawingDiagram extends Pane {
             char toSide = ending.getSide(points[1]);
 
             // Now we will create a line
-            Arrow line = new Arrow(rel.getName(), points[0], points[1], rel.getType(),
-                    rel.getOrigin().getName() + "\n" + rel.getOrigin().getCardinality(),
-                    rel.getEnd().getName() + "\n" + rel.getEnd().getCardinality(),
-                    fromSide, toSide
+            return new Arrow(rel.getName(), points[0], points[1], rel.getType(),
+                    rel.getOrigin(),rel.getEnd(), fromSide, toSide
             );
-
-            // Add it
-            arrows.add(line);
-            getChildren().add(line);
         }
         // If they are the same
         else {
             // Prepare the two points
             Point2D fromPoint = new Point2D(
-                    origin.getLayoutX() + origin.getWidth(),
-                    origin.getLayoutY() + Math.random() *
-                            ((origin.getLayoutY() + origin.getHeight()) - origin.getLayoutY())
+                    origin.getTranslateX() + origin.getWidth(),
+                    origin.getTranslateY() + Math.random() *
+                            ((origin.getTranslateY() + origin.getHeight()) - origin.getTranslateY())
             );
             Point2D toPoint = new Point2D(
-                    origin.getLayoutX() + Math.random() *
-                            ((origin.getLayoutX() + origin.getWidth()) - origin.getLayoutX()),
-                    origin.getLayoutY()
+                    origin.getTranslateX() + Math.random() *
+                            ((origin.getTranslateX() + origin.getWidth()) - origin.getTranslateX()),
+                    origin.getTranslateY()
             );
 
             // Create the loop arrow
-            Arrow loopLine = new Arrow(fromPoint, toPoint, rel);
-
-            // Add the loop
-            arrows.add(loopLine);
-            getChildren().add(loopLine);
+            return new Arrow(fromPoint, toPoint, rel);
         }
     }
 
@@ -213,27 +233,15 @@ public class DrawingDiagram extends Pane {
      * @param assocClass The new association class to create.
      */
     public void addNewAssociationClass(AssociationClass assocClass) {
-        // Prepare the nodes
-        Node origin = null;
-        Node ending = null;
-
         // Get the nodes
-        for(Node n: nodes) {
-            if(n.getName().equals(assocClass.getRelationship().getOrigin().getClassOf().getName()))
-                origin = n;
-            else if(n.getName().equals(assocClass.getRelationship().getEnd().getClassOf().getName()))
-                ending = n;
-
-            if(origin!=null && ending!=null) break;
-        }
-
+        Node[] oeNodes = getOriginEnding(assocClass.getRelationship());
 
         // Get the ending points
-        Point2D[] points = origin.fromTo(ending);
+        Point2D[] points = oeNodes[0].fromTo(oeNodes[1]);
 
         // Create the complex node
         ComplexNode complexNode = new ComplexNode(assocClass, points[0],
-                points[1], origin.getSide(points[0]), ending.getSide(points[1]));
+                points[1], oeNodes[0].getSide(points[0]), oeNodes[1].getSide(points[1]));
 
         // Add it to the diagram
         complexNodes.addFirst(complexNode);
@@ -242,6 +250,8 @@ public class DrawingDiagram extends Pane {
         // Update the size
         updateSize(getBoundsInLocal().getWidth(), getBoundsInLocal().getHeight());
     }
+
+
 
 
 
@@ -442,22 +452,13 @@ public class DrawingDiagram extends Pane {
                 : (diagram.getRelationship(eStatus.getEditedRelName()));
 
 
-        // Prepare the nodes
-        Node origin = null;
-        Node ending = null;
-
         // Get the nodes
-        for(Node n: nodes) {
-            if(n.getName().equals(relationship.getOrigin().getClassOf().getName())) origin = n;
-            if(n.getName().equals(relationship.getEnd().getClassOf().getName())) ending = n;
-
-            if(origin!=null && ending!=null) break;
-        }
+        Node[] oeNodes = getOriginEnding(relationship);
 
         // Get the ending points
-        Point2D[] points = origin.fromTo(ending);
-        char fromSide = origin.getSide(points[0]);
-        char toSide = ending.getSide(points[1]);
+        Point2D[] points = oeNodes[0].fromTo(oeNodes[1]);
+        char fromSide = oeNodes[0].getSide(points[0]);
+        char toSide = oeNodes[1].getSide(points[1]);
 
 
 
@@ -521,23 +522,32 @@ public class DrawingDiagram extends Pane {
 
 
 
-
-
-
-
-
-
-
-
-
+    /**
+     * Action listener for when the mouse is released from the dragging event
+     * @param me The mouse event to be used.
+     */
     private void draggedClass(MouseEvent me) {
         // If it is not drawing anything else
         if(!DrawingStatus.getInstance(false).isDrawing() && me.getButton() == MouseButton.SECONDARY) {
+            // Get the node
+            Node node = (Node) me.getSource();
+
             // Save the values
             if (orgScene == null && orgTranslate == null) {
+                // Store points
                 orgScene = new Point2D(me.getSceneX(), me.getSceneY());
                 orgTranslate = new Point2D( ((Node)me.getSource()).getTranslateX(),
                         ((Node)me.getSource()).getTranslateY());
+
+                // Now store the arrows
+                draggedArrows.addAll(
+                        arrows.stream().filter(a -> a.startsOn(node.getName()) || a.endsOn(node.getName())).collect(Collectors.toList())
+                );
+
+                // Store the complex nodes
+                draggedCN.addAll(
+                        complexNodes.stream().filter(cn -> cn.startsOn(node.getName()) || cn.endsOn(node.getName()) ).collect(Collectors.toList())
+                );
             }
 
             // Calculate the movement
@@ -545,20 +555,55 @@ public class DrawingDiagram extends Pane {
             double newTranslateY = orgTranslate.getY() + me.getSceneY() - orgScene.getY();
 
             // Update it!
-            Node node = (Node) me.getSource();
             node.setTranslateX(newTranslateX);
             node.setTranslateY(newTranslateY);
+
+            // Update the arrows
+            for(Arrow da : draggedArrows) {
+                // Get the relationship
+                Relationship rel = UMLDiagram.getInstance(false).getRelationship(da.getName());
+
+                // Update with the values of a new arrow. It is simpler!
+                da.updateDrawing(createNewArrow(getOriginEnding(rel), rel), rel.getType());
+            }
+
+            // Update the complex nodes
+            for(ComplexNode dcn : draggedCN) {
+                // Get the association class
+                AssociationClass ac = UMLDiagram.getInstance(false).getRelAssociationClass(dcn.getRelName());
+                Relationship rel = ac.getRelationship();
+
+                // Update with new elements
+                dcn.updateDrawing(createNewArrow(getOriginEnding(rel), rel), rel.getType(), ac.getUmlClass());
+            }
+
+
         }
     }
 
 
 
-    private void releasedClass(MouseEvent me) {
+
+
+
+    /**
+     * Action listener for when the mouse is released from the dragging event.
+     * @param me The mouse event to be used.
+     */
+    private void releasedClass(DragEvent me) {
+        // Drag released
+        System.out.println("drag released");
+
         // If it is not drawing anything else
-        if(!DrawingStatus.getInstance(false).isDrawing() && me.getButton() == MouseButton.SECONDARY) {
+        if(!DrawingStatus.getInstance(false).isDrawing() /*&& me.getButton() == MouseButton.SECONDARY*/) {
             // Back to nothing
             orgTranslate = null;
             orgScene = null;
+            draggedArrows.clear();
+            draggedCN.clear();
         }
     }
+
+
+
 }
