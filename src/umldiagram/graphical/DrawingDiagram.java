@@ -123,10 +123,7 @@ public class DrawingDiagram extends Pane {
 
         // Add the listeners for dragging
         node.setOnMouseDragged(this::draggedClass);
-        //node.setOnMouseReleased(this::releasedClass);
-
-        node.setOnDragOver(this::releasedClass);
-
+        node.setOnMouseReleased(this::releasedClass);
 
         // Add the nodes
         nodes.add(node);
@@ -550,38 +547,63 @@ public class DrawingDiagram extends Pane {
                 );
             }
 
+
             // Calculate the movement
             double newTranslateX = orgTranslate.getX() + me.getSceneX() - orgScene.getX();
             double newTranslateY = orgTranslate.getY() + me.getSceneY() - orgScene.getY();
 
-            // Update it!
-            node.setTranslateX(newTranslateX);
-            node.setTranslateY(newTranslateY);
+            // If it is not colliding with any other class
+            if( hasNoCollision(node, newTranslateX, newTranslateY) ) {
 
-            // Update the arrows
-            for(Arrow da : draggedArrows) {
-                // Get the relationship
-                Relationship rel = UMLDiagram.getInstance(false).getRelationship(da.getName());
+                // Update it!
+                node.setTranslateX(newTranslateX);
+                node.setTranslateY(newTranslateY);
 
-                // Update with the values of a new arrow. It is simpler!
-                da.updateDrawing(createNewArrow(getOriginEnding(rel), rel), rel.getType());
+                // Update the arrows
+                for(Arrow da : draggedArrows) {
+                    // Get the relationship
+                    Relationship rel = UMLDiagram.getInstance(false).getRelationship(da.getName());
+
+                    // Update with the values of a new arrow. It is simpler!
+                    da.updateDrawing(createNewArrow(getOriginEnding(rel), rel), rel.getType());
+                }
+
+                // Update the complex nodes
+                for(ComplexNode dcn : draggedCN) {
+                    // Get the association class
+                    AssociationClass ac = UMLDiagram.getInstance(false).getRelAssociationClass(dcn.getRelName());
+                    Relationship rel = ac.getRelationship();
+
+                    // Update with new elements
+                    dcn.updateDrawing(createNewArrow(getOriginEnding(rel), rel), rel.getType(), ac.getUmlClass());
+                }
             }
-
-            // Update the complex nodes
-            for(ComplexNode dcn : draggedCN) {
-                // Get the association class
-                AssociationClass ac = UMLDiagram.getInstance(false).getRelAssociationClass(dcn.getRelName());
-                Relationship rel = ac.getRelationship();
-
-                // Update with new elements
-                dcn.updateDrawing(createNewArrow(getOriginEnding(rel), rel), rel.getType(), ac.getUmlClass());
-            }
-
-
         }
     }
 
 
+
+
+    /**
+     * Checks if a node collides with another one in the future position.
+     * @param dragged The node being dragged.
+     * @param x The new x for the top-left corner.
+     * @param y The new y for the top-left corner.
+     * @return False if there is a collision, true otherwise.
+     */
+   private boolean hasNoCollision(Node dragged, double x, double y) {
+        // For each node
+        for (Node n : nodes) {
+            // If it is not the same, and future position overlaps
+            if (!n.equals(dragged) &&
+                    n.getBoundsInParent().intersects(x, y, dragged.getWidth(), dragged.getHeight())) {
+                // Then prevent collission
+                return false;
+            }
+        }
+        // Otherwise all is good!
+        return true;
+   }
 
 
 
@@ -590,12 +612,9 @@ public class DrawingDiagram extends Pane {
      * Action listener for when the mouse is released from the dragging event.
      * @param me The mouse event to be used.
      */
-    private void releasedClass(DragEvent me) {
-        // Drag released
-        System.out.println("drag released");
-
+    private void releasedClass(MouseEvent me) {
         // If it is not drawing anything else
-        if(!DrawingStatus.getInstance(false).isDrawing() /*&& me.getButton() == MouseButton.SECONDARY*/) {
+        if(!DrawingStatus.getInstance(false).isDrawing() && me.getButton() == MouseButton.SECONDARY) {
             // Back to nothing
             orgTranslate = null;
             orgScene = null;

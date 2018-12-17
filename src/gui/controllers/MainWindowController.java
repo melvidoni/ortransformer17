@@ -18,6 +18,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import transformations.ort.TransformationStatus;
 import transformations.ort.UMLtoXML;
@@ -656,6 +657,11 @@ public class MainWindowController {
             // Get the selected file
             File file = PopupHandlers.showSaveFileChooser("Save Diagram",
                     "ORT Files", "*.ort", (Stage) drawingCanvas.getScene().getWindow());
+
+            // Add the extension to the file
+            if( !file.getName().endsWith(".ort") ) {
+                file = new File(file.getAbsolutePath() + ".ort");
+            }
 
             // If a file was selected, save the diagram
             if(file != null)
