@@ -2,10 +2,13 @@ package transformations.ort;
 
 
 import javafx.concurrent.Task;
+import org.apache.commons.io.FileUtils;
+
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
+import java.io.StringReader;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -43,13 +46,10 @@ public class TranslationTask extends Task {
         // STEP 0
         // Copy files to the temp directory
         String userPath = System.getProperty("user.dir") + File.separator + "files" + File.separator;
-        String tempPath = System.getProperty("java.io.tmpdir") + "ORTransformer";
-
-
-        /*String tempFilesPath = tempPath + File.separator + "files";
-        FileUtils.copyDirectory(
-                new File(System.getProperty("user.dir") + File.separator + "files"),
-                new File(tempFilesPath));*/
+        String tempPath = System.getProperty("java.io.tmpdir") + File.separator + "ORTransformer";
+        String tempFilesPath = tempPath + File.separator + "files";
+        FileUtils.copyDirectory( new File(userPath), new File(tempFilesPath));
+        tempFilesPath += File.separator;
 
 
         // STEP 1
@@ -63,30 +63,42 @@ public class TranslationTask extends Task {
 
         // STEP 2
         // Translate from UML to XML
-        File preFile = new File(tempPath + File.separator + tempName + ".xml.pre");
+        File preFile = new File(tempPath + File.separator + tempName + "-pre.xml");
         UMLtoXML.transformToXML(preFile, true, null);
         updateProgress(25, 100);
-        updateMessage("25% Completed. XML translation compleated successfully.");
+        updateMessage("25% Completed. XML translation completed successfully.");
 
 
         // STEP 3
         // Transform towards the metamodel
-        File modFile = new File(tempPath + File.separator + tempName + ".xml.mod");
+        File modFile = new File(tempPath + File.separator + tempName + "-mod.xml");
         LinkedList<String[]> paramsList1 = new LinkedList<>();
-        String[] params1 = {"UMLMetamodel", userPath + "UMLMetamodel.xsd"};
+        String[] params1 = {"UMLMetamodel", tempFilesPath + "UMLMetamodel.xsd"};
         paramsList1.add(params1);
-        transform(userPath + "UMLToModel.xslt", paramsList1, preFile, modFile);
+        transform(tempFilesPath + "UMLToModel.xslt", paramsList1, preFile, modFile);
         updateProgress(40, 100);
         updateMessage("40% Completed. Metamodel transformation achieved.");
 
 
         // STEP 4
         // First mapping, using types
-        File tpoFile = new File(tempPath + File.separator + tempName + ".xml.tpo");
-        transform(userPath + "FirstMapping.xslt",
+        File tpoFile = new File(tempPath + File.separator + tempName+ "-tpo.xml");
+        transform(tempFilesPath + "FirstMapping.xslt",
                 getParamsList(modFile.getAbsolutePath(), 8, "Param_",
                         "SQL2003Metamodel_data_1",
-                        userPath + "SQL2003Metamodel_data.xsd"),
+                        tempFilesPath + "SQL2003Metamodel_data.xsd"),
+                modFile, tpoFile);
+        updateProgress(55, 100);
+        updateMessage("55% Completed. Types transformation achieved.");
+
+/*
+        // STEP 4
+        // First mapping, using types
+        File tpoFile = new File(tempPath + File.separator + tempName+ "-tpo.xml");
+        transform(tempFilesPath + "FirstMapping.xslt",
+                getParamsList(modFile.getAbsolutePath(), 8, "Param_",
+                        "SQL2003Metamodel_data_1",
+                        tempFilesPath + "SQL2003Metamodel_data.xsd"),
                 modFile, tpoFile);
         updateProgress(55, 100);
         updateMessage("55% Completed. Types transformation achieved.");
@@ -94,12 +106,12 @@ public class TranslationTask extends Task {
 
         // STEP 5
         // Second mapping, using tables
-        File tblFile = new File(tempPath + File.separator + tempName + ".xml.tbl");
-        transform(userPath + "SecondMapping.xslt." + tStatus.getImplementation().getExtension(),
+        File tblFile = new File(tempPath + File.separator + tempName + "-tbl.xml");
+        transform(tempFilesPath + "SecondMapping" + tStatus.getImplementation().getExtension() + ".xslt",
                         getParamsList(tpoFile.getAbsolutePath(), 2,
                         "SQL2003Metamodel_data",
                         "SQL2003Metamodel_schema_1",
-                        userPath + "SQL2003Metamodel_schema.xsd"),
+                        tempFilesPath + "SQL2003Metamodel_schema.xsd"),
                 tpoFile, tblFile);
         updateProgress(70, 100);
         updateMessage("70% Completed. Tables successfully mapped.");
@@ -122,10 +134,10 @@ public class TranslationTask extends Task {
 
                 break;
 
-            case RELATIONAL_MSQL: // TODO: FUTURE WORK RELATIONAL_MSQL MODEL
+            case RELATIONAL_MSQL: // TODO: FUTURE WORK RELATIONAL_SQL MODEL
                 break;
         }
-
+*/
 
         // Return a value from the transformation
         return true;
@@ -150,7 +162,8 @@ public class TranslationTask extends Task {
             throws TransformerException {
         // Prepare the factory and source
         TransformerFactory factory = TransformerFactory.newInstance();
-        Source xsltSource = new StreamSource(new File(xslt));
+        StreamSource xsltSource = new StreamSource(new File(xslt));
+        xsltSource.setSystemId(xslt);
 
         // Prepare the transformation
         Transformer transformer = factory.newTransformer(xsltSource);
@@ -159,7 +172,8 @@ public class TranslationTask extends Task {
         }
 
         // Obtain the input file
-        Source text = new StreamSource(startFile);
+        StreamSource text = new StreamSource(startFile);
+        text.setSystemId(startFile.getAbsolutePath());
         transformer.transform(text, new StreamResult(endFile));
     }
 
@@ -200,7 +214,6 @@ public class TranslationTask extends Task {
         // Return the list
         return parameters;
     }
-
 
 
 

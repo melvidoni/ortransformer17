@@ -60,12 +60,13 @@ public class UMLtoXML {
             Node node = null;
 
             // If this is not for transformation, find the equivalent node
-            if(!forTransformation) for(Node n: nodes)
-                if(n.getName().equals(c.getName())) {
-                    // Save the information and break the loop
-                    node = n;
-                    break;
-            }
+            if(!forTransformation)
+                for(Node n: nodes)
+                    if(n.getName().equals(c.getName())) {
+                        // Save the information and break the loop
+                        node = n;
+                        break;
+                    }
 
             // Now add the node
             root.appendChild( getXmlClass(document, c, forTransformation, node, false) );
@@ -194,8 +195,8 @@ public class UMLtoXML {
         // If this is not for transformation and it is not an association class
         if(!forTransformation && !isAssocClass) {
             // Then record the points
-            xmlClass.setAttribute(XMLLabels.NODE_POINT_X.getName(), String.valueOf(node.getLayoutX()));
-            xmlClass.setAttribute(XMLLabels.NODE_POINT_Y.getName(), String.valueOf(node.getLayoutY()));
+            xmlClass.setAttribute(XMLLabels.NODE_POINT_X.getName(), String.valueOf(node.getTranslateX()));
+            xmlClass.setAttribute(XMLLabels.NODE_POINT_Y.getName(), String.valueOf(node.getTranslateY()));
         }
 
 		// Add the attributes

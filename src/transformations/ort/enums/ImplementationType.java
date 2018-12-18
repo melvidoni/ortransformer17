@@ -10,9 +10,9 @@ package transformations.ort.enums;
  * @author Melina Vidoni, INGAR CONICET-UTN.
  */
 public enum ImplementationType {
-	FLAT("Flat Model", "genP"),
-	VERTICAL("Vertical Split", "genV"),
-	HORIZONTAL("Horizontal Split", "genH");
+	FLAT("Flat Model", "-genP"),
+	VERTICAL("Vertical Split", "-genV"),
+	HORIZONTAL("Horizontal Split", "-genH");
 	
 	String name;
 	String extension;

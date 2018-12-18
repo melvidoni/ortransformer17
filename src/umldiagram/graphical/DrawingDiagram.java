@@ -107,9 +107,6 @@ public class DrawingDiagram extends Pane {
 
 
 
-
-
-
     /**
      * Method to create a new graphical node, with the info
      * received as a parameter.
@@ -175,6 +172,7 @@ public class DrawingDiagram extends Pane {
         // Return the pair
         return new Node[]{origin, ending};
     }
+
 
 
 
@@ -538,12 +536,14 @@ public class DrawingDiagram extends Pane {
 
                 // Now store the arrows
                 draggedArrows.addAll(
-                        arrows.stream().filter(a -> a.startsOn(node.getName()) || a.endsOn(node.getName())).collect(Collectors.toList())
+                        arrows.stream().filter(a -> a.startsOn(node.getName()) ||
+                                a.endsOn(node.getName())).collect(Collectors.toList())
                 );
 
                 // Store the complex nodes
                 draggedCN.addAll(
-                        complexNodes.stream().filter(cn -> cn.startsOn(node.getName()) || cn.endsOn(node.getName()) ).collect(Collectors.toList())
+                        complexNodes.stream().filter(cn -> cn.startsOn(node.getName()) ||
+                                cn.endsOn(node.getName()) ).collect(Collectors.toList())
                 );
             }
 
