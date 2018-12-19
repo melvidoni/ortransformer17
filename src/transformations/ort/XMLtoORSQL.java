@@ -84,7 +84,7 @@ class XMLtoORSQL {
 	String translateORTypes() {
         try {
             // Read the tpo file
-            Element tpo = read(".xml.tpo");
+            Element tpo = read("-tpo.xml");
 
             // Prepare the script
             String typesScript = "";
@@ -563,7 +563,7 @@ class XMLtoORSQL {
 	 */
 	String translateORTables(ImplementationType imp) {
 		// Read the file
-		Element tbl = read(".xml.tbl");
+		Element tbl = read("-tbl.xml");
 
         // Set the script
         String tableScripts = "";

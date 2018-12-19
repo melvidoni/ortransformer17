@@ -84,19 +84,7 @@ public class TranslationTask extends Task {
         // First mapping, using types
         File tpoFile = new File(tempPath + File.separator + tempName+ "-tpo.xml");
         transform(tempFilesPath + "FirstMapping.xslt",
-                getParamsList(modFile.getAbsolutePath(), 8, "Param_",
-                        "SQL2003Metamodel_data_1",
-                        tempFilesPath + "SQL2003Metamodel_data.xsd"),
-                modFile, tpoFile);
-        updateProgress(55, 100);
-        updateMessage("55% Completed. Types transformation achieved.");
-
-/*
-        // STEP 4
-        // First mapping, using types
-        File tpoFile = new File(tempPath + File.separator + tempName+ "-tpo.xml");
-        transform(tempFilesPath + "FirstMapping.xslt",
-                getParamsList(modFile.getAbsolutePath(), 8, "Param_",
+                getParamsList(modFile.getAbsolutePath().substring(1), 8, "Param_",
                         "SQL2003Metamodel_data_1",
                         tempFilesPath + "SQL2003Metamodel_data.xsd"),
                 modFile, tpoFile);
@@ -108,7 +96,7 @@ public class TranslationTask extends Task {
         // Second mapping, using tables
         File tblFile = new File(tempPath + File.separator + tempName + "-tbl.xml");
         transform(tempFilesPath + "SecondMapping" + tStatus.getImplementation().getExtension() + ".xslt",
-                        getParamsList(tpoFile.getAbsolutePath(), 2,
+                        getParamsList(tpoFile.getAbsolutePath().substring(1), 2,
                         "SQL2003Metamodel_data",
                         "SQL2003Metamodel_schema_1",
                         tempFilesPath + "SQL2003Metamodel_schema.xsd"),
@@ -137,7 +125,7 @@ public class TranslationTask extends Task {
             case RELATIONAL_MSQL: // TODO: FUTURE WORK RELATIONAL_SQL MODEL
                 break;
         }
-*/
+
 
         // Return a value from the transformation
         return true;
