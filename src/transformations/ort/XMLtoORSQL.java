@@ -16,18 +16,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-
-
-
-
-
-
-
-
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -50,6 +40,7 @@ class XMLtoORSQL {
 	private HashMap<String, List<String>> nestedScopesList;
 	private HashMap<String, String> ntList;
 
+	String typesScript;
 
 
     /**
@@ -61,6 +52,8 @@ class XMLtoORSQL {
 	XMLtoORSQL(String r, String n){
 		path = r;
 		number = n;
+
+		typesScript = "";
 
 		// Initialize the elements
 		typesList = new LinkedList<>();
@@ -87,7 +80,7 @@ class XMLtoORSQL {
             Element tpo = read("-tpo.xml");
 
             // Prepare the script
-            String typesScript = "";
+            typesScript = "";
 
             // Get the structured childs
 			Node child = tpo.getFirstChild();
@@ -208,11 +201,6 @@ class XMLtoORSQL {
 
             }
 
-            // Add type modifications
-            for (String alter : alterTypesList) {
-                typesScript += alter;
-            }
-
             // Add the arrangemenets
             for (String key : vArrangementsList.keySet()) {
                 typesScript += vArrangementsList.get(key);
@@ -221,6 +209,11 @@ class XMLtoORSQL {
             //Agregamos los multiset
             for (String key : tabsList.keySet()) {
                 typesScript += tabsList.get(key);
+            }
+
+            // Add type modifications
+            for (String alter : alterTypesList) {
+                typesScript += alter;
             }
 
             return typesScript;
@@ -551,6 +544,117 @@ class XMLtoORSQL {
 	}
 
 
+    /**
+     * Method that manages the transformation into tables, depending on the
+     * type of implementation. Vertical and Flat remain straightforward.
+     * @param imp Implementation type to work with.
+     * @return The type of scripts to be used.
+     */
+	String manageTablesTranslation(ImplementationType imp) {
+		String sql = "";
+
+		// If this is not horizontal, go ahead
+		if(!imp.getExtension().equals(ImplementationType.HORIZONTAL.getExtension())) {
+			sql = translateORTables(imp, "");
+		}
+		// Otherwise, let's check
+		else {
+			// Get both transformations
+			String vertical = translateORTables(ImplementationType.VERTICAL, "-V");
+
+			String[] tablesGenV = vertical.split("\r\n\r\n");
+			String[] tablesGenH = translateORTables(imp, "-H").split("\r\n\r\n");
+
+			// Create an empty list for the parents
+			LinkedList<String> parents = new LinkedList<>();
+
+			// Add everything from horizontal
+			for(String tgv : tablesGenV) {
+				// Get the name
+				String tname = tgv.split("\r\n")[0].split(" ")[2];
+
+				// If the name is not a parent or a children
+				if(!parentsList.contains(tname + "ip") && !childrenList.contains(tname + "ip")) {
+					// Add it to the list
+					if(!sql.equals("")) sql += "\r\n\r\n";
+					sql += tgv;
+				}
+				// Otherwise, add it to the parent list
+				else if(parentsList.contains(tname + "ip")) parents.add(tgv);
+			}
+
+			// Now split the types
+            List<String> splitTypes = Arrays.asList(typesScript.split("\r\n\r\n"));
+
+			// For each horizontal table
+            for(String tgh : tablesGenH) {
+                // Get the name
+                String t2name = tgh.split("\r\n")[0].split(" ")[2];
+                String parentName = "";
+
+                // Get the parent
+                for(String st: splitTypes) {
+                    if(st.contains(t2name + "ip UNDER" )) {
+                        parentName = st.split("\r\n")[0].split(" UNDER ")[1].replace(" (", "");
+                        break;
+                    }
+                }
+
+                // Get the new table
+                String newChildTable = "";
+
+                // If we have a parent
+                if(!parentName.equals("")) {
+                    // Split the children
+                    String[] splitChildren = tgh.split("\r\n");
+
+                    // Get parent attributes
+                    LinkedList<String> parentTable = new LinkedList<>();
+
+                    for(String p : parents) {
+                        // Split at get the name
+                        String[] psplit = p.split("\r\n");
+                        String pname = psplit[0].split(" ")[2];
+                        //pname = pname.substring(0, pname.length() - 2);
+
+                        // Check if this is the one
+                        if(parentName.startsWith(pname)) {
+                            // Add the origin
+                            newChildTable = splitChildren[0] + "\r\n";
+
+                            // Loop and add
+                            for(int k = 1; k < psplit.length; k++) {
+                                if(!psplit[k].startsWith("NOT "))
+                                    newChildTable += psplit[k] + "\r\n";
+                            }
+
+                            // Add the remaining bits
+                            newChildTable += String.join("\r\n",
+                                    Arrays.copyOfRange(splitChildren, 1, splitChildren.length));
+
+                            // Add to the sql
+                            sql = newChildTable + "\r\n\r\n" + sql;
+                            break;
+                        }
+                    }
+                }
+
+
+            }
+
+		}
+
+
+
+
+
+
+
+		// Return the result
+		return sql;
+	}
+
+
 
 
 
@@ -561,9 +665,9 @@ class XMLtoORSQL {
 	 * @param imp Type of implementation.
 	 * @return String with the SQL script
 	 */
-	String translateORTables(ImplementationType imp) {
+	private String translateORTables(ImplementationType imp, String additional) {
 		// Read the file
-		Element tbl = read("-tbl.xml");
+		Element tbl = read(additional + "-tbl.xml");
 
         // Set the script
         String tableScripts = "";
@@ -664,4 +768,8 @@ class XMLtoORSQL {
 
 
 
+
+    String getTypesScript() {
+	    return typesScript;
+    }
 }

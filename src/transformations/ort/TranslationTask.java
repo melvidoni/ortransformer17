@@ -3,6 +3,7 @@ package transformations.ort;
 
 import javafx.concurrent.Task;
 import org.apache.commons.io.FileUtils;
+import transformations.ort.enums.ImplementationType;
 
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
@@ -94,13 +95,41 @@ public class TranslationTask extends Task {
 
         // STEP 5
         // Second mapping, using tables
-        File tblFile = new File(tempPath + File.separator + tempName + "-tbl.xml");
-        transform(tempFilesPath + "SecondMapping" + tStatus.getImplementation().getExtension() + ".xslt",
-                        getParamsList(tpoFile.getAbsolutePath().substring(1), 2,
-                        "SQL2003Metamodel_data",
-                        "SQL2003Metamodel_schema_1",
-                        tempFilesPath + "SQL2003Metamodel_schema.xsd"),
-                tpoFile, tblFile);
+        LinkedList<Object[]> tblFiles = new LinkedList<>();
+
+        // If this is flat, go ahead
+        if(!tStatus.getImplementation().getExtension().equals(ImplementationType.HORIZONTAL.getExtension())) {
+            // Add one file
+            tblFiles.addLast(new Object[]{
+                    new File(tempPath + File.separator + tempName + "-tbl.xml"), "SINGLE"});
+        }
+        // If this is horizontal...
+        else {
+            // Add the other files
+            tblFiles.addFirst(new Object[]{
+                    new File(tempPath + File.separator + tempName + "-V-tbl.xml"), "VERTICAL"});
+            tblFiles.addLast(new Object[]{
+                    new File(tempPath + File.separator + tempName + "-H-tbl.xml"), "SINGLE"});
+        }
+
+        // Now transform
+        for(Object[] tf : tblFiles) {
+            // Prepare the extension
+            String ext = tStatus.getImplementation().getExtension();
+
+            // Check what it is
+            if(tf[1].toString().equals("VERTICAL")) {
+                ext = ImplementationType.VERTICAL.getExtension();
+            }
+
+            // Now transform
+            transform(tempFilesPath + "SecondMapping" + ext + ".xslt",
+                    getParamsList(tpoFile.getAbsolutePath().substring(1), 2,
+                            "SQL2003Metamodel_data",
+                            "SQL2003Metamodel_schema_1",
+                            tempFilesPath + "SQL2003Metamodel_schema.xsd"),
+                    tpoFile, (File)tf[0]);
+        }
         updateProgress(70, 100);
         updateMessage("70% Completed. Tables successfully mapped.");
 
@@ -115,7 +144,7 @@ public class TranslationTask extends Task {
                 updateMessage("85% Completed. Translation towards SQL in progress.");
 
                 // Translate tables
-                tStatus.setTablesScript(sqlGuide.translateORTables(tStatus.getImplementation()));
+                tStatus.setTablesScript(sqlGuide.manageTablesTranslation(tStatus.getImplementation()));
                 tStatus.setTransformed(true);
                 updateProgress(100, 100);
                 updateMessage("100% Completed. Preparing results visualization.");

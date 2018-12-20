@@ -16,6 +16,7 @@ import gui.components.TreeBrowser;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -144,8 +145,19 @@ public class MainWindowController {
         // Set text information
         alert.setTitle("About OR-Transformer");
         alert.setHeaderText("Object-Relational Transforming Tool");
-        alert.setContentText("This tool was created at the Institute of Design and Development" +
+
+        // Create the content
+        /*Text content = new Text("This tool was created at the Institute of Design and Development" +
                 " (INGAR CONICET-UTN) by Dr. Melina Vidoni, Dr. Fernanda Golobisky and Dr. Aldo Vecchietti.");
+        content.setWrappingWidth();
+        alert.getDialogPane().setContent(content);*/
+
+
+        alert.setContentText("This tool was created at the Institute of Design\n" +
+                             "and Development (INGAR CONICET-UTN) by\n" +
+                             "Dr. Melina Vidoni, Dr. Fernanda Golobisky\n" +
+                             "and Dr. Aldo Vecchietti. 2017.");
+        alert.setWidth(350);
 
         // Change the image
         Image image = new Image("/gui/views/img/icon_about.png");
@@ -629,6 +641,7 @@ public class MainWindowController {
             File file = PopupHandlers.showSaveFileChooser("Export Diagram as Image",
                     "PNG Files", "*.png", (Stage) drawingCanvas.getScene().getWindow());
 
+
             // If a file was selected
             if (file != null) {
                 // Get the snapshop and write the image
@@ -789,6 +802,7 @@ public class MainWindowController {
             if(file != null) {
                 // Prepare new files
                 String originalPath = file.getAbsolutePath();
+                if(!originalPath.endsWith(".txt")) originalPath += ".txt";
 
                 // Prepare the new files for types
                 FileUtils.writeStringToFile(
